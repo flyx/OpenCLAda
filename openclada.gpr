@@ -9,7 +9,7 @@ library project OpenCLAda is
    for Library_Dir use "lib";
 
    package Compiler is
-      for Default_Switches ("ada") use ("-g", "-p", "-O2", "-gnatn", "-gnatf", "-gnat05", "-gnata");
+      for Default_Switches ("ada") use ("-g", "-O2", "-gnatn", "-gnatf", "-gnat05", "-gnata");
    end Compiler;
 
    package Linker is

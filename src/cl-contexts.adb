@@ -161,13 +161,19 @@ package body CL.Contexts is
    end Reference_Count;
 
    function Devices (Source : Context) return Platforms.Device_List is
-      function Get_Context_Info_Devices is
-        new Helpers.Get_Parameters (Return_Element_T => Platforms.Device,
-                                    Return_T         => Platforms.Device_List,
+      function Getter is
+        new Helpers.Get_Parameters (Return_Element_T => System.Address,
+                                    Return_T         => Address_List,
                                     Parameter_T      => Enumerations.Context_Info,
                                     C_Getter         => API.Get_Context_Info);
+      Raw_List : Address_List := Getter (Source, Enumerations.Devices);
+      Ret_List : Platforms.Device_List (Raw_List'Range);
    begin
-      return Get_Context_Info_Devices (Source, Enumerations.Devices);
+      for Index in Raw_List'Range loop
+         Ret_List (Index) := Platforms.Device'(Ada.Finalization.Controlled with
+                                               Location => Raw_List (Index));
+      end loop;
+      return Ret_List;
    end Devices;
 
    function Platform (Source : Context) return Platforms.Platform is

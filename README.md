@@ -30,7 +30,7 @@ navigate to the OpenCLAda directory and do:
 On Windows, it could work the same way if you're using MinGW or Cygwin.
 However, I didn't try either one. Anyway, to compile without make, just do
 
-	$ gnatmake -P openclada.gpr -XOS=Windows
+	$ gnatmake -p -P openclada.gpr -XOS=Windows
 
 The compiler needs to find the `OpenCL.lib` file mentioned above. If you're
 unsure how to achieve this, just copy it into `C:\GNAT\2011\lib` or wherever
@@ -59,7 +59,7 @@ some of the basic functionality of the API. You can build them with
 
 or
 
-	$ gnatmake -P openclada_tests.gpr -XOS=Windows
+	$ gnatmake -p -P openclada_tests.gpr -XOS=Windows
 	
 on Windows. A basic "hello world" example is also included. After compilation,
 the executables will be located in the `bin` directory.

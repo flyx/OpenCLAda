@@ -77,7 +77,7 @@ package body CL.Helpers is
                          Value_Count'Unchecked_Access);
       Error_Handler (Error);
       declare
-         Return_Value    : Return_T (1 .. Integer (Value_Count));
+         Return_Value    : Return_T (1 .. Integer (Value_Count / Unit_Size));
       begin
          Error := C_Getter (Object.Location, Param, Value_Count,
                             Return_Value (1)'Address, null);
@@ -99,7 +99,7 @@ package body CL.Helpers is
                          Value_Count'Unchecked_Access);
       Error_Handler (Error);
       declare
-         Return_Value    : Return_T (1 .. Integer (Value_Count));
+         Return_Value    : Return_T (1 .. Integer (Value_Count / Unit_Size));
       begin
          Error := C_Getter (Object.Location, Param, Value_Count,
                             Return_Value (1)'Unchecked_Access, null);
@@ -144,7 +144,7 @@ package body CL.Helpers is
                          System.Null_Address, Value_Count'Unchecked_Access);
       Error_Handler (Error);
       declare
-         Return_Value    : Return_T (1 .. Integer (Value_Count));
+         Return_Value    : Return_T (1 .. Integer (Value_Count / Unit_Size));
       begin
          Error := C_Getter (Object1.Location, Object2.Location, Param,
                             Value_Count, Return_Value (1)'Address, null);

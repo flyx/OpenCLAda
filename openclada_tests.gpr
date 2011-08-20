@@ -14,7 +14,7 @@ project OpenCLAda_Tests is
                  "cl_test-hello_world.adb");
 
    package Compiler is
-      for Default_Switches ("ada") use ("-g", "-p", "-O2", "-gnatn", "-gnatf", "-gnat05", "-gnata");
+      for Default_Switches ("ada") use ("-g", "-O2", "-gnatn", "-gnatf", "-gnat05", "-gnata");
    end Compiler;
 
    package Builder is

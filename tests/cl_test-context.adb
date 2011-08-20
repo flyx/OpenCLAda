@@ -31,6 +31,7 @@ with CL_Test.Helpers;
 with Ada.Text_IO;
 with Ada.Strings.Fixed;
 with Ada.Exceptions;
+with System;
 
 procedure CL_Test.Context is
    package ATI renames Ada.Text_IO;
@@ -44,6 +45,10 @@ procedure CL_Test.Context is
    Dv    : CL.Platforms.Device := Dvs (1);
 
    use Ada.Strings.Fixed;
+   use type CL.Size;
+
+   Unit_Size   : constant CL.Size :=
+        System.Address'Size / System.Storage_Unit;
 begin
    ATI.Put_Line ("Device count is" & Dvs'Length'Img);
 
@@ -61,8 +66,16 @@ begin
       end;
       ATI.Put ("Duplicated terminated, reference count is");
       ATI.Put_Line (Context.Reference_Count'Img);
-      ATI.Put ("Number of Devices is");
-      ATI.Put_Line (Context.Devices'Length'Img);
+      declare
+         Devices : CL.Platforms.Device_List := Context.Devices;
+      begin
+         ATI.Put ("Number of Devices is");
+         ATI.Put_Line (Devices'Length'Img);
+         for Index in Devices'Range loop
+            ATI.Put ("#" & Index'Img & ": ");
+            ATI.Put_Line (Devices (Index).Name);
+         end loop;
+      end;
    exception
       when Error : others =>
          ATI.Put_Line ("Encountered Error: " &
