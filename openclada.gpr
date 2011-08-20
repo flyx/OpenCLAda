@@ -1,0 +1,31 @@
+library project OpenCLAda is
+
+   type Os_Type is
+      ("Windows", "Linux", "MacOSX");
+   Os : Os_Type := external ("OS", "Linux");
+   for Library_Name use "OpenCLAda";
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Library_Dir use "lib";
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-g", "-p", "-O2", "-gnatn", "-gnatf", "-gnat05", "-gnata");
+   end Compiler;
+
+   package Linker is
+
+      case Os is
+
+         when "Windows" =>
+            for Linker_Options use ("-lOpenCL");
+
+         when "Linux" =>
+            for Linker_Options use ("-lOpenCL");
+
+         when "MacOSX" =>
+            for Linker_Options use ("-Wl,-framework,OpenCL");
+      end case;
+   end Linker;
+
+end OpenCLAda;
+

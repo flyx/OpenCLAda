@@ -1,0 +1,24 @@
+with "openclada.gpr";
+
+project OpenCLAda_Tests is
+
+   for Source_Dirs use ("tests");
+   for Object_Dir use "obj";
+   for Exec_Dir use "bin";
+   type Os_Type is
+      ("Windows", "Linux", "MacOSX");
+   Os : Os_Type := external ("OS");
+
+   for Main use ("cl_test-context.adb", "cl_test-device.adb",
+                 "cl_test-memory.adb", "cl_test-platform.adb",
+                 "cl_test-hello_world.adb");
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-g", "-p", "-O2", "-gnatn", "-gnatf", "-gnat05", "-gnata");
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-m");
+   end Builder;
+
+end OpenCLAda_Tests;
