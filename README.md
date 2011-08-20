@@ -8,8 +8,10 @@ enable you to write OpenCL kernels in Ada.
 ## Prerequisites
 
 OpenCLAda currently supports MacOSX, Linux and Windows. You need to have
+
  - a GNAT compiler
  - an OpenCL implementation
+
 available on your system. GNAT GPL Edition is available at
 [the AdaCore website](http://libre.adacore.com/libre/download/). OpenCL is
 usually available from your hardware vendor. On MacOSX, it's already part of
@@ -26,7 +28,7 @@ navigate to the OpenCLAda directory and do:
 	$ make
 
 On Windows, it could work the same way if you're using MinGW or Cygwin.
-However, I didn't either one. Anyway, to compile without make, just do
+However, I didn't try either one. Anyway, to compile without make, just do
 
 	$ gnatmake -P openclada.gpr -XOS=Windows
 
@@ -78,4 +80,4 @@ You're welcome to contribute code or file bug reports on the
 
 This code is distributed under the terms of the
 Simplified BSD License, which you can find in the file
-`LICENSE`.
+`COPYING`.
