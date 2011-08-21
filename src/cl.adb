@@ -30,4 +30,11 @@ package body CL is
    begin
       return Left.Location = Right.Location;
    end "=";
+
+   function Initialized (Object : Runtime_Object) return Boolean is
+      use type System.Address;
+   begin
+      return Object.Location /= System.Null_Address;
+   end Initialized;
+
 end CL;

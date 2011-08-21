@@ -22,7 +22,7 @@ part of an SDK from your hardware vendor (eg the
 
 ## Compilation
 
-Under MacOSX and Linux, open a terminal,
+On MacOSX and Linux, open a terminal,
 navigate to the OpenCLAda directory and do:
 
 	$ make
@@ -66,14 +66,15 @@ the executables will be located in the `bin` directory.
 
 ## Usage
 
-There is some overview over the OpenCLAda API on the Wiki (TBD). For more
-information, please consult the
+There is some
+[overview over the OpenCLAda API on the Wiki](https://github.com/flyx86/OpenCLAda/wiki/Overview).
+For more information, please consult the
 [Khronos OpenCL API Registry](http://www.khronos.org/registry/cl/).
 
 ## Contributing
 
-As this is my first real Ada project, there might be some flaws in the code.
-You're welcome to contribute code or file bug reports on the
+As this is my first real Ada project, the probability of errors in the code
+is rather high. You're welcome to contribute code or file bug reports on the
 [project's page on GitHub](https://github.com/flyx86/openclada).
 
 ## License

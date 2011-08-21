@@ -85,6 +85,8 @@ package CL is
 
    type Runtime_Object is abstract new CL_Object with private;
 
+   function Initialized (Object : Runtime_Object) return Boolean;
+
    function Reference_Count (Source : Runtime_Object) return UInt is abstract;
 
    -----------------------------------------------------------------------------
