@@ -39,14 +39,16 @@ package CL.Queueing.Memory_Objects is
                          Blocking    : Boolean;
                          Offset      : Size;
                          Destination : access Element_List;
-                         Wait_For    : Events.Event_List) return Events.Event;
+                         Wait_For    : access constant Events.Event_List)
+                         return Events.Event;
 
    function Write_Buffer (Queue       : Command_Queues.Command_Queue'Class;
                           Buffer      : Memory.Buffers.Buffer'Class;
                           Blocking    : Boolean;
                           Offset      : Size;
                           Source      : access Element_List;
-                          Wait_For    : Events.Event_List) return Events.Event;
+                          Wait_For    : access constant Events.Event_List)
+                          return Events.Event;
 
    function Copy_Buffer (Queue         : Command_Queues.Command_Queue'Class;
                          Source        : Memory.Buffers.Buffer'Class;
@@ -63,7 +65,8 @@ package CL.Queueing.Memory_Objects is
                           Region      : Size_Vector2D;
                           Row_Pitch   : Size;
                           Destination : access Element_List;
-                          Wait_For    : Events.Event_List) return Events.Event;
+                          Wait_For    : access constant Events.Event_List)
+                          return Events.Event;
 
    function Read_Image3D (Queue       : Command_Queues.Command_Queue'Class;
                           Image       : Memory.Images.Image3D'Class;
@@ -73,7 +76,8 @@ package CL.Queueing.Memory_Objects is
                           Row_Pitch   : Size;
                           Slice_Pitch : Size;
                           Destination : access Element_List;
-                          Wait_For    : Events.Event_List) return Events.Event;
+                          Wait_For    : access constant Events.Event_List)
+                          return Events.Event;
 
    function Write_Image2D (Queue       : Command_Queues.Command_Queue'Class;
                            Image       : Memory.Images.Image2D'Class;
@@ -82,7 +86,8 @@ package CL.Queueing.Memory_Objects is
                            Region      : Size_Vector2D;
                            Row_Pitch   : Size;
                            Source      : access Element_List;
-                           Wait_For    : Events.Event_List) return Events.Event;
+                           Wait_For    : access constant Events.Event_List)
+                           return Events.Event;
 
    function Write_Image3D (Queue       : Command_Queues.Command_Queue'Class;
                            Image       : Memory.Images.Image3D'Class;
@@ -92,7 +97,8 @@ package CL.Queueing.Memory_Objects is
                            Row_Pitch   : Size;
                            Slice_Pitch : Size;
                            Source      : access Element_List;
-                           Wait_For    : Events.Event_List) return Events.Event;
+                           Wait_For    : access constant Events.Event_List)
+                           return Events.Event;
 
    function Copy_Image2D (Queue       : Command_Queues.Command_Queue'Class;
                           Source      : Memory.Images.Image2D'Class;
@@ -100,7 +106,8 @@ package CL.Queueing.Memory_Objects is
                           Src_Origin  : Size_Vector2D;
                           Dest_Origin : Size_Vector2D;
                           Region      : Size_Vector2D;
-                          Wait_For    : Events.Event_List) return Events.Event;
+                          Wait_For    : access constant Events.Event_List)
+                          return Events.Event;
 
    function Copy_Image3D (Queue       : Command_Queues.Command_Queue'Class;
                           Source      : Memory.Images.Image3D'Class;
@@ -108,7 +115,8 @@ package CL.Queueing.Memory_Objects is
                           Src_Origin  : Size_Vector3D;
                           Dest_Origin : Size_Vector3D;
                           Region      : Size_Vector3D;
-                          Wait_For    : Events.Event_List) return Events.Event;
+                          Wait_For    : access constant Events.Event_List)
+                          return Events.Event;
 
    --  currently not supported: Copy_Image_To_Buffer, Copy_Buffer_To_Image,
    --  Map_Buffer, Map_Image, Unmap_Mem_Object

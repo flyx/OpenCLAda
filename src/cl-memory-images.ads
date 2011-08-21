@@ -50,9 +50,10 @@ package CL.Memory.Images is
    --  have the minimum required size
    Invalid_Source_Size : exception;
 
-   function Supported_Image_Formats (Context    : Contexts.Context;
-                                     Flags      : Memory_Flags;
-                                     Img_Type   : Image_Type)
+   function Supported_Image_Formats (Context         : Contexts.Context;
+                                     Mode            : Access_Kind;
+                                     Img_Type        : Image_Type;
+                                     Use_Host_Memory : Boolean := False)
                                      return Image_Format_List;
 
    type Image is abstract new Memory_Object with null record;
@@ -72,45 +73,51 @@ package CL.Memory.Images is
 
    --  Analogous to Create_Buffer
    function Create_Image2D (Context   : Contexts.Context;
-                            Flags     : Memory_Flags;
+                            Mode      : Access_Kind;
                             Format    : Image_Format;
                             Width     : CL.Size;
                             Height    : CL.Size;
-                            Row_Pitch : CL.Size) return Image2D;
+                            Row_Pitch : CL.Size;
+                            Use_Host_Memory : Boolean := False) return Image2D;
    --  Analogous to Create_Buffer
    function Create_Image3D (Context     : Contexts.Context;
-                            Flags       : Memory_Flags;
+                            Mode        : Access_Kind;
                             Format      : Image_Format;
                             Width       : CL.Size;
                             Height      : CL.Size;
                             Depth       : CL.Size;
                             Row_Pitch   : CL.Size;
-                            Slice_Pitch : CL.Size) return Image3D;
+                            Slice_Pitch : CL.Size;
+                            Use_Host_Memory : Boolean := False) return Image3D;
 
    generic
       type Element is private;
       type Element_List is array (Integer range <>) of Element;
    function Create_Image2D_From_Source (Context   : Contexts.Context;
-                                        Flags     : Memory_Flags;
+                                        Mode      : Access_Kind;
                                         Format    : Image_Format;
                                         Width     : CL.Size;
                                         Height    : CL.Size;
                                         Row_Pitch : CL.Size;
-                                        Source    : Element_List)
+                                        Source    : Element_List;
+                                        Use_Source_As_Image : Boolean := False;
+                                        Use_Host_Memory     : Boolean := False)
                                         return Image2D;
 
    generic
       type Element is private;
       type Element_List is array (Integer range <>) of Element;
    function Create_Image3D_From_Source (Context     : Contexts.Context;
-                                        Flags       : Memory_Flags;
+                                        Mode        : Access_Kind;
                                         Format      : Image_Format;
                                         Width       : CL.Size;
                                         Height      : CL.Size;
                                         Depth       : CL.Size;
                                         Row_Pitch   : CL.Size;
                                         Slice_Pitch : CL.Size;
-                                        Source      : Element_List)
+                                        Source      : Element_List;
+                                        Use_Source_As_Image : Boolean := False;
+                                        Use_Host_Memory     : Boolean := False)
                                         return Image3D;
 
    function Slice_Pitch (Source : Image3D) return CL.Size;

@@ -31,12 +31,15 @@ with CL.Helpers;
 
 package body CL.Memory.Buffers is
 
-   function Create_Buffer (Context : Contexts.Context;
-                           Flags   : Memory_Flags;
-                           Size    : CL.Size) return Buffer is
+   function Create_Buffer (Context         : Contexts.Context;
+                           Mode            : Access_Kind;
+                           Size            : CL.Size;
+                           Use_Host_Memory : Boolean := False) return Buffer is
+      Flags      : Memory_Flags;
       Raw_Object : System.Address;
       Error      : aliased Enumerations.Error_Code;
    begin
+      Flags := Create_Flags (Mode => Mode, Alloc_Host_Ptr => Use_Host_Memory);
       Ada.Text_IO.Put_Line ("converted flags:" & To_Bitfield (Flags)'Img);
       Raw_Object := API.Create_Buffer (CL_Object (Context).Location,
                                        To_Bitfield (Flags),
@@ -46,12 +49,31 @@ package body CL.Memory.Buffers is
       return Buffer'(Ada.Finalization.Controlled with Location => Raw_Object);
    end Create_Buffer;
 
-   function Create_Buffer_From_Source (Context : Contexts.Context;
-                                       Flags   : Memory_Flags;
-                                       Source  : access constant Element_List) return Buffer is
+   function Create_Buffer_From_Source (Context              : Contexts.Context;
+                                       Mode                 : Access_Kind;
+                                       Source               : access constant Element_List;
+                                       Use_Source_As_Buffer : Boolean := False;
+                                       Use_Host_Memory      : Boolean := False)
+                                       return Buffer is
+      Flags      : Memory_Flags;
       Raw_Object : System.Address;
       Error      : aliased Enumerations.Error_Code;
    begin
+      if Use_Source_As_Buffer then
+         if not Use_Host_Memory then
+            raise Invalid_Value with "Use_Source_As_Buffer requires Use_Host_Memory.";
+         end if;
+         Flags := Create_Flags (Mode           => Mode,
+                                Use_Host_Ptr   => True,
+                                Copy_Host_Ptr  => False,
+                                Alloc_Host_Ptr => False);
+      else
+         Flags := Create_Flags (Mode           => Mode,
+                                Use_Host_Ptr   => False,
+                                Copy_Host_Ptr  => True,
+                                Alloc_Host_Ptr => Use_Host_Memory);
+      end if;
+
       Raw_Object
         := API.Create_Buffer (Context  => CL_Object (Context).Location,
                               Flags    => To_Bitfield (Flags),

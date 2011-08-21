@@ -34,13 +34,14 @@ package body CL.Memory.Images is
                                 Parameter_T => Enumerations.Image_Info,
                                 C_Getter    => API.Get_Image_Info);
 
-   function Supported_Image_Formats (Context    : Contexts.Context;
-                                     Flags      : Memory_Flags;
-                                     Img_Type   : Image_Type)
+   function Supported_Image_Formats (Context         : Contexts.Context;
+                                     Mode            : Access_Kind;
+                                     Img_Type        : Image_Type;
+                                     Use_Host_Memory : Boolean := False)
                                      return Image_Format_List is
-      Num_Values      : aliased UInt;
-      Error           : Enumerations.Error_Code;
-
+      Flags      : Memory_Flags;
+      Num_Values : aliased UInt;
+      Error      : Enumerations.Error_Code;
    begin
       Error := API.Get_Supported_Image_Formats (CL_Object (Context).Location,
                                                 To_Bitfield (Flags), Img_Type,
@@ -62,15 +63,21 @@ package body CL.Memory.Images is
 
    --  Analogous to Create_Buffer
    function Create_Image2D (Context   : Contexts.Context;
-                            Flags     : Memory_Flags;
+                            Mode      : Access_Kind;
                             Format    : Image_Format;
                             Width     : CL.Size;
                             Height    : CL.Size;
-                            Row_Pitch : CL.Size) return Image2D is
+                            Row_Pitch : CL.Size;
+                            Use_Host_Memory : Boolean := False) return Image2D is
+      Flags      : Memory_Flags;
       Raw_Object : System.Address;
       Error      : aliased Enumerations.Error_Code;
       Format_Obj : aliased Image_Format := Format;
    begin
+      Flags := Create_Flags (Mode           => Mode,
+                             Alloc_Host_Ptr => Use_Host_Memory,
+                             Use_Host_Ptr   => False,
+                             Copy_Host_Ptr  => False);
       Raw_Object := API.Create_Image2D (CL_Object (Context).Location,
                                         To_Bitfield (Flags),
                                         Format_Obj'Unchecked_Access,
@@ -83,17 +90,23 @@ package body CL.Memory.Images is
 
    --  Analogous to Create_Buffer
    function Create_Image3D (Context     : Contexts.Context;
-                            Flags       : Memory_Flags;
+                            Mode        : Access_Kind;
                             Format      : Image_Format;
                             Width       : CL.Size;
                             Height      : CL.Size;
                             Depth       : CL.Size;
                             Row_Pitch   : CL.Size;
-                            Slice_Pitch : CL.Size) return Image3D is
+                            Slice_Pitch : CL.Size;
+                            Use_Host_Memory : Boolean := False) return Image3D is
+      Flags      : Memory_Flags;
       Raw_Object : System.Address;
       Error      : aliased Enumerations.Error_Code;
       Format_Obj : aliased Image_Format := Format;
    begin
+      Flags := Create_Flags (Mode           => Mode,
+                             Alloc_Host_Ptr => Use_Host_Memory,
+                             Use_Host_Ptr   => False,
+                             Copy_Host_Ptr  => False);
       Raw_Object := API.Create_Image3D (CL_Object (Context).Location,
                                         To_Bitfield (Flags),
                                         Format_Obj'Unchecked_Access,
@@ -105,17 +118,35 @@ package body CL.Memory.Images is
    end Create_Image3D;
 
    function Create_Image2D_From_Source (Context   : Contexts.Context;
-                                        Flags     : Memory_Flags;
+                                        Mode      : Access_Kind;
                                         Format    : Image_Format;
                                         Width     : CL.Size;
                                         Height    : CL.Size;
                                         Row_Pitch : CL.Size;
-                                        Source    : Element_List)
+                                        Source    : Element_List;
+                                        Use_Source_As_Image : Boolean := False;
+                                        Use_Host_Memory     : Boolean := False)
                                         return Image2D is
+      Flags      : Memory_Flags;
       Raw_Object : System.Address;
       Error      : aliased Enumerations.Error_Code;
       Element_Format : aliased Image_Format := Format;
    begin
+      if Use_Source_As_Image then
+         if not Use_Host_Memory then
+            raise Invalid_Value with "Use_Source_As_Buffer requires Use_Host_Memory.";
+         end if;
+         Flags := Create_Flags (Mode           => Mode,
+                                Use_Host_Ptr   => True,
+                                Copy_Host_Ptr  => False,
+                                Alloc_Host_Ptr => False);
+      else
+         Flags := Create_Flags (Mode           => Mode,
+                                Use_Host_Ptr   => False,
+                                Copy_Host_Ptr  => True,
+                                Alloc_Host_Ptr => Use_Host_Memory);
+      end if;
+
       --  check if Source has required size.
       --  do not check for other errors as this will be done by OpenCL.
       if (Row_Pitch = 0) then
@@ -140,19 +171,37 @@ package body CL.Memory.Images is
    end Create_Image2D_From_Source;
 
    function Create_Image3D_From_Source (Context     : Contexts.Context;
-                                        Flags       : Memory_Flags;
+                                        Mode        : Access_Kind;
                                         Format      : Image_Format;
                                         Width       : CL.Size;
                                         Height      : CL.Size;
                                         Depth       : CL.Size;
                                         Row_Pitch   : CL.Size;
                                         Slice_Pitch : CL.Size;
-                                        Source      : Element_List)
+                                        Source      : Element_List;
+                                        Use_Source_As_Image : Boolean := False;
+                                        Use_Host_Memory     : Boolean := False)
                                         return Image3D is
+      Flags      : Memory_Flags;
       Raw_Object : System.Address;
       Error      : aliased Enumerations.Error_Code;
       Element_Format : aliased Image_Format := Format;
    begin
+      if Use_Source_As_Image then
+         if not Use_Host_Memory then
+            raise Invalid_Value with "Use_Source_As_Buffer requires Use_Host_Memory.";
+         end if;
+         Flags := Create_Flags (Mode           => Mode,
+                                Use_Host_Ptr   => True,
+                                Copy_Host_Ptr  => False,
+                                Alloc_Host_Ptr => False);
+      else
+         Flags := Create_Flags (Mode           => Mode,
+                                Use_Host_Ptr   => False,
+                                Copy_Host_Ptr  => True,
+                                Alloc_Host_Ptr => Use_Host_Memory);
+      end if;
+
       if Slice_Pitch = 0 then
          if Row_Pitch = 0 then
             if Source'Length < Width * Height * Depth then

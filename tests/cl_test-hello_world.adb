@@ -34,16 +34,21 @@ with CL.Memory.Buffers;
 with CL.Kernels;
 with CL.Command_Queues;
 with CL.Queueing;
+with CL.Queueing.Memory_Objects;
 with CL.Events;
 
 procedure CL_Test.Hello_World is
    package IO renames Ada.Text_IO;
 
-   type Aliased_String is array (Integer range <>) of aliased Character;
+   type Aliased_String is array (Positive range <>) of aliased Character;
 
    function String_Buffer is
      new CL.Memory.Buffers.Create_Buffer_From_Source (Element => Character,
                                                       Element_List => Aliased_String);
+
+   package String_Objects is
+     new CL.Queueing.Memory_Objects (Element      => Character,
+                                     Element_List => Aliased_String);
 
    function Read_File (File : IO.File_Type) return String is
       use Ada.Strings.Unbounded;
@@ -60,7 +65,6 @@ procedure CL_Test.Hello_World is
    Device      : CL.Platforms.Device;
    Device_List : CL.Platforms.Device_List (1 .. 1);
    Context     : CL.Contexts.Context;
-   Flags       : CL.Memory.Memory_Flags;
    Buffer      : CL.Memory.Buffers.Buffer;
    Program     : CL.Programs.Program;
    Kernel      : CL.Kernels.Kernel;
@@ -81,12 +85,8 @@ begin
    Device_List := (1 => Device);
    IO.Put_Line ("Creating context");
    Context     := CL.Contexts.Create_Context (Platform, (1 => Device));
-   Flags       := CL.Memory.Memory_Flags'(Write_Only => True,
-                                          Use_Host_Ptr => True,
-                                          Reserved => 0,
-                                          others => False);
    IO.Put_Line ("Creating buffer");
-   Buffer   := String_Buffer (Context, Flags, Output'Access);
+   Buffer      := String_Buffer (Context, CL.Memory.Write_Only, Output'Access);
 
    IO.Put_Line ("Compiling kernel source");
    IO.Open (Kernel_File, IO.In_File, "../tests/hello-kernel.cl");
@@ -110,6 +110,8 @@ begin
    Event := CL.Queueing.Execute_Kernel (Queue, Kernel, 1, Global_Work_Size'Access,
                                         Local_Work_Size'Access, null);
    Event.Wait_For;
+   IO.Put_Line ("Retrieving result");
+   Event := String_Objects.Read_Buffer (Queue, Buffer, True, 0, Output'Access, null);
 
    IO.Put_Line (String (Output));
 end CL_Test.Hello_World;

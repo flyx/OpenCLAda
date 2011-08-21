@@ -34,22 +34,21 @@ package CL.Memory.Buffers is
          Size   : CL.Size;
       end record;
 
-   --  Create a buffer without providing a pointer to host memory.
-   --  when using this function, usage of Memory_Flags.Use_Host_Ptr and
-   --  Memory_Flags.Copy_Host_Ptr is invalid.
-   function Create_Buffer (Context : Contexts.Context;
-                           Flags   : Memory_Flags;
-                           Size    : CL.Size) return Buffer;
+   --  Create a buffer without providing a pointer to host memory
+   function Create_Buffer (Context         : Contexts.Context;
+                           Mode            : Access_Kind;
+                           Size            : CL.Size;
+                           Use_Host_Memory : Boolean := False) return Buffer;
 
-   --  when used with Alloc_Host_Ptr, there is currently no way of directly
-   --  gaining access to the allocated host memory, so useage of Alloc_Host_Ptr
-   --  is discouraged.
    generic
       type Element is private;
-      type Element_List is array (Integer range <>) of Element;
-   function Create_Buffer_From_Source (Context : Contexts.Context;
-                                       Flags   : Memory_Flags;
-                                       Source  : access constant Element_List) return Buffer;
+      type Element_List is array (Positive range <>) of Element;
+   function Create_Buffer_From_Source (Context              : Contexts.Context;
+                                       Mode                 : Access_Kind;
+                                       Source               : access constant Element_List;
+                                       Use_Source_As_Buffer : Boolean := False;
+                                       Use_Host_Memory      : Boolean := False)
+                                       return Buffer;
 
    --function Create_Sub_Buffer_Region (Buff    : Buffer;
    --                                   Flags   : Memory_Flags;

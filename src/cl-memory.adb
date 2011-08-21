@@ -97,6 +97,24 @@ package body CL.Memory is
       return Getter (Source, Enumerations.Flags);
    end Flags;
 
+   function Mode (Source : Memory_Object) return Access_Kind is
+      Flags : Memory_Flags := Source.Flags;
+   begin
+      if Flags.Write_Only then
+         return Write_Only;
+      end if;
+      if Flags.Read_Only then
+         return Read_Only;
+      end if;
+      return Read_Write;
+   end Mode;
+
+   function In_Host_Memory (Source : Memory_Object) return Boolean is
+      Flags : Memory_Flags := Source.Flags;
+   begin
+      return (Flags.Use_Host_Ptr or Flags.Alloc_Host_Ptr);
+   end In_Host_Memory;
+
    function Size (Source : Memory_Object) return CL.Size is
    begin
       return Size_Info (Source, Enumerations.Size);
@@ -133,5 +151,21 @@ package body CL.Memory is
    --begin
    --   Error_Handler (Error);
    --end Set_Destructor_Callback;
+
+   function Create_Flags (Mode : Access_Kind;
+                          Use_Host_Ptr, Copy_Host_Ptr, Alloc_Host_Ptr : Boolean := False)
+                          return Memory_Flags is
+      Flags : Memory_Flags;
+   begin
+      case Mode is
+         when Read_Only  => Flags.Read_Only  := True;
+         when Write_Only => Flags.Write_Only := True;
+         when Read_Write => Flags.Read_Write := True;
+      end case;
+      Flags.Use_Host_Ptr   := Use_Host_Ptr;
+      Flags.Copy_Host_Ptr  := Copy_Host_Ptr;
+      Flags.Alloc_Host_Ptr := Alloc_Host_Ptr;
+      return Flags;
+   end Create_Flags;
 
 end CL.Memory;
