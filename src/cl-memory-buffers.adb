@@ -23,7 +23,6 @@
 --  (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING IN ANY WAY OUT OF THE USE OF
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
-with Ada.Text_IO;
 
 with CL.API;
 with CL.Enumerations;
@@ -40,7 +39,6 @@ package body CL.Memory.Buffers is
       Error      : aliased Enumerations.Error_Code;
    begin
       Flags := Create_Flags (Mode => Mode, Alloc_Host_Ptr => Use_Host_Memory);
-      Ada.Text_IO.Put_Line ("converted flags:" & To_Bitfield (Flags)'Img);
       Raw_Object := API.Create_Buffer (CL_Object (Context).Location,
                                        To_Bitfield (Flags),
                                        Size, System.Null_Address,

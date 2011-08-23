@@ -9,10 +9,6 @@ project OpenCLAda_Tests is
       ("Windows", "Linux", "MacOSX");
    Os : Os_Type := external ("OS");
 
-   for Main use ("cl_test-context.adb", "cl_test-device.adb",
-                 "cl_test-memory.adb", "cl_test-platform.adb",
-                 "cl_test-hello_world.adb");
-
    package Compiler is
       for Default_Switches ("ada") use ("-g", "-O2", "-gnatn", "-gnatf", "-gnat05", "-gnata");
    end Compiler;
@@ -21,4 +17,17 @@ project OpenCLAda_Tests is
       for Default_Switches ("ada") use ("-m");
    end Builder;
 
+   case Os is
+
+      when "Windows" =>
+         for Main use ("cl_test-context.adb", "cl_test-device.adb", "cl_test-memory.adb", "cl_test-platform.adb", "cl_test-hello_world.adb");
+
+      when "Linux" =>
+         for Main use ("cl_test-context.adb", "cl_test-device.adb", "cl_test-hello_world.adb", "cl_test-memory.adb", "cl_test-platform.adb", "cl_test-vectors.adb");
+
+      when "MacOSX" =>
+         for Main use ("cl_test-context.adb", "cl_test-device.adb", "cl_test-memory.adb", "cl_test-platform.adb", "cl_test-hello_world.adb");
+   end case;
+
 end OpenCLAda_Tests;
+
