@@ -97,7 +97,7 @@ package body CL.Vector_Operations is
       Result : Boolean_Vector;
    begin
       for I in Index'Range loop
-         Result (I) := Left (I) > Right (I);
+         Result (I) := Right (I) < Left (I);
       end loop;
       return Result;
    end ">";
@@ -106,7 +106,7 @@ package body CL.Vector_Operations is
       Result : Boolean_Vector;
    begin
       for I in Index'Range loop
-         Result (I) := Left (I) > Right;
+         Result (I) := Right < Left (I);
       end loop;
       return Result;
    end ">";
@@ -115,7 +115,7 @@ package body CL.Vector_Operations is
       Result : Boolean_Vector;
    begin
       for I in Index'Range loop
-         Result (I) := Left > Right (I);
+         Result (I) := Right (I) < Left;
       end loop;
       return Result;
    end ">";

@@ -6,7 +6,6 @@ generic
    with function "*" (Left, Right: Base) return Base is <>;
    with function "/" (Left, Right: Base) return Base is <>;
    with function "<" (Left, Right: Base) return Boolean is <>;
-   with function ">" (Left, Right: Base) return Boolean is <>;
    type Index is (<>);
    type Vector is array (Index) of Base;
 package CL.Vector_Operations is
