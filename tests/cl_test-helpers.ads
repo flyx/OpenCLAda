@@ -25,8 +25,10 @@
 --------------------------------------------------------------------------------
 
 with CL.Contexts;
+with Ada.Text_IO;
 
 package CL_Test.Helpers is
    procedure Callback (Error_Info   : String;
                        Private_Info : CL.Contexts.Char_List);
+   function Read_File (File : Ada.Text_IO.File_Type) return String;
 end CL_Test.Helpers;

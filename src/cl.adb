@@ -36,5 +36,4 @@ package body CL is
    begin
       return Object.Location /= System.Null_Address;
    end Initialized;
-
 end CL;

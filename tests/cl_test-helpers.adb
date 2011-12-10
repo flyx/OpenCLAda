@@ -26,23 +26,35 @@
 
 with Ada.Text_IO;
 with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;
 
 package body CL_Test.Helpers is
-   package ATI renames Ada.Text_IO;
+   package IO renames Ada.Text_IO;
 
    procedure Callback (Error_Info   : String;
                        Private_Info : CL.Contexts.Char_List) is
       use Ada.Strings.Fixed;
    begin
-      ATI.Put_Line (40 * '-');
-      ATI.Put_Line ("Error callback invoked:");
-      ATI.Put_Line ("Info String: """ & Error_Info & """");
-      ATI.Put      ("Binary data: (");
+      IO.Put_Line (40 * '-');
+      IO.Put_Line ("Error callback invoked:");
+      IO.Put_Line ("Info String: """ & Error_Info & """");
+      IO.Put      ("Binary data: (");
       for Index in Private_Info'Range loop
-         ATI.Put (Private_Info (Index)'Img);
+         IO.Put (Private_Info (Index)'Img);
       end loop;
-      ATI.Put_Line (")");
-      ATI.Put_Line (40 * '-');
+      IO.Put_Line (")");
+      IO.Put_Line (40 * '-');
    end Callback;
+
+   function Read_File (File : Ada.Text_IO.File_Type) return String is
+      use Ada.Strings.Unbounded;
+      Contents : Unbounded_String := Null_Unbounded_String;
+   begin
+      while not IO.End_Of_File (File) loop
+         Append (Contents, IO.Get_Line (File));
+         Append (Contents, ASCII.LF);
+      end loop;
+      return To_String (Contents);
+   end Read_File;
 
 end CL_Test.Helpers;

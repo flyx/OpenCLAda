@@ -37,6 +37,8 @@ with CL.Queueing;
 with CL.Queueing.Memory_Objects;
 with CL.Events;
 
+with CL_Test.Helpers;
+
 procedure CL_Test.Hello_World is
    package IO renames Ada.Text_IO;
 
@@ -49,17 +51,6 @@ procedure CL_Test.Hello_World is
    package String_Objects is
      new CL.Queueing.Memory_Objects (Element      => Character,
                                      Element_List => Aliased_String);
-
-   function Read_File (File : IO.File_Type) return String is
-      use Ada.Strings.Unbounded;
-      Contents : Unbounded_String := Null_Unbounded_String;
-   begin
-      while not IO.End_Of_File (File) loop
-         Append (Contents, IO.Get_Line (File));
-         Append (Contents, ASCII.LF);
-      end loop;
-      return To_String (Contents);
-   end Read_File;
 
    Platform    : CL.Platforms.Platform;
    Device      : CL.Platforms.Device;
@@ -91,7 +82,7 @@ begin
    IO.Put_Line ("Compiling kernel source");
    IO.Open (Kernel_File, IO.In_File, "../tests/hello-kernel.cl");
    declare
-      Kernel_Source : aliased String := Read_File (Kernel_File);
+      Kernel_Source : aliased String := CL_Test.Helpers.Read_File (Kernel_File);
    begin
       IO.Close (Kernel_File);
       Program := CL.Programs.Create_Program_With_Source (Context,

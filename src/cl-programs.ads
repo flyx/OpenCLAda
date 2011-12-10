@@ -34,7 +34,7 @@ package CL.Programs is
    package SSE renames System.Storage_Elements;
 
    type Binary_List is array (Positive range <>) of access SSE.Storage_Array;
-   type String_List is array (Positive range <>) of access String;
+   type String_List is array (Positive range <>) of access constant String;
    type Bool_List   is array (Positive range <>) of Boolean;
 
    type Build_Status is (In_Progress, Error, None, Success);
