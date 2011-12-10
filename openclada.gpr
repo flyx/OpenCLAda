@@ -4,7 +4,16 @@ library project OpenCLAda is
       ("Windows", "Linux", "MacOSX");
    Os : Os_Type := external ("OS", "Linux");
    for Library_Name use "OpenCLAda";
-   for Source_Dirs use ("src");
+   
+   case Os is
+      when "Windows" =>
+         for Source_Dirs use ("src", "src/cl_gl", "src/cl_gl/win");
+      when "Linux" =>
+         for Source_Dirs use ("src", "src/cl_gl", "src/cl_gl/x11");
+      when "MacOSX" =>
+         for Source_Dirs use ("src", "src/cl_gl", "src/cl_gl/mac");
+   end case;
+         
    for Object_Dir use "obj";
    for Library_Dir use "lib";
 
