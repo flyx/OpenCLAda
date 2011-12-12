@@ -28,6 +28,8 @@ package CL.Contexts.GL is
 
    type GL_Enabled_Context is new Context with null record;
 
-   function Create_From_Current_GL_Context return GL_Enabled_Context;
+   function Create_From_Current_GL_Context (Platform : Platforms.Platform;
+                            Devices  : Platforms.Device_List)
+                            return Context;
 
 end CL.Contexts.GL;
