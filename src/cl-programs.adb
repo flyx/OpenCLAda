@@ -65,13 +65,13 @@ package body CL.Programs is
    function Create_Program_With_Source (Context : Contexts.Context;
                                         Sources : String_List)
                                         return Program is
-      C_Strings   : array (Sources'Range) of aliased API.IFC.Strings.chars_ptr;
+      C_Strings   : array (Sources'Range) of aliased IFC.Strings.chars_ptr;
       Size_List   : array (Sources'Range) of aliased Size;
       Ret_Program : System.Address;
       Error       : aliased Enumerations.Error_Code;
    begin
       for Index in Sources'Range loop
-         C_Strings (Index) := API.IFC.Strings.New_String (Sources (Index).all);
+         C_Strings (Index) := IFC.Strings.New_String (Sources (Index).all);
          Size_List (Index) := Sources (Index)'Length;
       end loop;
 
@@ -150,13 +150,13 @@ package body CL.Programs is
       if Callback /= null then
          Error := API.Build_Program (Source.Location, UInt (Raw_List'Length),
                                      Raw_List (1)'Address,
-                                     API.IFC.Strings.New_String (Options),
+                                     IFC.Strings.New_String (Options),
                                      Build_Callback_Dispatcher'Access,
                                      Callback);
       else
          Error := API.Build_Program (Source.Location, UInt (Raw_List'Length),
                                      Raw_List (1)'Address,
-                                     API.IFC.Strings.New_String (Options),
+                                     IFC.Strings.New_String (Options),
                                      null, null);
       end if;
       Helpers.Error_Handler (Error);

@@ -40,13 +40,13 @@ package body CL.Contexts is
    --  Helpers
    -----------------------------------------------------------------------------
 
-   procedure Callback_Dispatcher (Error_Info   : API.CStr.chars_ptr;
-                                  Private_Info : API.C_Chars.Pointer;
-                                  CB           : API.IFC.ptrdiff_t;
+   procedure Callback_Dispatcher (Error_Info   : CStr.chars_ptr;
+                                  Private_Info : C_Chars.Pointer;
+                                  CB           : IFC.ptrdiff_t;
                                   User_Data    : Error_Callback) is
    begin
-      User_Data (API.CStr.Value    (Error_Info),
-                 API.C_Chars.Value (Private_Info, CB));
+      User_Data (CStr.Value    (Error_Info),
+                 C_Chars.Value (Private_Info, CB));
    end Callback_Dispatcher;
 
    function UInt_Info is

@@ -28,6 +28,8 @@ with Ada.Finalization;
 with Interfaces.C;
 
 private with System;
+private with Interfaces.C.Strings;
+private with Interfaces.C.Pointers;
 
 package CL is
 
@@ -134,6 +136,9 @@ package CL is
    type Size is new Interfaces.C.size_t;
 
    type Size_List is array (Positive range <>) of aliased Size;
+
+   type Char_List is array (Positive range <>) of
+     aliased Interfaces.C.unsigned_char;
 
    --  only Runtime_Objects implement Adjust and Finalize, but as multiple
    --  inheritance isn't possible, we have to derive CL_Object from Controlled
@@ -327,5 +332,14 @@ private
 
    type Bitfield is new ULong;
    for Bitfield'Size use ULong'Size;
+
+   package IFC renames Interfaces.C;
+   package CStr renames Interfaces.C.Strings;
+
+   package C_Chars is
+     new Interfaces.C.Pointers (Index              => Positive,
+                                Element            => IFC.unsigned_char,
+                                Element_Array      => Char_List,
+                                Default_Terminator => 0);
 end CL;
 

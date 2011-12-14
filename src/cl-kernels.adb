@@ -51,7 +51,7 @@ package body CL.Kernels is
       Ret_Kernel : System.Address;
    begin
       Ret_Kernel := API.Create_Kernel (CL_Object (Source).Location,
-                                       API.IFC.Strings.New_String (Name),
+                                       IFC.Strings.New_String (Name),
                                        Error'Unchecked_Access);
       Helpers.Error_Handler (Error);
       return Kernel'(Ada.Finalization.Controlled with

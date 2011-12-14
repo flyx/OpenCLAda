@@ -39,14 +39,6 @@ with CL.Programs;
 with CL.Queueing;
 
 private package CL.API is
-   package IFC renames Interfaces.C;
-   package CStr renames Interfaces.C.Strings;
-
-   package C_Chars is
-     new Interfaces.C.Pointers (Index              => Positive,
-                                Element            => IFC.unsigned_char,
-                                Element_Array      => Contexts.Char_List,
-                                Default_Terminator => 0);
 
    type Image_Format_Ptr is access all CL.Memory.Images.Image_Format;
    pragma Convention (C, Image_Format_Ptr);

@@ -32,8 +32,6 @@ package CL.Contexts is
    type Context is new Runtime_Object with null record;
    -- pragma Preelaborable_Initialization (Context);
 
-   type Char_List is array (Positive range <>) of
-     aliased Interfaces.C.unsigned_char;
    type Error_Callback is access procedure (Error_Info   : String;
                                             Private_Info : Char_List);
 
@@ -67,9 +65,9 @@ private
      new Ada.Unchecked_Conversion (Source => System.Address,
                                    Target => Address_Equivalent);
 
-   procedure Callback_Dispatcher (Error_Info   : API.CStr.chars_ptr;
-                                  Private_Info : API.C_Chars.Pointer;
-                                  CB           : API.IFC.ptrdiff_t;
+   procedure Callback_Dispatcher (Error_Info   : CStr.chars_ptr;
+                                  Private_Info : C_Chars.Pointer;
+                                  CB           : IFC.ptrdiff_t;
                                   User_Data    : Error_Callback);
    pragma Convention (C, Callback_Dispatcher);
 
