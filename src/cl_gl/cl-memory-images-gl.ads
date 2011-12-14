@@ -38,7 +38,7 @@ package CL.Memory.Images.GL is
                                          Texture_Target : Interfaces.C.unsigned;
                                          Mipmap_Level   : Interfaces.C.int;
                                          Texture        : Interfaces.C.unsigned)
-                                         return GL_Shared_Image2D'Class;
+                                         return GL_Shared_Image2D;
 
    function Create_Image2D_From_Renderbuffer
      (Context      : Contexts.GL.GL_Enabled_Context;
