@@ -40,8 +40,8 @@ package body CL.Command_Queues is
       Queue : System.Address;
 
       function To_Bitfield is new
-        Ada.Unchecked_Conversion (Source => Platforms.CQ_Property_Vector,
-                                  Target => Bitfield);
+        Helpers.Record_To_Bitfield (Bit_Vector_Record => Platforms.CQ_Property_Vector,
+                                    Used_Bits => 2);
    begin
       Queue := API.Create_Command_Queue (CL_Object (Attach_To).Location,
                                          CL_Object (Device).Location,

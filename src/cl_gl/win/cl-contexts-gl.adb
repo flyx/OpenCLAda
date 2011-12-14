@@ -29,7 +29,9 @@ with Ada.Exceptions;
 -- Windows-specific implementation
 package body CL.Contexts.GL is
 
-   function Create_From_Current_GL_Context return GL_Enabled_Context is
+   function Create_From_Current_GL_Context (Platform : Platforms.Platform;
+                                            Devices  : Platforms.Device_List)
+                                            return GL_Enabled_Context is
    begin
       -- TODO: implement
       return GL_Enabled_Context'(Ada.Finalization.Controlled

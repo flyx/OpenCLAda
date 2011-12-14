@@ -246,4 +246,13 @@ package body CL.Helpers is
       return Ret_Object;
    end New_Reference;
 
+   function Record_To_Bitfield (Bit_Vector : Bit_Vector_Record) return Bitfield
+   is
+      function Convert is new Ada.Unchecked_Conversion (Source => Bit_Vector_Record,
+                                                        Target => Bitfield);
+      Result : Bitfield := Convert (Bit_Vector);
+   begin
+      return Result mod 2 ** Used_Bits;
+   end Record_To_Bitfield;
+
 end CL.Helpers;

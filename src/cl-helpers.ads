@@ -140,4 +140,13 @@ private package CL.Helpers is
    generic
       type Object_T is new Runtime_Object with private;
    function New_Reference (Location : System.Address) return Object_T;
+
+   -- converts a bit vector that is represented as record to a raw Bitfield
+   -- value. Apart from the conversion itself, this function fills all unused
+   -- bits with zeros, because the OpenCL interface requires bitfields to be
+   -- zero at all bits that are not defined to hold a value.
+   generic
+      type Bit_Vector_Record is private;
+      Used_Bits : Natural;
+   function Record_To_Bitfield (Bit_Vector : Bit_Vector_Record) return Bitfield;
 end CL.Helpers;
