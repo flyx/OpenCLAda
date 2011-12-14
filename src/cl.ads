@@ -184,6 +184,14 @@ package CL is
    Invalid_Platform                : exception;
    Invalid_Device_Type             : exception;
    Invalid_Value                   : exception;
+
+   Kernel_Arg_Info_Not_Available   : exception;
+   Device_Partition_Failed         : exception;
+   Link_Program_Failure            : exception;
+   Linker_Not_Available            : exception;
+   Compile_Program_Failure         : exception;
+   Exec_Status_Error_For_Events_In_Wait_List : exception;
+   Misaligned_Sub_Buffer_Offset    : exception;
    Map_Failure                     : exception;
    Build_Program_Failure           : exception;
    Image_Format_Not_Supported      : exception;
