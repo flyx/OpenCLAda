@@ -175,6 +175,10 @@ package body CL.Helpers is
 
    procedure Error_Handler (Error : Enumerations.Error_Code) is
       use Enumerations;
+
+      function To_Int is new Ada.Unchecked_Conversion (Source => Error_Code,
+                                                       Target => Int);
+
    begin
       case Error is
       when E_Invalid_Global_Work_Size     => raise Invalid_Global_Work_Size;
@@ -227,6 +231,8 @@ package body CL.Helpers is
       when E_Device_Not_Found             => raise Device_Not_Found;
       when E_Success                      => null;
       end case;
+   exception when Constraint_Error =>
+         raise Internal_Error with "Unknown error code:" & To_Int(Error)'Img;
    end Error_Handler;
 
    function Raw_List (List : Element_List_T) return Address_List is
