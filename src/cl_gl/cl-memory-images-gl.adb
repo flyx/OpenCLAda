@@ -35,7 +35,7 @@ package body CL.Memory.Images.GL is
                                          Texture_Target : Interfaces.C.unsigned;
                                          Mipmap_Level   : Interfaces.C.int;
                                          Texture        : Interfaces.C.unsigned)
-                                         return GL_Shared_Image2D'Class is
+                                         return GL_Shared_Image2D is
       Flags      : Memory_Flags;
       Raw_Object : System.Address;
       Error      : aliased Enumerations.Error_Code;
@@ -53,7 +53,7 @@ package body CL.Memory.Images.GL is
    function Create_Image2D_From_Renderbuffer
      (Context      : Contexts.GL.GL_Enabled_Context;
       Mode         : Access_Kind;
-      Renderbuffer : Interfaces.C.unsigned) return GL_Shared_Image2D'Class is
+      Renderbuffer : Interfaces.C.unsigned) return GL_Shared_Image2D is
       Flags      : Memory_Flags;
       Raw_Object : System.Address;
       Error      : aliased Enumerations.Error_Code;
@@ -72,7 +72,7 @@ package body CL.Memory.Images.GL is
                                          Texture_Target : Interfaces.C.unsigned;
                                          Mipmap_Level   : Interfaces.C.int;
                                          Texture        : Interfaces.C.unsigned)
-                                         return GL_Shared_Image3D'Class is
+                                         return GL_Shared_Image3D is
       Flags      : Memory_Flags;
       Raw_Object : System.Address;
       Error      : aliased Enumerations.Error_Code;
