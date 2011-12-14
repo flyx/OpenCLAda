@@ -43,7 +43,7 @@ package CL.Memory.Images.GL is
    function Create_Image2D_From_Renderbuffer
      (Context      : Contexts.GL.GL_Enabled_Context;
       Mode         : Access_Kind;
-      Renderbuffer : Interfaces.C.unsigned) return GL_Shared_Image2D'Class;
+      Renderbuffer : Interfaces.C.unsigned) return GL_Shared_Image2D;
 
 
    package Image3D_Base is new GL_Base (Parent => Image3D);
@@ -55,6 +55,6 @@ package CL.Memory.Images.GL is
                                          Texture_Target : Interfaces.C.unsigned;
                                          Mipmap_Level   : Interfaces.C.int;
                                          Texture        : Interfaces.C.unsigned)
-                                         return GL_Shared_Image3D'Class;
+                                         return GL_Shared_Image3D;
 
 end CL.Memory.Images.GL;
