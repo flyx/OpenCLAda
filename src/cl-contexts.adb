@@ -43,12 +43,6 @@ package body CL.Contexts is
    procedure Callback_Dispatcher (Error_Info   : API.CStr.chars_ptr;
                                   Private_Info : API.C_Chars.Pointer;
                                   CB           : API.IFC.ptrdiff_t;
-                                  User_Data    : Error_Callback);
-   pragma Convention (C, Callback_Dispatcher);
-
-   procedure Callback_Dispatcher (Error_Info   : API.CStr.chars_ptr;
-                                  Private_Info : API.C_Chars.Pointer;
-                                  CB           : API.IFC.ptrdiff_t;
                                   User_Data    : Error_Callback) is
    begin
       User_Data (API.CStr.Value    (Error_Info),

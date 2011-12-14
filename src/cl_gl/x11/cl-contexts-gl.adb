@@ -52,7 +52,8 @@ package body CL.Contexts.GL is
 
    -- massive copypasta
    function Create_From_Current_GL_Context (Platform : Platforms.Platform;
-                            Devices  : Platforms.Device_List)
+                                            Devices  : Platforms.Device_List;
+                                            Callback : Error_Callback := null)
                             return GL_Enabled_Context is
       Error       : aliased Enumerations.Error_Code;
       Ret_Context : System.Address;
@@ -75,7 +76,8 @@ package body CL.Contexts.GL is
       Ret_Context := API.Create_Context (Props (1)'Unchecked_Access,
                                          Devices'Length,
                                          Raw_List (1)'Address,
-                                         null, System.Null_Address,
+                                         Callback_Dispatcher'Access,
+                                         Address (Callback),
                                          Error'Unchecked_Access);
       Helpers.Error_Handler (Error);
 

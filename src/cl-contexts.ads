@@ -66,4 +66,11 @@ private
    function Image is
      new Ada.Unchecked_Conversion (Source => System.Address,
                                    Target => Address_Equivalent);
+
+   procedure Callback_Dispatcher (Error_Info   : API.CStr.chars_ptr;
+                                  Private_Info : API.C_Chars.Pointer;
+                                  CB           : API.IFC.ptrdiff_t;
+                                  User_Data    : Error_Callback);
+   pragma Convention (C, Callback_Dispatcher);
+
 end CL.Contexts;
