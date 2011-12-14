@@ -216,6 +216,14 @@ package body CL.Helpers is
       when E_Invalid_Platform             => raise Invalid_Platform;
       when E_Invalid_Device_Type          => raise Invalid_Device_Type;
       when E_Invalid_Value                => raise Invalid_Value;
+
+      when E_Kernel_Arg_Info_Not_Available   => raise Kernel_Arg_Info_Not_Available;
+      when E_Device_Partition_Failed         => raise Device_Partition_Failed;
+      when E_Link_Program_Failure            => raise Link_Program_Failure;
+      when E_Linker_Not_Available            => raise Linker_Not_Available;
+      when E_Compile_Program_Failure         => raise Compile_Program_Failure;
+      when E_Exec_Status_Error_For_Events_In_Wait_List => raise Exec_Status_Error_For_Events_In_Wait_List;
+      when E_Misaligned_Sub_Buffer_Offset    => raise Misaligned_Sub_Buffer_Offset;
       when E_Map_Failure                  => raise Map_Failure;
       when E_Build_Program_Failure        => raise Build_Program_Failure;
       when E_Image_Format_Not_Supported   => raise Image_Format_Not_Supported;
