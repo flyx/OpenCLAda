@@ -53,7 +53,7 @@ package body CL.Contexts.GL is
    -- massive copypasta
    function Create_From_Current_GL_Context (Platform : Platforms.Platform;
                             Devices  : Platforms.Device_List)
-                            return Context is
+                            return GL_Enabled_Context is
       Error       : aliased Enumerations.Error_Code;
       Ret_Context : System.Address;
       Props       : Address_List := (Value (CL_GLX_CONTEXT_KHR),
@@ -79,7 +79,7 @@ package body CL.Contexts.GL is
                                          Error'Unchecked_Access);
       Helpers.Error_Handler (Error);
 
-      return Context'(Ada.Finalization.Controlled with Location => Ret_Context);
+      return GL_Enabled_Context'(Ada.Finalization.Controlled with Location => Ret_Context);
    end Create_From_Current_GL_Context;
 
 end CL.Contexts.GL;

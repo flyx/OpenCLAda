@@ -45,7 +45,7 @@ package body CL.Command_Queues is
    begin
       Queue := API.Create_Command_Queue (CL_Object (Attach_To).Location,
                                          CL_Object (Device).Location,
-                                         To_Bitfield (Properties),
+                                         To_Bitfield (Properties) mod 4,
                                          Error'Unchecked_Access);
       Helpers.Error_Handler (Error);
       return Command_Queue'(Ada.Finalization.Controlled with

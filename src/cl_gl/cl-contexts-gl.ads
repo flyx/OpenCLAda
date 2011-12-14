@@ -30,6 +30,6 @@ package CL.Contexts.GL is
 
    function Create_From_Current_GL_Context (Platform : Platforms.Platform;
                             Devices  : Platforms.Device_List)
-                            return Context;
+                            return GL_Enabled_Context;
 
 end CL.Contexts.GL;
