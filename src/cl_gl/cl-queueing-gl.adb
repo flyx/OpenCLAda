@@ -43,18 +43,34 @@ package body CL.Queueing.GL is
                                 Wait_For : access Events.Event_List)
                                 return Events.Event is
 
-      Raw_Events  : Address_List := Raw_Event_List (Wait_For.all);
       Raw_Objects : Address_List := Raw_Object_List (Objects);
 
       Error       : Enumerations.Error_Code;
       Ret_Event   : aliased System.Address;
    begin
-      Error := API.GL.Enqueue_Acquire_GL_Objects (Command_Queue => CL_Object (Queue).Location,
-                                                  Num_Objects   => Raw_Objects'Length,
-                                                  Object_List   => Raw_Objects (1)'Unchecked_Access,
-                                                  Num_Events    => Raw_Events'Length,
-                                                  Event_List    => Raw_Events (1)'Unchecked_Access,
-                                                  Event         => Ret_Event'Unchecked_Access);
+      if Wait_For /= null and then Wait_For.all'Length > 0 then
+         declare
+            Raw_Events : Address_List := Raw_Event_List (Wait_For.all);
+         begin
+            Error := API.GL.Enqueue_Acquire_GL_Objects
+              (Command_Queue => CL_Object (Queue).Location,
+               Num_Objects   => Raw_Objects'Length,
+               Object_List   => Raw_Objects (1)'Unchecked_Access,
+               Num_Events    => Raw_Events'Length,
+               Event_List    => Raw_Events (1)'Unchecked_Access,
+               Event         => Ret_Event'Unchecked_Access);
+         end;
+      else
+         Error := API.GL.Enqueue_Acquire_GL_Objects
+           (Command_Queue => CL_Object (Queue).Location,
+            Num_Objects   => Raw_Objects'Length,
+            Object_List   => Raw_Objects (1)'Unchecked_Access,
+            Num_Events    => 0,
+            Event_List    => null,
+            Event         => Ret_Event'Unchecked_Access);
+      end if;
+
+
       Helpers.Error_Handler (Error);
 
       return Events.Event'(Ada.Finalization.Controlled with Location => Ret_Event);
@@ -71,12 +87,27 @@ package body CL.Queueing.GL is
       Error       : Enumerations.Error_Code;
       Ret_Event   : aliased System.Address;
    begin
-      Error := API.GL.Enqueue_Release_GL_Objects (Command_Queue => CL_Object (Queue).Location,
-                                                  Num_Objects   => Raw_Objects'Length,
-                                                  Object_List   => Raw_Objects (1)'Unchecked_Access,
-                                                  Num_Events    => Raw_Events'Length,
-                                                  Event_List    => Raw_Events (1)'Unchecked_Access,
-                                                  Event         => Ret_Event'Unchecked_Access);
+      if Wait_For /= null and then Wait_For.all'Length > 0 then
+         declare
+            Raw_Events : Address_List := Raw_Event_List (Wait_For.all);
+         begin
+            Error := API.GL.Enqueue_Release_GL_Objects
+              (Command_Queue => CL_Object (Queue).Location,
+               Num_Objects   => Raw_Objects'Length,
+               Object_List   => Raw_Objects (1)'Unchecked_Access,
+               Num_Events    => Raw_Events'Length,
+               Event_List    => Raw_Events (1)'Unchecked_Access,
+               Event         => Ret_Event'Unchecked_Access);
+         end;
+      else
+         Error := API.GL.Enqueue_Release_GL_Objects
+           (Command_Queue => CL_Object (Queue).Location,
+            Num_Objects   => Raw_Objects'Length,
+            Object_List   => Raw_Objects (1)'Unchecked_Access,
+            Num_Events    => 0,
+            Event_List    => null,
+            Event         => Ret_Event'Unchecked_Access);
+      end if;
       Helpers.Error_Handler (Error);
 
       return Events.Event'(Ada.Finalization.Controlled with Location => Ret_Event);
