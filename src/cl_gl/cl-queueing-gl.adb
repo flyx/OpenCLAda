@@ -81,7 +81,6 @@ package body CL.Queueing.GL is
                                 Wait_For : access Events.Event_List)
                                 return Events.Event is
 
-      Raw_Events  : Address_List := Raw_Event_List (Wait_For.all);
       Raw_Objects : Address_List := Raw_Object_List (Objects);
 
       Error       : Enumerations.Error_Code;
