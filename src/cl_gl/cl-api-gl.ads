@@ -85,7 +85,8 @@ package CL.API.GL is
                                         Num_Objects   : UInt;
                                         Object_List   : Address_Ptr;
                                         Num_Events    : UInt;
-                                        Event_List    : Address_Ptr)
+                                        Event_List    : Address_Ptr;
+                                        Event         : Address_Ptr)
                                         return Enumerations.Error_Code;
    pragma Import (Convention => StdCall, Entity => Enqueue_Acquire_GL_Objects,
                   External_Name => "clEnqueueAcquireGLObjects");
@@ -94,7 +95,8 @@ package CL.API.GL is
                                         Num_Objects   : UInt;
                                         Object_List   : Address_Ptr;
                                         Num_Events    : UInt;
-                                        Event_List    : Address_Ptr)
+                                        Event_List    : Address_Ptr;
+                                        Event         : Address_Ptr)
                                         return Enumerations.Error_Code;
    pragma Import (Convention => StdCall, Entity => Enqueue_Release_GL_Objects,
                   External_Name => "clEnqueueReleaseGLObjects");

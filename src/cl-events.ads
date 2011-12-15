@@ -29,7 +29,7 @@ with CL.Command_Queues;
 package CL.Events is
    type Event is new Runtime_Object with null record;
 
-   type Event_List is array (Positive range <>) of Event;
+   type Event_List is array (Positive range <>) of access constant Event'Class;
 
    type Command_Type is (NDRange_Kernel, C_Task, Native_Kernel, Read_Buffer,
                          Write_Buffer, Copy_Buffer, Read_Image, Write_Image,

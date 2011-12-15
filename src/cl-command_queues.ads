@@ -37,10 +37,12 @@ package CL.Command_Queues is
          Write : Boolean;
       end record;
 
-   function Create_Command_Queue (Attach_To  : Contexts.Context;
-                                  Device     : Platforms.Device;
-                                  Properties : Platforms.CQ_Property_Vector)
-                                  return Command_Queue;
+   package Constructors is
+      function Create (Attach_To  : Contexts.Context'Class;
+                       Device     : Platforms.Device'Class;
+                       Properties : Platforms.CQ_Property_Vector)
+                       return Command_Queue;
+   end Constructors;
 
    overriding procedure Adjust (Object : in out Command_Queue);
 

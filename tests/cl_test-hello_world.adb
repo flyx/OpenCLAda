@@ -45,8 +45,8 @@ procedure CL_Test.Hello_World is
    type Aliased_String is array (Positive range <>) of aliased Character;
 
    function String_Buffer is
-     new CL.Memory.Buffers.Create_Buffer_From_Source (Element => Character,
-                                                      Element_List => Aliased_String);
+     new CL.Memory.Buffers.Constructors.Create_From_Source (Element => Character,
+                                                            Element_List => Aliased_String);
 
    package String_Objects is
      new CL.Queueing.Memory_Objects (Element      => Character,
@@ -75,7 +75,7 @@ begin
    Device      := Platform.Devices (CL.Platforms.Device_Kind_All) (Platform.Devices (CL.Platforms.Device_Kind_All)'First);
    Device_List := (1 => Device);
    IO.Put_Line ("Creating context");
-   Context     := CL.Contexts.Create_Context (Platform, (1 => Device));
+   Context     := CL.Contexts.Constructors.Create_For_Devices (Platform, (1 => Device));
    IO.Put_Line ("Creating buffer");
    Buffer      := String_Buffer (Context, CL.Memory.Write_Only, Output'Access);
 
@@ -85,16 +85,16 @@ begin
       Kernel_Source : aliased String := CL_Test.Helpers.Read_File (Kernel_File);
    begin
       IO.Close (Kernel_File);
-      Program := CL.Programs.Create_Program_With_Source (Context,
-                                                         (1 => Kernel_Source'Unchecked_Access));
+      Program := CL.Programs.Constructors.Create_From_Source
+        (Context, (1 => Kernel_Source'Unchecked_Access));
    end;
    Program.Build (Device_List, "", null);
    IO.Put_Line ("Creating kernel");
-   Kernel := CL.Kernels.Create_Kernel (Program, "hello");
+   Kernel := CL.Kernels.Constructors.Create (Program, "hello");
    IO.Put_Line ("Setting kernel argument");
    CL.Kernels.Set_Kernel_Argument_Object (Kernel, 0, Buffer);
    IO.Put_Line ("Creating queue");
-   Queue  := CL.Command_Queues.Create_Command_Queue
+   Queue  := CL.Command_Queues.Constructors.Create
      (Context, Device, CL.Platforms.CQ_Property_Vector'(Out_Of_Order_Exec_Mode_Enable => False,
                                                         Profiling_Enable => False));
    IO.Put_Line ("Queueing kernel");

@@ -138,6 +138,11 @@ private package CL.Helpers is
    function Raw_List (List : Element_List_T) return Address_List;
 
    generic
+      type Element_T is abstract new CL_Object with private;
+      type Element_List_T is array (Positive range <>) of access Element_T'Class;
+   function Raw_List_From_Polymorphic (List : Element_List_T) return Address_List;
+
+   generic
       type Object_T is new Runtime_Object with private;
    function New_Reference (Location : System.Address) return Object_T;
 

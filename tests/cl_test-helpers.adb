@@ -32,7 +32,7 @@ package body CL_Test.Helpers is
    package IO renames Ada.Text_IO;
 
    procedure Callback (Error_Info   : String;
-                       Private_Info : CL.Contexts.Char_List) is
+                       Private_Info : CL.Char_List) is
       use Ada.Strings.Fixed;
    begin
       IO.Put_Line (40 * '-');

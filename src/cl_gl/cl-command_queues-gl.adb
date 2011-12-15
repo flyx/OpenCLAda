@@ -24,23 +24,25 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with Interfaces.C;
+with CL.Contexts.GL;
 
-package CL.Memory.GL is
+package body CL.Command_Queues.GL is
 
-   type Object_Kind is (Buffer, Texture2D, Texture3D, Renderbuffer);
+   package body Constructors is
 
-   -- Sadly, we cannot ensure that all elements in the list are GL enabled
-   -- memory objects, because CL.Memory.GL.Objects is orthogonal and thus there
-   -- is no common parent class for all GL enabled memory objects.
-   type Object_List is array (Positive range <>) of access constant Memory_Object'Class;
+      function Create (Attach_To  : Contexts.GL.GL_Enabled_Context'Class;
+                       Device     : Platforms.Device'Class;
+                       Properties : Platforms.CQ_Property_Vector)
+                       return GL_Enabled_Command_Queue is
+         Queue : Command_Queue
+           := Command_Queues.Constructors.Create (Attach_To, Device, Properties);
+      begin
+         Queue.Adjust;
 
-private
+         return GL_Enabled_Command_Queue'(Ada.Finalization.Controlled
+                                            with Location => Queue.Location);
+      end Create;
 
-   for Object_Kind use (Buffer       => 16#2000#,
-                        Texture2D    => 16#2001#,
-                        Texture3D    => 16#2002#,
-                        Renderbuffer => 16#2003#);
-   for Object_Kind'Size use UInt'Size;
+   end Constructors;
 
-end CL.Memory.GL;
+end CL.Command_Queues.GL;

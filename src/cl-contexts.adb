@@ -58,80 +58,83 @@ package body CL.Contexts is
    --  Implementations
    -----------------------------------------------------------------------------
 
-   function Create_Context (Platform : Platforms.Platform;
-                            Devices  : Platforms.Device_List;
-                            Callback : Error_Callback := null)
-                            return Context is
-      Error       : aliased Enumerations.Error_Code;
-      Ret_Context : System.Address;
-      Props       : Address_List := (Value (Platform_Identifier),
-                                     CL_Object (Platform).Location,
-                                     System.Null_Address);
-      function Raw_Device_List is
-        new Helpers.Raw_List (Element_T => Platforms.Device,
-                              Element_List_T => Platforms.Device_List);
-      Raw_List : Address_List := Raw_Device_List (Devices);
+   package body Constructors is
 
-      function Address is new
-        Ada.Unchecked_Conversion (Source => Error_Callback,
-                                  Target => System.Address);
-   begin
-      if Callback /= null then
-         Ret_Context := API.Create_Context (Props (1)'Unchecked_Access,
-                                            Devices'Length,
-                                            Raw_List (1)'Address,
+      function Create_For_Devices (Platform : Platforms.Platform'Class;
+                                   Devices  : Platforms.Device_List;
+                                   Callback : Error_Callback := null)
+                                   return Context is
+         Error       : aliased Enumerations.Error_Code;
+         Ret_Context : System.Address;
+         Props       : Address_List := (Value (Platform_Identifier),
+                                        CL_Object (Platform).Location,
+                                        System.Null_Address);
+         function Raw_Device_List is
+           new Helpers.Raw_List (Element_T => Platforms.Device,
+                                 Element_List_T => Platforms.Device_List);
+         Raw_List : Address_List := Raw_Device_List (Devices);
+
+         function Address is new
+           Ada.Unchecked_Conversion (Source => Error_Callback,
+                                     Target => System.Address);
+      begin
+         if Callback /= null then
+            Ret_Context := API.Create_Context (Props (1)'Unchecked_Access,
+                                               Devices'Length,
+                                               Raw_List (1)'Address,
+                                               Callback_Dispatcher'Access,
+                                               Address (Callback),
+                                               Error'Unchecked_Access);
+         else
+            Ret_Context := API.Create_Context (Props (1)'Unchecked_Access,
+                                               Devices'Length,
+                                               Raw_List (1)'Address,
+                                               null, System.Null_Address,
+                                               Error'Unchecked_Access);
+         end if;
+
+         Helpers.Error_Handler (Error);
+
+         return Context'(Ada.Finalization.Controlled with Location => Ret_Context);
+      end Create_For_Devices;
+
+      function Create_From_Type (Platform : Platforms.Platform'Class;
+                                 Dev_Type : Platforms.Device_Kind;
+                                 Callback : Error_Callback := null)
+                                 return Context is
+         Error       : aliased Enumerations.Error_Code;
+         Ret_Context : System.Address;
+         Props       : Address_List := (Value (Platform_Identifier),
+                                        CL_Object (Platform).Location,
+                                        System.Null_Address);
+         function To_Address is new
+           Ada.Unchecked_Conversion (Source => Error_Callback,
+                                     Target => System.Address);
+
+         function To_Bitfield is new
+           Ada.Unchecked_Conversion (Source => Platforms.Device_Kind,
+                                     Target => Bitfield);
+      begin
+         if Callback /= null then
+            Ret_Context :=
+              API.Create_Context_From_Type (Props (1)'Unchecked_Access,
+                                            To_Bitfield (Dev_Type),
                                             Callback_Dispatcher'Access,
-                                            Address (Callback),
+                                            To_Address (Callback),
                                             Error'Unchecked_Access);
-      else
-         Ret_Context := API.Create_Context (Props (1)'Unchecked_Access,
-                                            Devices'Length,
-                                            Raw_List (1)'Address,
-                                            null, System.Null_Address,
+         else
+            Ret_Context :=
+              API.Create_Context_From_Type (Props (1)'Unchecked_Access,
+                                            To_Bitfield (Dev_Type), null,
+                                            System.Null_Address,
                                             Error'Unchecked_Access);
-      end if;
+         end if;
 
-      Helpers.Error_Handler (Error);
+         Helpers.Error_Handler (Error);
 
-      return Context'(Ada.Finalization.Controlled with Location => Ret_Context);
-   end Create_Context;
-
-   function Create_Context_From_Type (Platform : Platforms.Platform;
-                                      Dev_Type : Platforms.Device_Kind;
-                                      Callback : Error_Callback := null)
-                                      return Context is
-      Error       : aliased Enumerations.Error_Code;
-      Ret_Context : System.Address;
-      Props       : Address_List := (Value (Platform_Identifier),
-                                     CL_Object (Platform).Location,
-                                     System.Null_Address);
-      function To_Address is new
-        Ada.Unchecked_Conversion (Source => Error_Callback,
-                                  Target => System.Address);
-
-      function To_Bitfield is new
-        Ada.Unchecked_Conversion (Source => Platforms.Device_Kind,
-                                  Target => Bitfield);
-   begin
-      if Callback /= null then
-         Ret_Context :=
-           API.Create_Context_From_Type (Props (1)'Unchecked_Access,
-                                         To_Bitfield (Dev_Type),
-                                         Callback_Dispatcher'Access,
-                                         To_Address (Callback),
-                                         Error'Unchecked_Access);
-      else
-         Ret_Context :=
-           API.Create_Context_From_Type (Props (1)'Unchecked_Access,
-                                         To_Bitfield (Dev_Type), null,
-                                         System.Null_Address,
-                                         Error'Unchecked_Access);
-      end if;
-
-      Helpers.Error_Handler (Error);
-
-      return Context'(Ada.Finalization.Controlled with Location => Ret_Context);
-   end Create_Context_From_Type;
+         return Context'(Ada.Finalization.Controlled with Location => Ret_Context);
+      end Create_From_Type;
+   end Constructors;
 
    overriding procedure Adjust (Object : in out Context) is
       use type System.Address;

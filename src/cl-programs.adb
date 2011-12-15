@@ -62,64 +62,67 @@ package body CL.Programs is
    --  Implementations
    -----------------------------------------------------------------------------
 
-   function Create_Program_With_Source (Context : Contexts.Context;
-                                        Sources : String_List)
-                                        return Program is
-      C_Strings   : array (Sources'Range) of aliased IFC.Strings.chars_ptr;
-      Size_List   : array (Sources'Range) of aliased Size;
-      Ret_Program : System.Address;
-      Error       : aliased Enumerations.Error_Code;
-   begin
-      for Index in Sources'Range loop
-         C_Strings (Index) := IFC.Strings.New_String (Sources (Index).all);
-         Size_List (Index) := Sources (Index)'Length;
-      end loop;
+   package body Constructors is
 
-      Ret_Program
-        := API.Create_Program_With_Source (CL_Object (Context).Location,
-                                           UInt (Size_List'Length),
-                                           C_Strings (C_Strings'First)'Access,
-                                           Size_List (Size_List'First)'Access,
-                                           Error'Unchecked_Access);
-      Helpers.Error_Handler (Error);
-      return Program'(Ada.Finalization.Controlled with Location => Ret_Program);
-   end Create_Program_With_Source;
-
-   function Create_Program_With_Binary (Context  : Contexts.Context;
-                                        Devices  : Platforms.Device_List;
-                                        Binaries : Binary_List;
-                                        Success  : access Bool_List)
-                                        return Program is
-      Binary_Pointers : array (Binaries'Range) of aliased System.Address;
-      Size_List       : array (Binaries'Range) of aliased Size;
-      Status          : array (Binaries'Range) of aliased Int;
-      Ret_Program     : System.Address;
-      Error           : aliased Enumerations.Error_Code;
-   begin
-      for Index in Binaries'Range loop
-         Binary_Pointers (Index) := Binaries (Index) (Binaries (Index)'First)'Address;
-         Size_List       (Index) := Binaries (Index)'Length;
-      end loop;
-
-      Ret_Program
-        := API.Create_Program_With_Binary (CL_Object (Context).Location,
-                                           UInt (Devices'Length),
-                                           Devices (Devices'First)'Address,
-                                           Size_List (Size_List'First)'Unchecked_Access,
-                                           Binary_Pointers (Binary_Pointers'First)'Access,
-                                           Status (Status'First)'Access,
-                                           Error'Unchecked_Access);
-
-      if Success /= null then
-         for Index in Success.all'Range loop
-            Success.all (Index) := (Status (Index) = 1);
+      function Create_From_Source (Context : Contexts.Context'Class;
+                                   Sources : String_List)
+                                   return Program is
+         C_Strings   : array (Sources'Range) of aliased IFC.Strings.chars_ptr;
+         Size_List   : array (Sources'Range) of aliased Size;
+         Ret_Program : System.Address;
+         Error       : aliased Enumerations.Error_Code;
+      begin
+         for Index in Sources'Range loop
+            C_Strings (Index) := IFC.Strings.New_String (Sources (Index).all);
+            Size_List (Index) := Sources (Index)'Length;
          end loop;
-      else
-         Helpers.Error_Handler (Error);
-      end if;
-      return Program'(Ada.Finalization.Controlled with Location => Ret_Program);
-   end Create_Program_With_Binary;
 
+         Ret_Program
+           := API.Create_Program_With_Source (CL_Object (Context).Location,
+                                              UInt (Size_List'Length),
+                                              C_Strings (C_Strings'First)'Access,
+                                              Size_List (Size_List'First)'Access,
+                                              Error'Unchecked_Access);
+         Helpers.Error_Handler (Error);
+         return Program'(Ada.Finalization.Controlled with Location => Ret_Program);
+      end Create_From_Source;
+
+      function Create_From_Binary (Context  : Contexts.Context'Class;
+                                   Devices  : Platforms.Device_List;
+                                   Binaries : Binary_List;
+                                   Success  : access Bool_List)
+                                   return Program is
+         Binary_Pointers : array (Binaries'Range) of aliased System.Address;
+         Size_List       : array (Binaries'Range) of aliased Size;
+         Status          : array (Binaries'Range) of aliased Int;
+         Ret_Program     : System.Address;
+         Error           : aliased Enumerations.Error_Code;
+      begin
+         for Index in Binaries'Range loop
+            Binary_Pointers (Index) := Binaries (Index) (Binaries (Index)'First)'Address;
+            Size_List       (Index) := Binaries (Index)'Length;
+         end loop;
+
+         Ret_Program
+           := API.Create_Program_With_Binary (CL_Object (Context).Location,
+                                              UInt (Devices'Length),
+                                              Devices (Devices'First)'Address,
+                                              Size_List (Size_List'First)'Unchecked_Access,
+                                              Binary_Pointers (Binary_Pointers'First)'Access,
+                                              Status (Status'First)'Access,
+                                              Error'Unchecked_Access);
+
+         if Success /= null then
+            for Index in Success.all'Range loop
+               Success.all (Index) := (Status (Index) = 1);
+            end loop;
+         else
+            Helpers.Error_Handler (Error);
+         end if;
+         return Program'(Ada.Finalization.Controlled with Location => Ret_Program);
+      end Create_From_Binary;
+
+   end Constructors;
 
    overriding procedure Adjust (Object : in out Program) is
       use type System.Address;

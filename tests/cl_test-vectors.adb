@@ -23,8 +23,8 @@ procedure CL_Test.Vectors is
    Destination_List : aliased Int2_List := (Source1_List'Range => (0, 0));
 
    function Int2_Buffer is
-     new CL.Memory.Buffers.Create_Buffer_From_Source (Element      => CL.Int2,
-                                                      Element_List => Int2_List);
+     new CL.Memory.Buffers.Constructors.Create_From_Source
+       (Element      => CL.Int2, Element_List => Int2_List);
 
    package Int2_Objects is
      new CL.Queueing.Memory_Objects (Element      => CL.Int2,
@@ -52,23 +52,23 @@ begin
    Device      := Platform.Devices (CL.Platforms.Device_Kind'(GPU => True,
                                                               others => False)) (1);
    Device_List := (1 => Device);
-   Context     := CL.Contexts.Create_Context (Platform, Device_List);
+   Context     := CL.Contexts.Constructors.Create_For_Devices (Platform, Device_List);
    Source1     := Int2_Buffer (Context, CL.Memory.Read_Only, Source1_List'Access);
    Source2     := Int2_Buffer (Context, CL.Memory.Read_Only, Source2_List'Access);
-   Destination := CL.Memory.Buffers.Create_Buffer (Context, CL.Memory.Write_Only, CL.Int2'Size / System.Storage_Unit * Source1_List'Length);
-   Queue       := CL.Command_Queues.Create_Command_Queue (Context, Device,
-                                                          CL.Platforms.CQ_Property_Vector'(others => False));
+   Destination := CL.Memory.Buffers.Constructors.Create (Context, CL.Memory.Write_Only, CL.Int2'Size / System.Storage_Unit * Source1_List'Length);
+   Queue       := CL.Command_Queues.Constructors.Create (Context, Device,
+                                                         CL.Platforms.CQ_Property_Vector'(others => False));
 
    IO.Open (Kernel_File, IO.In_File, "../tests/vectors.cl");
     declare
       Kernel_Source : aliased String := CL_Test.Helpers.Read_File (Kernel_File);
    begin
       IO.Close (Kernel_File);
-      Program := CL.Programs.Create_Program_With_Source (Context,
-                                                         (1 => Kernel_Source'Unchecked_Access));
+      Program := CL.Programs.Constructors.Create_From_Source
+        (Context, (1 => Kernel_Source'Unchecked_Access));
    end;
    Program.Build (Device_List, "", null);
-   Kernel := CL.Kernels.Create_Kernel (Program, "add");
+   Kernel := CL.Kernels.Constructors.Create (Program, "add");
    Kernel.Set_Kernel_Argument_Object (0, Source1);
    Kernel.Set_Kernel_Argument_Object (1, Source2);
    Kernel.Set_Kernel_Argument_Object (2, Destination);

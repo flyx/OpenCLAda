@@ -33,23 +33,25 @@ package body CL.Samplers is
    --  Implementations
    -----------------------------------------------------------------------------
 
-   function Create_Sampler (Context           : Contexts.Context;
-                            Normalized_Coords : Boolean;
-                            Addressing        : Addressing_Mode;
-                            Filter            : Filter_Mode)
-                            return Sampler is
-      Ret_Sampler : System.Address;
-      Error       : aliased Enumerations.Error_Code;
-   begin
-      Ret_Sampler := API.Create_Sampler (Context           => CL_Object (Context).Location,
-                                         Normalized_Coords => CL.Bool (Normalized_Coords),
-                                         Addressing        => Addressing,
-                                         Filter            => Filter,
-                                         Error => Error'Unchecked_Access);
-      Helpers.Error_Handler (Error);
-      return Sampler'(Ada.Finalization.Controlled with
-                      Location => Ret_Sampler);
-   end Create_Sampler;
+   package body Constructors is
+      function Create (Context           : Contexts.Context'Class;
+                       Normalized_Coords : Boolean;
+                       Addressing        : Addressing_Mode;
+                       Filter            : Filter_Mode)
+                       return Sampler is
+         Ret_Sampler : System.Address;
+         Error       : aliased Enumerations.Error_Code;
+      begin
+         Ret_Sampler := API.Create_Sampler (Context           => CL_Object (Context).Location,
+                                            Normalized_Coords => CL.Bool (Normalized_Coords),
+                                            Addressing        => Addressing,
+                                            Filter            => Filter,
+                                            Error => Error'Unchecked_Access);
+         Helpers.Error_Handler (Error);
+         return Sampler'(Ada.Finalization.Controlled with
+                         Location => Ret_Sampler);
+      end Create;
+   end Constructors;
 
    overriding procedure Adjust (Object : in out Sampler) is
       use type System.Address;

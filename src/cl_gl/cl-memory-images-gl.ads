@@ -30,31 +30,31 @@ with CL.Contexts.GL;
 package CL.Memory.Images.GL is
 
    package Image2D_Base is new GL_Base (Parent => Image2D);
-
-   subtype GL_Shared_Image2D is Image2D_Base.GL_Shared_Image;
-
-   function Create_Image2D_From_Texture (Context        : Contexts.GL.GL_Enabled_Context;
-                                         Mode           : Access_Kind;
-                                         Texture_Target : Interfaces.C.unsigned;
-                                         Mipmap_Level   : Interfaces.C.int;
-                                         Texture        : Interfaces.C.unsigned)
-                                         return GL_Shared_Image2D;
-
-   function Create_Image2D_From_Renderbuffer
-     (Context      : Contexts.GL.GL_Enabled_Context;
-      Mode         : Access_Kind;
-      Renderbuffer : Interfaces.C.unsigned) return GL_Shared_Image2D;
-
-
    package Image3D_Base is new GL_Base (Parent => Image3D);
 
+   subtype GL_Shared_Image2D is Image2D_Base.GL_Shared_Image;
    subtype GL_Shared_Image3D is Image3D_Base.GL_Shared_Image;
 
-   function Create_Image3D_From_Texture (Context        : Contexts.GL.GL_Enabled_Context;
-                                         Mode           : Access_Kind;
-                                         Texture_Target : Interfaces.C.unsigned;
-                                         Mipmap_Level   : Interfaces.C.int;
-                                         Texture        : Interfaces.C.unsigned)
-                                         return GL_Shared_Image3D;
+   package Constructors is
+
+      function Create_Image2D_From_Texture (Context        : Contexts.GL.GL_Enabled_Context'Class;
+                                            Mode           : Access_Kind;
+                                            Texture_Target : Interfaces.C.unsigned;
+                                            Mipmap_Level   : Interfaces.C.int;
+                                            Texture        : Interfaces.C.unsigned)
+                                            return GL_Shared_Image2D;
+
+      function Create_Image2D_From_Renderbuffer
+        (Context      : Contexts.GL.GL_Enabled_Context'Class;
+         Mode         : Access_Kind;
+         Renderbuffer : Interfaces.C.unsigned) return GL_Shared_Image2D;
+
+      function Create_Image3D_From_Texture (Context        : Contexts.GL.GL_Enabled_Context'Class;
+                                            Mode           : Access_Kind;
+                                            Texture_Target : Interfaces.C.unsigned;
+                                            Mipmap_Level   : Interfaces.C.int;
+                                            Texture        : Interfaces.C.unsigned)
+                                            return GL_Shared_Image3D;
+   end Constructors;
 
 end CL.Memory.Images.GL;

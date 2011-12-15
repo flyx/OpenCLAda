@@ -45,8 +45,8 @@ procedure CL_Test.Memory is
    pragma Assert (Dvs'Length > 0);
    Dv      : CL.Platforms.Device := Dvs (1);
    Context : CL.Contexts.Context
-     := CL.Contexts.Create_Context (Pf, Dvs,
-                                    CL_Test.Helpers.Callback'Access);
+     := CL.Contexts.Constructors.Create_For_Devices (Pf, Dvs,
+                                                     CL_Test.Helpers.Callback'Access);
 
    use type CL.Size;
    use type CL.Memory.Images.Image_Format;
@@ -62,7 +62,7 @@ begin
       ATI.Put_Line ("Testing Buffer");
       declare
          Buffer : CL.Memory.Buffers.Buffer
-           := CL.Memory.Buffers.Create_Buffer (Context, Index, 1024);
+           := CL.Memory.Buffers.Constructors.Create (Context, Index, 1024);
       begin
          ATI.Put_Line ("Created Buffer.");
          ATI.Put_Line ("Context Refcount:" & Context.Reference_Count'Img);
@@ -85,8 +85,8 @@ begin
          pragma Assert (Format_List'Length > 0);
 
          Image : CL.Memory.Images.Image2D
-           := CL.Memory.Images.Create_Image2D (Context, Index,
-                                               Format_List (1), 1024, 512, 0);
+           := CL.Memory.Images.Constructors.Create_Image2D
+             (Context, Index, Format_List (1), 1024, 512, 0);
       begin
          ATI.Put_Line ("Created Image.");
          ATI.Put_Line ("Context Refcount:" & Context.Reference_Count'Img);

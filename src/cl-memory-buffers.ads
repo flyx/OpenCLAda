@@ -34,21 +34,24 @@ package CL.Memory.Buffers is
          Size   : CL.Size;
       end record;
 
-   --  Create a buffer without providing a pointer to host memory
-   function Create_Buffer (Context         : Contexts.Context;
-                           Mode            : Access_Kind;
-                           Size            : CL.Size;
-                           Use_Host_Memory : Boolean := False) return Buffer;
+   package Constructors is
 
-   generic
-      type Element is private;
-      type Element_List is array (Positive range <>) of Element;
-   function Create_Buffer_From_Source (Context              : Contexts.Context;
-                                       Mode                 : Access_Kind;
-                                       Source               : access constant Element_List;
-                                       Use_Source_As_Buffer : Boolean := False;
-                                       Use_Host_Memory      : Boolean := False)
-                                       return Buffer;
+      --  Create a buffer without providing a pointer to host memory
+      function Create (Context         : Contexts.Context'Class;
+                       Mode            : Access_Kind;
+                       Size            : CL.Size;
+                       Use_Host_Memory : Boolean := False) return Buffer;
+
+      generic
+         type Element is private;
+         type Element_List is array (Positive range <>) of Element;
+      function Create_From_Source (Context              : Contexts.Context'Class;
+                                   Mode                 : Access_Kind;
+                                   Source               : access constant Element_List;
+                                   Use_Source_As_Buffer : Boolean := False;
+                                   Use_Host_Memory      : Boolean := False)
+                                   return Buffer;
+   end Constructors;
 
    --function Create_Sub_Buffer_Region (Buff    : Buffer;
    --                                   Flags   : Memory_Flags;

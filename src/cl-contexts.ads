@@ -35,15 +35,19 @@ package CL.Contexts is
    type Error_Callback is access procedure (Error_Info   : String;
                                             Private_Info : Char_List);
 
-   function Create_Context (Platform : Platforms.Platform;
-                            Devices  : Platforms.Device_List;
-                            Callback : Error_Callback := null)
-                            return Context;
+   package Constructors is
 
-   function Create_Context_From_Type (Platform : Platforms.Platform;
-                                      Dev_Type : Platforms.Device_Kind;
-                                      Callback : Error_Callback := null)
-                                      return Context;
+      function Create_For_Devices (Platform : Platforms.Platform'Class;
+                                   Devices  : Platforms.Device_List;
+                                   Callback : Error_Callback := null)
+                                   return Context;
+
+      function Create_From_Type (Platform : Platforms.Platform'Class;
+                                 Dev_Type : Platforms.Device_Kind;
+                                 Callback : Error_Callback := null)
+                                 return Context;
+
+   end Constructors;
 
    overriding procedure Adjust (Object : in out Context);
    overriding procedure Finalize (Object : in out Context);

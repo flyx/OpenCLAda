@@ -47,7 +47,7 @@ package body CL.Events is
    end Finalize;
 
    procedure Wait_For (Subject : Event) is
-      List : Event_List (1..1) := (1 => Subject);
+      List : Event_List (1..1) := (1 => Subject'Unchecked_Access);
    begin
       Wait_For (List);
    end Wait_For;

@@ -30,61 +30,64 @@ with CL.API.GL;
 
 package body CL.Memory.Images.GL is
 
-   function Create_Image2D_From_Texture (Context        : Contexts.GL.GL_Enabled_Context;
-                                         Mode           : Access_Kind;
-                                         Texture_Target : Interfaces.C.unsigned;
-                                         Mipmap_Level   : Interfaces.C.int;
-                                         Texture        : Interfaces.C.unsigned)
-                                         return GL_Shared_Image2D is
-      Flags      : Memory_Flags;
-      Raw_Object : System.Address;
-      Error      : aliased Enumerations.Error_Code;
-   begin
-      Flags := Create_Flags (Mode);
-      Raw_Object := API.GL.Create_From_GL_Texture_2D (CL_Object (Context).Location,
-                                        To_Bitfield (Flags),
-                                        Texture_Target, Mipmap_Level, Texture,
-                                        Error'Unchecked_Access);
-      Helpers.Error_Handler (Error);
-      return GL_Shared_Image2D'(Ada.Finalization.Controlled with Location => Raw_Object);
+   package body Constructors is
 
-   end Create_Image2D_From_Texture;
+      function Create_Image2D_From_Texture (Context        : Contexts.GL.GL_Enabled_Context'Class;
+                                            Mode           : Access_Kind;
+                                            Texture_Target : Interfaces.C.unsigned;
+                                            Mipmap_Level   : Interfaces.C.int;
+                                            Texture        : Interfaces.C.unsigned)
+                                            return GL_Shared_Image2D is
+         Flags      : Memory_Flags;
+         Raw_Object : System.Address;
+         Error      : aliased Enumerations.Error_Code;
+      begin
+         Flags := Create_Flags (Mode);
+         Raw_Object := API.GL.Create_From_GL_Texture_2D (CL_Object (Context).Location,
+                                           To_Bitfield (Flags),
+                                           Texture_Target, Mipmap_Level, Texture,
+                                           Error'Unchecked_Access);
+         Helpers.Error_Handler (Error);
+         return GL_Shared_Image2D'(Ada.Finalization.Controlled with Location => Raw_Object);
 
-   function Create_Image2D_From_Renderbuffer
-     (Context      : Contexts.GL.GL_Enabled_Context;
-      Mode         : Access_Kind;
-      Renderbuffer : Interfaces.C.unsigned) return GL_Shared_Image2D is
-      Flags      : Memory_Flags;
-      Raw_Object : System.Address;
-      Error      : aliased Enumerations.Error_Code;
-   begin
-      Flags := Create_Flags (Mode);
-      Raw_Object := API.GL.Create_From_GL_Renderbuffer (CL_Object (Context).Location,
-                                                        To_Bitfield (Flags),
-                                                        Renderbuffer,
-                                                        Error'Unchecked_Access);
-      Helpers.Error_Handler (Error);
-      return GL_Shared_Image2D'(Ada.Finalization.Controlled with Location => Raw_Object);
-   end Create_Image2D_From_Renderbuffer;
+      end Create_Image2D_From_Texture;
 
-   function Create_Image3D_From_Texture (Context        : Contexts.GL.GL_Enabled_Context;
-                                         Mode           : Access_Kind;
-                                         Texture_Target : Interfaces.C.unsigned;
-                                         Mipmap_Level   : Interfaces.C.int;
-                                         Texture        : Interfaces.C.unsigned)
-                                         return GL_Shared_Image3D is
-      Flags      : Memory_Flags;
-      Raw_Object : System.Address;
-      Error      : aliased Enumerations.Error_Code;
-   begin
-      Flags := Create_Flags (Mode);
-      Raw_Object := API.GL.Create_From_GL_Texture_3D (CL_Object (Context).Location,
-                                        To_Bitfield (Flags),
-                                        Texture_Target, Mipmap_Level, Texture,
-                                        Error'Unchecked_Access);
-      Helpers.Error_Handler (Error);
-      return GL_Shared_Image3D'(Ada.Finalization.Controlled with Location => Raw_Object);
+      function Create_Image2D_From_Renderbuffer
+        (Context      : Contexts.GL.GL_Enabled_Context'Class;
+         Mode         : Access_Kind;
+         Renderbuffer : Interfaces.C.unsigned) return GL_Shared_Image2D is
+         Flags      : Memory_Flags;
+         Raw_Object : System.Address;
+         Error      : aliased Enumerations.Error_Code;
+      begin
+         Flags := Create_Flags (Mode);
+         Raw_Object := API.GL.Create_From_GL_Renderbuffer (CL_Object (Context).Location,
+                                                           To_Bitfield (Flags),
+                                                           Renderbuffer,
+                                                           Error'Unchecked_Access);
+         Helpers.Error_Handler (Error);
+         return GL_Shared_Image2D'(Ada.Finalization.Controlled with Location => Raw_Object);
+      end Create_Image2D_From_Renderbuffer;
 
-   end Create_Image3D_From_Texture;
+      function Create_Image3D_From_Texture (Context        : Contexts.GL.GL_Enabled_Context'Class;
+                                            Mode           : Access_Kind;
+                                            Texture_Target : Interfaces.C.unsigned;
+                                            Mipmap_Level   : Interfaces.C.int;
+                                            Texture        : Interfaces.C.unsigned)
+                                            return GL_Shared_Image3D is
+         Flags      : Memory_Flags;
+         Raw_Object : System.Address;
+         Error      : aliased Enumerations.Error_Code;
+      begin
+         Flags := Create_Flags (Mode);
+         Raw_Object := API.GL.Create_From_GL_Texture_3D (CL_Object (Context).Location,
+                                           To_Bitfield (Flags),
+                                           Texture_Target, Mipmap_Level, Texture,
+                                           Error'Unchecked_Access);
+         Helpers.Error_Handler (Error);
+         return GL_Shared_Image3D'(Ada.Finalization.Controlled with Location => Raw_Object);
+
+      end Create_Image3D_From_Texture;
+   end Constructors;
 
 end CL.Memory.Images.GL;

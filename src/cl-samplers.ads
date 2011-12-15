@@ -35,11 +35,13 @@ package CL.Samplers is
 
    type Filter_Mode is (Nearest, Linear);
 
+   package Constructors is
 
-   function Create_Sampler (Context           : Contexts.Context;
-                            Normalized_Coords : Boolean;
-                            Addressing        : Addressing_Mode;
-                            Filter            : Filter_Mode) return Sampler;
+      function Create (Context           : Contexts.Context'Class;
+                       Normalized_Coords : Boolean;
+                       Addressing        : Addressing_Mode;
+                       Filter            : Filter_Mode) return Sampler;
+   end Constructors;
 
    overriding procedure Adjust (Object : in out Sampler);
 

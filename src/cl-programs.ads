@@ -41,23 +41,26 @@ package CL.Programs is
 
    type Build_Callback is access procedure (Subject : Program);
 
-   function Create_Program_With_Source (Context : Contexts.Context;
-                                        Sources : String_List)
-                                        return Program;
+   package Constructors is
 
-   --  The result for each binary in Binaries will be stored in Success
-   --  at the position of the binary's index in Binaries. Therefore, Success
-   --  should have a range covering all indexes Binaries contains.
-   --  If Success misses an index present in Binaries, Invalid_Arg_Size will
-   --  be raised.
-   --  Success.all(I) will be True iff Binaries(I) was loaded successfully.
-   --  Iff Success is null, it will be ignored and instead an Invalid_Binary
-   --  exception will be raised if any of the Binaries fails to build.
-   function Create_Program_With_Binary (Context  : Contexts.Context;
-                                        Devices  : Platforms.Device_List;
-                                        Binaries : Binary_List;
-                                        Success  : access Bool_List)
-                                        return Program;
+      function Create_From_Source (Context : Contexts.Context'Class;
+                                   Sources : String_List)
+                                   return Program;
+
+      --  The result for each binary in Binaries will be stored in Success
+      --  at the position of the binary's index in Binaries. Therefore, Success
+      --  should have a range covering all indexes Binaries contains.
+      --  If Success misses an index present in Binaries, Invalid_Arg_Size will
+      --  be raised.
+      --  Success.all(I) will be True iff Binaries(I) was loaded successfully.
+      --  Iff Success is null, it will be ignored and instead an Invalid_Binary
+      --  exception will be raised if any of the Binaries fails to build.
+      function Create_From_Binary (Context  : Contexts.Context'Class;
+                                   Devices  : Platforms.Device_List;
+                                   Binaries : Binary_List;
+                                   Success  : access Bool_List)
+                                   return Program;
+   end Constructors;
 
    overriding procedure Adjust (Object : in out Program);
 

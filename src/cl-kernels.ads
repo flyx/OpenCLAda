@@ -33,10 +33,13 @@ package CL.Kernels is
 
    type Kernel_List is array (Positive range <>) of Kernel;
 
-   function Create_Kernel (Source : Programs.Program; Name : String) return Kernel;
+   package Constructors is
 
-   function Create_Kernels_In_Program (Source : Programs.Program)
-                                       return Kernel_List;
+      function Create (Source : Programs.Program'Class; Name : String) return Kernel;
+
+      function Create_All_In_Program (Source : Programs.Program'Class)
+                                      return Kernel_List;
+   end Constructors;
 
    overriding procedure Adjust (Object : in out Kernel);
 

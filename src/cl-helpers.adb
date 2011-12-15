@@ -252,6 +252,15 @@ package body CL.Helpers is
       return Ret_List;
    end Raw_List;
 
+   function Raw_List_From_Polymorphic (List : Element_List_T) return Address_List is
+      Ret_List : Address_List (1 .. (List'Last - List'First + 1));
+   begin
+      for Index in List'Range loop
+         Ret_List (Index - List'First + 1) := CL_Object (List (Index).all).Location;
+      end loop;
+      return Ret_List;
+   end Raw_List_From_Polymorphic;
+
    function New_Reference (Location : System.Address) return Object_T is
       Ret_Object : Object_T;
    begin

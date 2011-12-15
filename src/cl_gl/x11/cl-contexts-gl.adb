@@ -50,38 +50,41 @@ package body CL.Contexts.GL is
    function Get_Current_Display return System.Address;
    pragma Import (C, Get_Current_Display, "glXGetCurrentDisplay");
 
-   -- massive copypasta
-   function Create_From_Current_GL_Context (Platform : Platforms.Platform;
-                                            Devices  : Platforms.Device_List;
-                                            Callback : Error_Callback := null)
-                            return GL_Enabled_Context is
-      Error       : aliased Enumerations.Error_Code;
-      Ret_Context : System.Address;
-      Props       : Address_List := (Value (CL_GLX_CONTEXT_KHR),
-                                     Get_Current_Context,
-                                     Value (CL_GLX_DISPLAY_KHR),
-                                     Get_Current_Display,
-                                     Value (CL_CONTEXT_PLATFORM),
-                                     CL_Object (Platform).Location,
-                                     System.Null_Address);
-      function Raw_Device_List is
-        new Helpers.Raw_List (Element_T => Platforms.Device,
-                              Element_List_T => Platforms.Device_List);
-      Raw_List : Address_List := Raw_Device_List (Devices);
 
-      function Address is new
-        Ada.Unchecked_Conversion (Source => Error_Callback,
-                                  Target => System.Address);
-   begin
-      Ret_Context := API.Create_Context (Props (1)'Unchecked_Access,
-                                         Devices'Length,
-                                         Raw_List (1)'Address,
-                                         Callback_Dispatcher'Access,
-                                         Address (Callback),
-                                         Error'Unchecked_Access);
-      Helpers.Error_Handler (Error);
+   package body Constructors is
 
-      return GL_Enabled_Context'(Ada.Finalization.Controlled with Location => Ret_Context);
-   end Create_From_Current_GL_Context;
+      function Create (Platform : Platforms.Platform;
+                       Devices  : Platforms.Device_List;
+                       Callback : Error_Callback := null)
+                       return GL_Enabled_Context is
+         Error       : aliased Enumerations.Error_Code;
+         Ret_Context : System.Address;
+         Props       : Address_List := (Value (CL_GLX_CONTEXT_KHR),
+                                        Get_Current_Context,
+                                        Value (CL_GLX_DISPLAY_KHR),
+                                        Get_Current_Display,
+                                        Value (CL_CONTEXT_PLATFORM),
+                                        CL_Object (Platform).Location,
+                                        System.Null_Address);
+         function Raw_Device_List is
+           new Helpers.Raw_List (Element_T => Platforms.Device,
+                                 Element_List_T => Platforms.Device_List);
+         Raw_List : Address_List := Raw_Device_List (Devices);
+
+         function Address is new
+           Ada.Unchecked_Conversion (Source => Error_Callback,
+                                     Target => System.Address);
+      begin
+         Ret_Context := API.Create_Context (Props (1)'Unchecked_Access,
+                                            Devices'Length,
+                                            Raw_List (1)'Address,
+                                            Callback_Dispatcher'Access,
+                                            Address (Callback),
+                                            Error'Unchecked_Access);
+         Helpers.Error_Handler (Error);
+
+         return GL_Enabled_Context'(Ada.Finalization.Controlled with Location => Ret_Context);
+      end Create;
+   end Constructors;
 
 end CL.Contexts.GL;

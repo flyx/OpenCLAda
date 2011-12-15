@@ -32,25 +32,29 @@ with CL.API;
 
 package body CL.Command_Queues is
 
-   function Create_Command_Queue (Attach_To  : Contexts.Context;
-                                  Device     : Platforms.Device;
-                                  Properties : Platforms.CQ_Property_Vector)
-                                  return Command_Queue is
-      Error : aliased Enumerations.Error_Code;
-      Queue : System.Address;
+   package body Constructors is
 
-      function To_Bitfield is new
-        Helpers.Record_To_Bitfield (Bit_Vector_Record => Platforms.CQ_Property_Vector,
-                                    Used_Bits => 2);
-   begin
-      Queue := API.Create_Command_Queue (CL_Object (Attach_To).Location,
-                                         CL_Object (Device).Location,
-                                         To_Bitfield (Properties),
-                                         Error'Unchecked_Access);
-      Helpers.Error_Handler (Error);
-      return Command_Queue'(Ada.Finalization.Controlled with
-                            Location => Queue);
-   end Create_Command_Queue;
+     function Create (Attach_To  : Contexts.Context'Class;
+                      Device     : Platforms.Device'Class;
+                      Properties : Platforms.CQ_Property_Vector)
+                      return Command_Queue is
+        Error : aliased Enumerations.Error_Code;
+        Queue : System.Address;
+
+        function To_Bitfield is new
+          Helpers.Record_To_Bitfield (Bit_Vector_Record => Platforms.CQ_Property_Vector,
+                                      Used_Bits => 2);
+     begin
+        Queue := API.Create_Command_Queue (CL_Object (Attach_To).Location,
+                                           CL_Object (Device).Location,
+                                           To_Bitfield (Properties),
+                                           Error'Unchecked_Access);
+        Helpers.Error_Handler (Error);
+        return Command_Queue'(Ada.Finalization.Controlled with
+                              Location => Queue);
+     end Create;
+
+   end Constructors;
 
    overriding procedure Adjust (Object : in out Command_Queue) is
       use type System.Address;

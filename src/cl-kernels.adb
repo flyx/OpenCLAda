@@ -45,44 +45,46 @@ package body CL.Kernels is
    --  Implementations
    -----------------------------------------------------------------------------
 
-   function Create_Kernel (Source : Programs.Program; Name : String)
-                           return Kernel is
-      Error      : aliased Enumerations.Error_Code;
-      Ret_Kernel : System.Address;
-   begin
-      Ret_Kernel := API.Create_Kernel (CL_Object (Source).Location,
-                                       IFC.Strings.New_String (Name),
-                                       Error'Unchecked_Access);
-      Helpers.Error_Handler (Error);
-      return Kernel'(Ada.Finalization.Controlled with
-                     Location => Ret_Kernel);
-   end Create_Kernel;
-
-   function Create_Kernels_In_Program (Source : Programs.Program)
-                                       return Kernel_List is
-      Num_Kernels     : aliased UInt;
-      Error           : Enumerations.Error_Code;
-   begin
-      Error := API.Create_Kernels_In_Program(CL_Object (Source).Location, 0,
-                                             System.Null_Address,
-                                             Num_Kernels'Unchecked_Access);
-      Helpers.Error_Handler (Error);
-      declare
-         Raw_Kernels : Address_List (1 .. Integer (Num_Kernels));
-         Ret_Kernels : Kernel_List  (1 .. Integer (Num_Kernels));
+   package body Constructors is
+      function Create (Source : Programs.Program'Class; Name : String)
+                       return Kernel is
+         Error      : aliased Enumerations.Error_Code;
+         Ret_Kernel : System.Address;
       begin
-         Error := API.Create_Kernels_In_Program (CL_Object (Source).Location,
-                                                 Num_Kernels,
-                                                 Raw_Kernels (1)'Address,
-                                                 null);
+         Ret_Kernel := API.Create_Kernel (CL_Object (Source).Location,
+                                          IFC.Strings.New_String (Name),
+                                          Error'Unchecked_Access);
          Helpers.Error_Handler (Error);
-         for Index in Raw_Kernels'Range loop
-            Ret_Kernels (Index) := Kernel'(Ada.Finalization.Controlled with
-                                           Location => Raw_Kernels (Index));
-         end loop;
-         return Ret_Kernels;
-      end;
-   end Create_Kernels_In_Program;
+         return Kernel'(Ada.Finalization.Controlled with
+                        Location => Ret_Kernel);
+      end Create;
+
+      function Create_All_In_Program (Source : Programs.Program'Class)
+                                      return Kernel_List is
+         Num_Kernels     : aliased UInt;
+         Error           : Enumerations.Error_Code;
+      begin
+         Error := API.Create_Kernels_In_Program(CL_Object (Source).Location, 0,
+                                                System.Null_Address,
+                                                Num_Kernels'Unchecked_Access);
+         Helpers.Error_Handler (Error);
+         declare
+            Raw_Kernels : Address_List (1 .. Integer (Num_Kernels));
+            Ret_Kernels : Kernel_List  (1 .. Integer (Num_Kernels));
+         begin
+            Error := API.Create_Kernels_In_Program (CL_Object (Source).Location,
+                                                    Num_Kernels,
+                                                    Raw_Kernels (1)'Address,
+                                                    null);
+            Helpers.Error_Handler (Error);
+            for Index in Raw_Kernels'Range loop
+               Ret_Kernels (Index) := Kernel'(Ada.Finalization.Controlled with
+                                              Location => Raw_Kernels (Index));
+            end loop;
+            return Ret_Kernels;
+         end;
+      end Create_All_In_Program;
+   end Constructors;
 
    overriding procedure Adjust (Object : in out Kernel) is
       use type System.Address;

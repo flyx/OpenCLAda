@@ -54,7 +54,8 @@ begin
 
    --  create a context for the first device
    declare
-      Context : CL.Contexts.Context := CL.Contexts.Create_Context (Pf, Dvs (1 .. 1), CL_Test.Helpers.Callback'Access);
+      Context : CL.Contexts.Context := CL.Contexts.Constructors.Create_For_Devices
+        (Pf, Dvs (1 .. 1), CL_Test.Helpers.Callback'Access);
    begin
       ATI.Put ("Created context, reference count is");
       ATI.Put_Line (Context.Reference_Count'Img);
@@ -90,8 +91,8 @@ begin
       GPU_Devices    : CL.Platforms.Device_Kind :=
         CL.Platforms.Device_Kind'(GPU => True, others => False);
       Context        : CL.Contexts.Context :=
-        CL.Contexts.Create_Context_From_Type (Pf, GPU_Devices,
-                                              CL_Test.Helpers.Callback'Access);
+        CL.Contexts.Constructors.Create_From_Type (Pf, GPU_Devices,
+                                                   CL_Test.Helpers.Callback'Access);
 
       Returned_Pf    : CL.Platforms.Platform := Context.Platform;
       use type CL.Platforms.Platform;

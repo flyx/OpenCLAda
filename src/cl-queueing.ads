@@ -69,6 +69,6 @@ private
    pragma Warnings (On);
    pragma Convention (C_Pass_By_Copy, Map_Flags);
 
-   function Raw_Event_List is new Helpers.Raw_List (Element_T => Events.Event,
-                                                    Element_List_T => Events.Event_List);
+   function Raw_Event_List is new Helpers.Raw_List_From_Polymorphic
+     (Element_T => Events.Event, Element_List_T => Events.Event_List);
 end CL.Queueing;

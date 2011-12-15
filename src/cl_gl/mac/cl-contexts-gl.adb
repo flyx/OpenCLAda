@@ -29,14 +29,17 @@ with Ada.Exceptions;
 -- Mac-specific implementation
 package body CL.Contexts.GL is
 
-   function Create_From_Current_GL_Context (Platform : Platforms.Platform;
-                                            Devices  : Platforms.Device_List;
-                                            Callback : Error_Callback := null)
-                            return GL_Enabled_Context is
-   begin
-      -- TODO: implement
-      return GL_Enabled_Context'(Ada.Finalization.Controlled
-                                 with Location => System.Null_Address);
-   end Create_From_Current_GL_Context;
+   package body Constructors is
+
+    function Create (Platform : Platforms.Platform;
+                     Devices  : Platforms.Device_List;
+                     Callback : Error_Callback := null)
+                     return GL_Enabled_Context is
+    begin
+       -- TODO: implement
+       return GL_Enabled_Context'(Ada.Finalization.Controlled
+                                  with Location => System.Null_Address);
+      end Create;
+   end Constructors;
 
 end CL.Contexts.GL;
