@@ -98,6 +98,15 @@ body > nav > ul > li > a:hover, body > nav > ul > li > a:active {
 	background: #adf;
 }
 
+/* Content Style */
+
+body > article h1 {
+	font-size: large;
+}
+
+body > article h2 {
+	font-size: medium;
+}
 
 /* Footer Style */
 body > footer > p {
