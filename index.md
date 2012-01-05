@@ -1,7 +1,6 @@
 ---
 layout : default
 title : Home
-permalink : /
 ---
 
 # Home
@@ -10,7 +9,7 @@ permalink : /
 
 **OpenCLAda** is a thick wrapper for the [OpenCL Host API](http://www.khronos.org/opencl/). It enables you to write OpenCL hosts in Ada. It does **not** enable you to write OpenCL kernels in Ada.
 
-For information on how to setup and use OpenCLAda, visit the [documentation section](/OpenCLAda/documentation).
+For information on how to setup and use OpenCLAda, visit the [documentation section](/OpenCLAda/documentation.html).
 
 ## Getting the Code
 

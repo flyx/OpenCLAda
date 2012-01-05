@@ -16,10 +16,11 @@
 		
 		<nav>
 			<h3>Navigation</h3>
+			{{ page.url }}
 			<ul>
-				<li><a href="/" {% if page.url == '/OpenCLAda/' or page.url = '/OpenCLAda/index.html'%} class="active" {% endif %}>Home</a></li>
-				<li><a href="/documentation" {% if page.url == '/OpenCLAda/documentation' %} class="active" {% endif %}>Documentation</a></li>
-				<li><a href="/binding-design" {% if page.url == '/OpenCLAda/binding-design' %} class="active" {% endif %}>Ada Binding Design Guidelines</a></li>
+				<li><a href="/OpenCLAda/" {% if page.url == '/OpenCLAda/' or page.url = '/OpenCLAda/index.html'%} class="active" {% endif %}>Home</a></li>
+				<li><a href="/OpenCLAda/documentation.html" {% if page.url == '/OpenCLAda/documentation.html' %} class="active" {% endif %}>Documentation</a></li>
+				<li><a href="/OpenCLAda/binding-design.html" {% if page.url == '/OpenCLAda/binding-design' %} class="active" {% endif %}>Ada Binding Design Guidelines</a></li>
 			</ul>
 		</nav>
 		
