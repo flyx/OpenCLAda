@@ -102,10 +102,14 @@ body > nav > ul > li > a:hover, body > nav > ul > li > a:active {
 /* Content Style */
 
 body > article h1 {
-	font-size: large;
+	font-size: larger;
 }
 
 body > article h2 {
+	font-size: large;
+}
+
+body > article h3 {
 	font-size: medium;
 }
 
