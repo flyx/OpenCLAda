@@ -92,6 +92,7 @@ body > nav > ul > li > a {
 body > nav > ul > li > a.active {
 	background: white;
 	font-weight: bold;
+	text-decoration: none;
 }
 
 body > nav > ul > li > a:hover, body > nav > ul > li > a:active {
