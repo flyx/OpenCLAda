@@ -1,3 +1,4 @@
+with "opengl.gpr";
 library project OpenCLAda is
 
    type Os_Type is

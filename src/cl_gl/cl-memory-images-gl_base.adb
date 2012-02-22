@@ -25,8 +25,8 @@
 --------------------------------------------------------------------------------
 
 with CL.Helpers;
-with CL.API.GL;
-with CL.Enumerations.GL;
+with CL.API.CL_GL;
+with CL.Enumerations.CL_GL;
 
 package body CL.Memory.Images.GL_Base is
 
@@ -34,19 +34,19 @@ package body CL.Memory.Images.GL_Base is
                             return Interfaces.C.unsigned is
       function Getter is
         new Helpers.Get_Parameter (Return_T    => Interfaces.C.unsigned,
-                                   Parameter_T => Enumerations.GL.GL_Texture_Info,
-                                   C_Getter    => API.GL.Get_GL_Texture_Info);
+                                   Parameter_T => Enumerations.CL_GL.GL_Texture_Info,
+                                   C_Getter    => API.CL_GL.Get_GL_Texture_Info);
    begin
-      return Getter (Source, Enumerations.GL.Target);
+      return Getter (Source, Enumerations.CL_GL.Target);
    end Texture_Target;
 
    function Mipmap_Level (Source : GL_Shared_Image) return Interfaces.C.int is
       function Getter is
         new Helpers.Get_Parameter (Return_T    => Interfaces.C.int,
-                                   Parameter_T => Enumerations.GL.GL_Texture_Info,
-                                   C_Getter    => API.GL.Get_GL_Texture_Info);
+                                   Parameter_T => Enumerations.CL_GL.GL_Texture_Info,
+                                   C_Getter    => API.CL_GL.Get_GL_Texture_Info);
    begin
-      return Getter (Source, Enumerations.GL.Level);
+      return Getter (Source, Enumerations.CL_GL.Level);
    end Mipmap_Level;
 
 end CL.Memory.Images.GL_Base;

@@ -24,13 +24,13 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with CL.Memory.GL.Objects;
+with CL.Memory.CL_GL.Objects;
 
 generic
    type Parent is new Image with private;
 package CL.Memory.Images.GL_Base is
 
-   package Base is new Memory.GL.Objects (Parent => Parent);
+   package Base is new Memory.CL_GL.Objects (Parent => Parent);
 
    subtype GL_Shared_Image is Base.GL_Shared_Memory_Object;
 
