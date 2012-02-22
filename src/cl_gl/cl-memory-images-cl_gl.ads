@@ -45,7 +45,7 @@ package CL.Memory.Images.CL_GL is
                                             Mode           : Access_Kind;
                                             Texture_Target : GL.Textures.Loader_2D.Target_Kind;
                                             Mipmap_Level   : Integer;
-                                            Texture        : GL.Textures.Texture_Id)
+                                            Texture        : GL.Textures.Texture_Id'Class)
                                             return GL_Shared_Image2D;
       -- not supported yet by OpenGLAda
       function Create_Image2D_From_Renderbuffer
@@ -58,7 +58,7 @@ package CL.Memory.Images.CL_GL is
                                             Mode           : Access_Kind;
                                             Texture_Target : IFC.unsigned;
                                             Mipmap_Level   : Integer;
-                                            Texture        : GL.Textures.Texture_Id)
+                                            Texture        : GL.Textures.Texture_Id'Class)
                                             return GL_Shared_Image3D;
    end Constructors;
 
