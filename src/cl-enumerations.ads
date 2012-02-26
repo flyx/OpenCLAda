@@ -129,7 +129,7 @@ private package CL.Enumerations is
    for Platform_Info'Size use UInt'Size;
 
    type Device_Info is (Dev_Type, Vendor_ID, Max_Compute_Units,
-                        Max_Work_Group_Size, Max_Work_Item_Dimensions,
+                        Max_Work_Item_Dimensions, Max_Work_Group_Size,
                         Max_Work_Item_Sizes, Preferred_Vector_Width_Char,
                         Preferred_Vector_Width_Short,
                         Preferred_Vector_Width_Int,
@@ -159,8 +159,8 @@ private package CL.Enumerations is
    for Device_Info use (Dev_Type                       => 16#1000#,
                         Vendor_ID                      => 16#1001#,
                         Max_Compute_Units              => 16#1002#,
-                        Max_Work_Group_Size            => 16#1003#,
-                        Max_Work_Item_Dimensions       => 16#1004#,
+                        Max_Work_Item_Dimensions       => 16#1003#,
+                        Max_Work_Group_Size            => 16#1004#,
                         Max_Work_Item_Sizes            => 16#1005#,
                         Preferred_Vector_Width_Char    => 16#1006#,
                         Preferred_Vector_Width_Short   => 16#1007#,

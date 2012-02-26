@@ -83,6 +83,8 @@ begin
             end if;
          end loop;
       end;
+      Ada.Text_IO.Put ("MAX_WORK_GROUP_SIZE: ");
+      Ada.Text_IO.Put_Line (Dvs (Index).Max_Work_Group_Size'Img);
 
       Ada.Text_IO.Put ("SINGLE_FLOATING_POINT_CONFIG: ");
       Fpc := Dvs (Index).Single_Floating_Point_Config;
