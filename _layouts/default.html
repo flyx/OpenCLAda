@@ -15,13 +15,42 @@
 		</header>
 		
 		<nav>
-			<h3>Navigation</h3>
-			<ul>
-				<li><a href="/OpenCLAda/" {% if page.url == '/index.html'%} class="active" {% endif %}>Home</a></li>
-				<li><a href="/OpenCLAda/documentation.html" {% if page.url == '/documentation.html' %} class="active" {% endif %}>Documentation</a></li>
-				<li><a href="/OpenCLAda/binding-design.html" {% if page.url == '/binding-design.html' %} class="active" {% endif %}>Ada Binding Design Guidelines</a></li>
-			</ul>
-			
+			<div class="scrollable">
+				<h3>Navigation</h3>
+				<ul>
+					{% for weight in (0..20) %}
+				
+						{% for p in site.pages %}
+							{% if p.weight == weight %}
+						
+								{% if p.url contains '/doc/CL' %}
+									{% assign api = true %}
+								{% else %}
+									{% assign api = false %}
+								{% endif %}
+								<li {% if api == true %}class="api"{% endif %}>
+									<a {% if p.url == page.url %}class="active"{% endif %}href="{{ p.url | prepend: '/OpenCLAda' }}">
+										{% if api == true %}
+											<span>
+												{% for package in p.packages %}
+													{% unless forloop.first %}
+														<br />
+													{% endunless %}
+													{{ package }}
+												{% endfor %}
+											</span>
+										{% else %}
+											{{ p.title }}
+										{% endif %}
+									</a>
+								</li>
+							
+							{% endif %}
+						{% endfor %}
+					
+					{% endfor %}
+				</ul>
+			</div>
 			<div class="seeAlso">
 				<h3>See Also</h3>
 				<ul>

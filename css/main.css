@@ -8,6 +8,10 @@ a:link,a:hover,a:active,a:visited {
 	color: black;
 }
 
+table {
+	border-collapse: collapse;
+}
+
 /* Overall Structure */
 
 body > header {
@@ -90,6 +94,7 @@ body > nav h3 {
 body > nav ul {
 	list-style-type: none;
 	padding: 0;
+	margin: 0;
 }
 
 body > nav ul > li > a {
@@ -111,6 +116,31 @@ body > nav ul > li > a:hover, body > nav > ul > li > a:active {
 	background: #bcf;
 }
 
+body > nav ul > li.api > a {
+	padding-top : 0.25em;
+	padding-bottom : 0.25em;
+}
+
+body > nav ul > li.api > a > span {
+	display: inline-block;
+	font-family: Menlo,Courier,monospace;
+	font-size: small;
+	padding: 0;
+	margin-left: 1em;
+}
+
+body > nav > div.scrollable {
+	overflow-y: auto;
+	position: absolute;
+	padding: 0;
+	margin: 0;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	padding-bottom: 5em;
+}
+
 body > nav > div.seeAlso {
 	position: absolute;
 	bottom : 0;
@@ -119,9 +149,23 @@ body > nav > div.seeAlso {
 	
 	margin: 0;
 	padding: 0;
+	
+	background: #8af;
 }
 
 /* Content Style */
+
+article th, article td {
+	border: 1px solid #aaa;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+article thead {
+	background: #ccd;
+}
 
 body > article h1 {
 	font-size: larger;
