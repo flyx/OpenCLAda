@@ -32,11 +32,11 @@ package body CL.Queueing is
    function Execute_Kernel (Queue            : Command_Queues.Command_Queue'Class;
                             Kernel           : Kernels.Kernel'Class;
                             Dimension        : Kernel_Dimension;
-                            Global_Work_Size : access Size_List;
-                            Local_Work_Size  : access Size_List;
+                            Global_Work_Size : access constant Size_List;
+                            Local_Work_Size  : access constant Size_List;
                             Wait_For         : access Events.Event_List)
                             return Events.Event is
-      Local_Work_Size_Ptr : Size_Ptr;
+      Local_Work_Size_Ptr : access constant Size;
       Ret_Event           : aliased System.Address;
       Error               : Enumerations.Error_Code;
    begin
@@ -50,7 +50,7 @@ package body CL.Queueing is
            Local_Work_Size.all'Last /= Integer (Dimension) then
             raise Invalid_Local_Work_Size;
          end if;
-         Local_Work_Size_Ptr := Local_Work_Size.all (Local_Work_Size.all'First)'Unchecked_Access;
+         Local_Work_Size_Ptr := Local_Work_Size.all (Local_Work_Size.all'First)'Access;
       else
          Local_Work_Size_Ptr := null;
       end if;
@@ -62,7 +62,7 @@ package body CL.Queueing is
               (CL_Object (Queue).Location,
                CL_Object (Kernel).Location,
                Dimension, null,
-               Global_Work_Size.all (1)'Unchecked_Access,
+               Global_Work_Size.all (1)'Access,
                Local_Work_Size_Ptr,
                Raw_List'Length,
                Raw_List (1)'Unchecked_Access,
@@ -73,7 +73,7 @@ package body CL.Queueing is
            (CL_Object (Queue).Location,
             CL_Object (Kernel).Location,
             Dimension, null,
-            Global_Work_Size.all (1)'Unchecked_Access,
+            Global_Work_Size.all (1)'Access,
             Local_Work_Size_Ptr,
             0,
             null,

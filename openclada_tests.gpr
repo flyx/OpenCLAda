@@ -1,4 +1,5 @@
 with "openclada.gpr";
+with "glfw.gpr";
 
 project OpenCLAda_Tests is
 
@@ -8,18 +9,9 @@ project OpenCLAda_Tests is
    type Os_Type is
       ("Windows", "Linux", "MacOSX");
    Os : Os_Type := external ("OS");
-
-   case Os is
-
-      when "Windows" =>
-         for Main use ("cl_test-context.adb", "cl_test-device.adb", "cl_test-memory.adb", "cl_test-platform.adb", "cl_test-hello_world.adb");
-
-      when "Linux" =>
-         for Main use ("cl_test-context.adb", "cl_test-device.adb", "cl_test-hello_world.adb", "cl_test-memory.adb", "cl_test-platform.adb", "cl_test-vectors.adb");
-
-      when "MacOSX" =>
-         for Main use ("cl_test-context.adb", "cl_test-device.adb", "cl_test-hello_world.adb", "cl_test-memory.adb", "cl_test-platform.adb", "cl_test-vectors.adb");
-   end case;
+   
+   for Main use ("cl_test-context.adb", "cl_test-device.adb", "cl_test-memory.adb",
+                 "cl_test-platform.adb", "cl_test-hello_world.adb", "cl_test-cl_gl.adb");
 
    package Compiler is
       for Default_Switches ("ada") use ("-g", "-O2", "-gnatn", "-gnatf", "-gnat05", "-gnata");

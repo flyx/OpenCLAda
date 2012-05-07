@@ -630,9 +630,9 @@ private package CL.API is
    function Enqueue_NDRange_Kernel (Queue              : System.Address;
                                     Kernel             : System.Address;
                                     Work_Dim           : UInt;
-                                    Global_Work_Offset : Size_Ptr;
-                                    Global_Work_Size   : Size_Ptr;
-                                    Local_Work_Size    : Size_Ptr;
+                                    Global_Work_Offset : access constant Size;
+                                    Global_Work_Size   : access constant Size;
+                                    Local_Work_Size    : access constant Size;
                                     Num_Events         : UInt;
                                     Event_List         : Address_Ptr;
                                     Event              : Address_Ptr)

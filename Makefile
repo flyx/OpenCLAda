@@ -5,7 +5,7 @@ LIBDIR ?= ${PREFIX}/lib
 DESTDIR ?=
 GNATFLAGS ?=
 ADA_PROJECT_DIR ?= ${PREFIX}/lib/gnat
-GNATMAKE = gnatmake ${GNATFLAGS} -p
+GPRBUILD = gprbuild ${GNATFLAGS} -p
 
 OS := Windows
 UNAME := $(shell uname)
@@ -19,7 +19,7 @@ endif
 compile:
 	mkdir -p lib
 	mkdir -p obj
-	${GNATMAKE} -P openclada.gpr -XOS=${OS}
+	${GPRBUILD} -P openclada.gpr -XOS=${OS}
 
 uninstall:
 	rm -rf ${DESTDIR}/${PREFIX}/include/openclada ${DESTDIR}/${LIBDIR}/openclada ${DESTDIR}/${ADA_PROJECT_DIR}/openclada.gpr
@@ -42,6 +42,6 @@ clean:
 
 tests: compile
 	mkdir -p bin
-	${GNATMAKE} -P openclada_tests.gpr -XOS=${OS}
+	${GPRBUILD} -P openclada_tests.gpr -XOS=${OS}
 
 .PHONY: tests

@@ -41,8 +41,8 @@ package CL.Queueing is
    function Execute_Kernel (Queue            : Command_Queues.Command_Queue'Class;
                             Kernel           : Kernels.Kernel'Class;
                             Dimension        : Kernel_Dimension;
-                            Global_Work_Size : access Size_List;
-                            Local_Work_Size  : access Size_List;
+                            Global_Work_Size : access constant Size_List;
+                            Local_Work_Size  : access constant Size_List;
                             Wait_For         : access Events.Event_List)
                             return Events.Event;
 

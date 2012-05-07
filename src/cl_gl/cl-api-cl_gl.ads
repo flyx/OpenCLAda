@@ -27,7 +27,7 @@
 with CL.Memory.CL_GL;
 with CL.Enumerations.CL_GL;
 
-with GL.Textures.Loader_2D;
+with GL.Objects.Textures.Loader_2D;
 with GL.Low_Level;
 
 package CL.API.CL_GL is
@@ -42,7 +42,7 @@ package CL.API.CL_GL is
 
    function Create_From_GL_Texture_2D (Context    : System.Address;
                                        Flags      : Bitfield;
-                                       Image_Type : GL.Textures.Loader_2D.Target_Kind;
+                                       Image_Type : GL.Objects.Textures.Loader_2D.Target_Kind;
                                        Mip_Level  : GL.Low_Level.Int;
                                        Source     : GL.Low_Level.UInt;
                                        Error      : Enumerations.Error_Ptr)

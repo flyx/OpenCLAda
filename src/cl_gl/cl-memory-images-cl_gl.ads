@@ -27,9 +27,8 @@
 with CL.Memory.Images.GL_Base;
 with CL.Contexts.CL_GL;
 
-with GL.Low_Level.Enums;
-with GL.Textures;
-with GL.Textures.Loader_2D;
+with GL.Objects.Textures;
+with GL.Objects.Textures.Loader_2D;
 
 package CL.Memory.Images.CL_GL is
 
@@ -43,9 +42,9 @@ package CL.Memory.Images.CL_GL is
 
       function Create_Image2D_From_Texture (Context        : Contexts.CL_GL.GL_Enabled_Context'Class;
                                             Mode           : Access_Kind;
-                                            Texture_Target : GL.Textures.Loader_2D.Target_Kind;
+                                            Texture_Target : GL.Objects.Textures.Loader_2D.Target_Kind;
                                             Mipmap_Level   : Integer;
-                                            Texture        : GL.Textures.Texture_Id'Class)
+                                            Texture        : GL.Objects.Textures.Texture'Class)
                                             return GL_Shared_Image2D;
       -- not supported yet by OpenGLAda
       function Create_Image2D_From_Renderbuffer
@@ -58,7 +57,7 @@ package CL.Memory.Images.CL_GL is
                                             Mode           : Access_Kind;
                                             Texture_Target : IFC.unsigned;
                                             Mipmap_Level   : Integer;
-                                            Texture        : GL.Textures.Texture_Id'Class)
+                                            Texture        : GL.Objects.Textures.Texture'Class)
                                             return GL_Shared_Image3D;
    end Constructors;
 
