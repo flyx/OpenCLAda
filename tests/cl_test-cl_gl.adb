@@ -84,9 +84,10 @@ begin
    Glfw.Init;
    Glfw.Display.Open (Mode => Glfw.Display.Window);
    declare
-      My_Texture : GL.Objects.Textures.Texture (Kind => GL.Objects.Textures.Texture_2D);
+      My_Texture : GL.Objects.Textures.Texture;
       CL_Texture : aliased CL.Memory.Images.CL_GL.GL_Shared_Image2D;
    begin
+      My_Texture.Bind (GL.Objects.Textures.Texture_2D);
       GL.Matrices.Projection.Load_Identity;
       GL.Matrices.Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
       GL.Toggles.Set (GL.Toggles.Texture_2D, GL.Toggles.Enabled);
@@ -115,10 +116,10 @@ begin
       Kernel := CL.Kernels.Constructors.Create (Program, "cl_gl_testkernel");
       
       IO.Put_Line ("Configuring Texture");
-      My_Texture.Set_X_Wrapping (GL.Objects.Textures.Repeat);
-      My_Texture.Set_Y_Wrapping (GL.Objects.Textures.Mirrored_Repeat);
-      My_Texture.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
-      My_Texture.Set_Minifying_Filter (GL.Objects.Textures.Linear);
+      GL.Objects.Textures.Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Repeat);
+      GL.Objects.Textures.Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Mirrored_Repeat);
+      GL.Objects.Textures.Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
+      GL.Objects.Textures.Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
       
       GL.Environment.Textures.Set_Tex_Function (GL.Environment.Textures.Replace);
       GL.Objects.Textures.Loader_2D.Load_Empty_Texture (
@@ -182,6 +183,7 @@ begin
          
          Glfw.Display.Swap_Buffers;
          
+         delay 0.5;
          Glfw.Events.Poll_Events;
       end loop;
    end;
