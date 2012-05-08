@@ -75,4 +75,6 @@ private
                                   User_Data    : Error_Callback);
    pragma Convention (C, Callback_Dispatcher);
 
+   Platform_Identifier : constant := 16#1084#;
+
 end CL.Contexts;

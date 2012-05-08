@@ -38,8 +38,7 @@ with CL.Contexts;
 package body CL.Contexts.CL_GL is
 
    --CONSTANTS!
-   CL_CONTEXT_PLATFORM : constant := 16#1084#;
-   CL_GLX_CONTEXT_KHR : constant := 16#2008#;
+   CL_GL_CONTEXT_KHR : constant := 16#2008#;
    CL_GLX_DISPLAY_KHR : constant := 16#200A#;
 
    -- GLX stuff (minimal)
@@ -59,11 +58,11 @@ package body CL.Contexts.CL_GL is
                        return GL_Enabled_Context is
          Error       : aliased Enumerations.Error_Code;
          Ret_Context : System.Address;
-         Props       : Address_List := (Value (CL_GLX_CONTEXT_KHR),
+         Props       : Address_List := (Value (CL_GL_CONTEXT_KHR),
                                         Get_Current_Context,
                                         Value (CL_GLX_DISPLAY_KHR),
                                         Get_Current_Display,
-                                        Value (CL_CONTEXT_PLATFORM),
+                                        Value (Platform_Identifier),
                                         CL_Object (Platform).Location,
                                         System.Null_Address);
          function Raw_Device_List is

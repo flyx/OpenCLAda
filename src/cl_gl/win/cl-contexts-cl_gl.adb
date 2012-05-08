@@ -26,18 +26,51 @@
 
 with Ada.Exceptions;
 
+with CL.API;
+with CL.Enumerations.CL_GL;
+with CL.Helpers;
+
+with GL.WGL;
+
 -- Windows-specific implementation
 package body CL.Contexts.CL_GL is
+   CL_GL_CONTEXT_KHR : constant := 16#2008#;
+   CL_WGL_HDC_KHR    : constant := 16#200B#;
 
    package body Constructors is
       function Create (Platform : Platforms.Platform;
                        Devices  : Platforms.Device_List;
                        Callback : Error_Callback := null)
                        return GL_Enabled_Context is
+         Props : Address_List := (Value (CL_GL_CONTEXT_KHR),
+                                  System.Address (GL.WGL.wglGetCurrentContext),
+                                  Value (CL_WGL_HDC_KHR),
+                                  System.Address (GL.WGL.wglGetCurrentDC),
+                                  Value (Platform_Identifier),
+                                  CL_Object (Platform).Location,
+                                  System.Null_Address);
+         Ret_Context : System.Address;
+         Error : aliased Enumerations.Error_Code;
+
+         function Raw_Device_List is
+           new Helpers.Raw_List (Element_T => Platforms.Device,
+                                 Element_List_T => Platforms.Device_List);
+         Raw_List : Address_List := Raw_Device_List (Devices);
+
+         function Address is new
+           Ada.Unchecked_Conversion (Source => Error_Callback,
+                                     Target => System.Address);
       begin
-         -- TODO: implement
+         Ret_Context := API.Create_Context (Props (1)'Unchecked_Access,
+                                            Devices'Length,
+                                            Raw_List (1)'Address,
+                                            Callback_Dispatcher'Access,
+                                            Address (Callback),
+                                            Error'Unchecked_Access);
+         Helpers.Error_Handler (Error);
+
          return GL_Enabled_Context'(Ada.Finalization.Controlled
-                                    with Location => System.Null_Address);
+                                    with Location => Ret_Context);
       end Create;
    end Constructors;
 

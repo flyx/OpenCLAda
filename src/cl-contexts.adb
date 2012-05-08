@@ -34,7 +34,6 @@ with CL.Enumerations;
 with CL.Helpers;
 
 package body CL.Contexts is
-   Platform_Identifier : constant := 16#1084#;
 
    -----------------------------------------------------------------------------
    --  Helpers
