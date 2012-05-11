@@ -34,20 +34,14 @@ with CL.Enumerations.CL_GL;
 with CL.Helpers;
 with CL.Contexts;
 
+with GL.GLX;
+
 -- X11-specific implementation
 package body CL.Contexts.CL_GL is
 
    --CONSTANTS!
    CL_GL_CONTEXT_KHR : constant := 16#2008#;
    CL_GLX_DISPLAY_KHR : constant := 16#200A#;
-
-   -- GLX stuff (minimal)
-
-   function Get_Current_Context return System.Address;
-   pragma Import (C, Get_Current_Context, "glXGetCurrentContext");
-
-   function Get_Current_Display return System.Address;
-   pragma Import (C, Get_Current_Display, "glXGetCurrentDisplay");
 
 
    package body Constructors is
@@ -59,9 +53,9 @@ package body CL.Contexts.CL_GL is
          Error       : aliased Enumerations.Error_Code;
          Ret_Context : System.Address;
          Props       : Address_List := (Value (CL_GL_CONTEXT_KHR),
-                                        Get_Current_Context,
+                                        GLX.Get_Current_Context,
                                         Value (CL_GLX_DISPLAY_KHR),
-                                        Get_Current_Display,
+                                        GLX.Get_Current_Display,
                                         Value (Platform_Identifier),
                                         CL_Object (Platform).Location,
                                         System.Null_Address);
