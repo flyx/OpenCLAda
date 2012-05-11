@@ -87,7 +87,7 @@ begin
       My_Texture : GL.Objects.Textures.Texture;
       CL_Texture : aliased CL.Memory.Images.CL_GL.GL_Shared_Image2D;
    begin
-      My_Texture.Bind (GL.Objects.Textures.Texture_2D);
+      GL.Objects.Textures.Texture_2D.Bind (My_Texture);
       GL.Matrices.Projection.Load_Identity;
       GL.Matrices.Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
       GL.Toggles.Set (GL.Toggles.Texture_2D, GL.Toggles.Enabled);
