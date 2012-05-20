@@ -22,9 +22,9 @@ part of an SDK from your hardware vendor (eg the
 [AMD APP SDK](http://developer.amd.com/SDKS/AMDAPPSDK/Pages/default.aspx)).
 
 [OpenGLAda](https://github.com/flyx86/openglada) is required for OpenCL's
-cl_gl extension. This should be an optional dependency, however it currently
-is required. If you don't have OpenGLAda installed, just download its source
-and make sure the path to `opengl.gpr` is included in the
+cl_gl extension (you can compile OpenCLAda with the cl_gl extension, so that
+you do not need OpenGLAda, see below). If you don't have OpenGLAda installed,
+just download its source and make sure the path to `opengl.gpr` is included in the
 `ADA_PROJECT_PATH` environment variable. To compile the tests, you also need
 the [GLFW library](http://www.glfw.org/), as the tests use the GLFW wrapper
 included in OpenGLAda.
@@ -39,7 +39,7 @@ navigate to the OpenCLAda directory and do:
 On Windows, it could work the same way if you're using MinGW or Cygwin.
 However, I didn't try either one. Anyway, to compile without make, just do
 
-	$ gprbuild -p -P openclada.gpr -XOS=Windows
+	$ gprbuild -p -P opencl.gpr -XOS=Windows -XCL_GL=Yes
 
 The compiler needs to find the `OpenCL.lib` file mentioned above. If you're
 unsure how to achieve this, just copy it into `C:\GNAT\2011\lib` or wherever
@@ -48,6 +48,12 @@ you installed your GNAT compiler.
 *Note: The availability of an OpenCL implementation will not be tested when
 building OpenCLAda. So if you want to make sure that OpenCL is available,
 build the tests and see if they are linked properly (see below).*
+
+If you want to build OpenCLAda without the cl_gl extension, do:
+
+   $ gprbuild -p -P opencl.gpr -XOS={Windows|MacOSX|Linux} -XCL_GL=No
+
+*Note: The makefile does not support switching off cl_gl.*
 
 ## Installation
 
@@ -67,10 +73,12 @@ some of the basic functionality of the API. You can build them with
 
 or
 
-	$ gprbuild -p -P openclada_tests.gpr -XOS=Windows
+	$ gprbuild -p -P opencl.gpr -XOS={Windows|MacOSX|Linux} -XTests=Yes
 	
-on Windows. A basic "hello world" example is also included. After compilation,
-the executables will be located in the `bin` directory.
+A basic "hello world" example is also included. After compilation,
+the executables will be located in the `bin` directory. They can only be
+executed in the `bin` directory, as they load some OpenCL kernel files through
+relative paths.
 
 ## Usage
 
