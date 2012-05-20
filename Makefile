@@ -19,10 +19,10 @@ endif
 compile:
 	mkdir -p lib
 	mkdir -p obj
-	${GPRBUILD} -P openclada.gpr -XOS=${OS}
+	${GPRBUILD} -P opencl.gpr -XOS=${OS} -XCL_GL=Yes
 
 uninstall:
-	rm -rf ${DESTDIR}/${PREFIX}/include/openclada ${DESTDIR}/${LIBDIR}/openclada ${DESTDIR}/${ADA_PROJECT_DIR}/openclada.gpr
+	rm -rf ${DESTDIR}/${PREFIX}/include/openclada ${DESTDIR}/${LIBDIR}/openclada ${DESTDIR}/${ADA_PROJECT_DIR}/openclada*.gpr
 
 install: compile uninstall
 	mkdir -p ${DESTDIR}/${PREFIX}/include/openclada
@@ -35,13 +35,14 @@ install: compile uninstall
 	cp -f src/cl-*.ad* ${DESTDIR}/${PREFIX}/include/openclada
 	chmod -w ${DESTDIR}/${PREFIX}/include/openclada/*.ad?
 	cp openclada.gpr ${DESTDIR}/${ADA_PROJECT_DIR}
+	cp openclada-cl_gl.gpr ${DESTDIR}/${ADA_PROJECT_DIR}
 all: compile
 
 clean:
 	rm -rf ./obj ./bin ./lib
 
-tests: compile
+tests:
 	mkdir -p bin
-	${GPRBUILD} -P openclada_tests.gpr -XOS=${OS}
+	${GPRBUILD} -P opencl.gpr -XOS=${OS} -XTests=Yes
 
 .PHONY: tests

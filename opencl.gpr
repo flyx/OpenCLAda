@@ -1,0 +1,19 @@
+aggregate project OpenCL is
+   type Yes_No is ("Yes", "No");
+   CL_GL : Yes_No := external ("CL_GL", "No");
+   Tests : Yes_No := external ("Tests", "No");
+   
+   Project_List := ("openclada.gpr");
+   
+   case CL_GL is
+      when "Yes" => Project_List := ("openclada-cl_gl.gpr");
+      when "No"  => null;
+   end case;
+   
+   case Tests is
+      when "Yes" => Project_List := ("openclada-tests.gpr");
+      when "No"  => null;
+   end case;
+   
+   for Project_Files use Project_List;
+end OpenCL;

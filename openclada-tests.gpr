@@ -1,7 +1,8 @@
 with "openclada.gpr";
+with "openclada-cl_gl.gpr";
 with "glfw.gpr";
 
-project OpenCLAda_Tests is
+project OpenCLAda.Tests is
 
    for Source_Dirs use ("tests");
    for Object_Dir use "obj";
@@ -21,5 +22,5 @@ project OpenCLAda_Tests is
       for Default_Switches ("ada") use ("-m");
    end Builder;
 
-end OpenCLAda_Tests;
+end OpenCLAda.Tests;
 
