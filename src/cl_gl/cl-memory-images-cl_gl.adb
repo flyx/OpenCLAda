@@ -29,8 +29,10 @@ with CL.Helpers;
 with CL.API.CL_GL;
 
 with GL.Low_Level;
+with GL.Types;
 
 package body CL.Memory.Images.CL_GL is
+   use GL.Types;
 
    package body Constructors is
 
@@ -47,7 +49,7 @@ package body CL.Memory.Images.CL_GL is
          Flags := Create_Flags (Mode);
          Raw_Object := API.CL_GL.Create_From_GL_Texture_2D (CL_Object (Context).Location,
                                            To_Bitfield (Flags),
-                                           Texture_Target, GL.Low_Level.Int (Mipmap_Level),
+                                           Texture_Target, GL.Types.Int (Mipmap_Level),
                                            Texture.Raw_Id,
                                            Error'Unchecked_Access);
          Helpers.Error_Handler (Error);
@@ -75,7 +77,7 @@ package body CL.Memory.Images.CL_GL is
 
       function Create_Image3D_From_Texture (Context        : Contexts.CL_GL.GL_Enabled_Context'Class;
                                             Mode           : Access_Kind;
-                                            Texture_Target : IFC.unsigned;
+                                            Texture_Target : UInt;
                                             Mipmap_Level   : Integer;
                                             Texture        : GL.Objects.Textures.Texture'Class)
                                             return GL_Shared_Image3D is

@@ -55,7 +55,7 @@ package CL.Memory.Images.CL_GL is
       -- not supported yet by OpenGLAda
       function Create_Image3D_From_Texture (Context        : Contexts.CL_GL.GL_Enabled_Context'Class;
                                             Mode           : Access_Kind;
-                                            Texture_Target : IFC.unsigned;
+                                            Texture_Target : UInt;
                                             Mipmap_Level   : Integer;
                                             Texture        : GL.Objects.Textures.Texture'Class)
                                             return GL_Shared_Image3D;

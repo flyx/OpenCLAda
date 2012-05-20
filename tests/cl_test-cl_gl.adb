@@ -36,14 +36,14 @@ with CL.Queueing.CL_GL;
 
 with GL;
 with GL.Buffers;
+with GL.Fixed.Textures;
+with GL.Fixed.Matrix;
+with GL.Immediate;
 with GL.Objects.Textures;
 with GL.Objects.Textures.Loader_2D;
-with GL.Matrices;
 with GL.Pixel_Data;
-with GL.Immediate;
 with GL.Toggles;
-with GL.Vectors;
-with GL.Environment.Textures;
+with GL.Types;
 
 with Glfw.Display;
 with Glfw.Events.Keys;
@@ -53,8 +53,10 @@ with CL_Test.Helpers;
 with Ada.Text_IO;
 
 procedure CL_Test.CL_GL is
-   use type GL.Real;
+   use GL.Types;
    
+   use type GL.Types.Double;
+      
    type Position is record
       X, Y, Z : Integer;
    end record;
@@ -88,8 +90,8 @@ begin
       CL_Texture : aliased CL.Memory.Images.CL_GL.GL_Shared_Image2D;
    begin
       GL.Objects.Textures.Texture_2D.Bind (My_Texture);
-      GL.Matrices.Projection.Load_Identity;
-      GL.Matrices.Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+      GL.Fixed.Matrix.Projection.Load_Identity;
+      GL.Fixed.Matrix.Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
       GL.Toggles.Set (GL.Toggles.Texture_2D, GL.Toggles.Enabled);
       
       IO.Put_Line ("Initializing OpenCL");
@@ -121,7 +123,7 @@ begin
       GL.Objects.Textures.Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
       GL.Objects.Textures.Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
       
-      GL.Environment.Textures.Set_Tex_Function (GL.Environment.Textures.Replace);
+      GL.Fixed.Textures.Set_Tex_Function (GL.Fixed.Textures.Replace);
       GL.Objects.Textures.Loader_2D.Load_Empty_Texture (
         Target          => GL.Objects.Textures.Loader_2D.TX_2D,
         Level           => 0,
@@ -166,17 +168,17 @@ begin
          IO.Put_Line ("Rendering Texture");
          declare
             use GL.Immediate;
-            use GL.Vectors;
+            use GL.Types.Doubles;
             Token : Input_Token := Start (Quads);
          begin
-            Set_Texture_Coordinates (Vector'( 0.0,  1.0, 0.0, 1.0));
-            Token.Add_Vertex        (Vector'(-1.0, -1.0, 0.0, 1.0));
-            Set_Texture_Coordinates (Vector'( 0.0,  0.0, 0.0, 1.0));
-            Token.Add_Vertex        (Vector'(-1.0,  1.0, 0.0, 1.0));
-            Set_Texture_Coordinates (Vector'( 1.0,  0.0, 0.0, 1.0));
-            Token.Add_Vertex        (Vector'( 1.0,  1.0, 0.0, 1.0));
-            Set_Texture_Coordinates (Vector'( 1.0,  1.0, 0.0, 1.0));
-            Token.Add_Vertex        (Vector'( 1.0, -1.0, 0.0, 1.0));
+            Set_Texture_Coordinates (Vector4'( 0.0,  1.0, 0.0, 1.0));
+            Token.Add_Vertex        (Vector4'(-1.0, -1.0, 0.0, 1.0));
+            Set_Texture_Coordinates (Vector4'( 0.0,  0.0, 0.0, 1.0));
+            Token.Add_Vertex        (Vector4'(-1.0,  1.0, 0.0, 1.0));
+            Set_Texture_Coordinates (Vector4'( 1.0,  0.0, 0.0, 1.0));
+            Token.Add_Vertex        (Vector4'( 1.0,  1.0, 0.0, 1.0));
+            Set_Texture_Coordinates (Vector4'( 1.0,  1.0, 0.0, 1.0));
+            Token.Add_Vertex        (Vector4'( 1.0, -1.0, 0.0, 1.0));
          end;
          
          GL.Finish;
