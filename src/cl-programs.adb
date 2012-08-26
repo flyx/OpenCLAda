@@ -103,7 +103,8 @@ package body CL.Programs is
       begin
          for Index in Sources'Range loop
             C_Strings (Index) := IFC.Strings.New_String
-              (Helpers.Read_File (Sources (Index)));
+              (Helpers.Read_File (Sources (Index).all));
+            Size_List (Index) := Size (IFC.Strings.Strlen (C_Strings (Index)));
          end loop;
          
          Ret_Program

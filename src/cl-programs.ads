@@ -37,7 +37,7 @@ package CL.Programs is
 
    type Binary_List is array (Positive range <>) of access SSE.Storage_Array;
    type String_List is array (Positive range <>) of access constant String;
-   type File_List   is array (Positive range <>) of Ada.Text_IO.File_Type;
+   type File_List   is array (Positive range <>) of access constant Ada.Text_IO.File_Type;
    type Bool_List   is array (Positive range <>) of Boolean;
 
    type Build_Status is (In_Progress, Error, None, Success);
