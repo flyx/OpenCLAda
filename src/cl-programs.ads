@@ -24,6 +24,8 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
+with Ada.Text_IO;
+
 with CL.Platforms;
 with System.Storage_Elements;
 with CL.Contexts;
@@ -35,6 +37,7 @@ package CL.Programs is
 
    type Binary_List is array (Positive range <>) of access SSE.Storage_Array;
    type String_List is array (Positive range <>) of access constant String;
+   type File_List   is array (Positive range <>) of Ada.Text_IO.File_Type;
    type Bool_List   is array (Positive range <>) of Boolean;
 
    type Build_Status is (In_Progress, Error, None, Success);
@@ -45,6 +48,9 @@ package CL.Programs is
 
       function Create_From_Source (Context : Contexts.Context'Class;
                                    Sources : String_List)
+                                   return Program;
+      function Create_From_Source (Context : Contexts.Context'Class;
+                                   Sources : File_List)
                                    return Program;
 
       --  The result for each binary in Binaries will be stored in Success

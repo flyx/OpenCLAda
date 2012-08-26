@@ -86,7 +86,7 @@ begin
    begin
       IO.Close (Kernel_File);
       Program := CL.Programs.Constructors.Create_From_Source
-        (Context, (1 => Kernel_Source'Unchecked_Access));
+        (Context, CL.Programs.String_List'(1 => Kernel_Source'Unchecked_Access));
    end;
    Program.Build (Device_List, "", null);
    IO.Put_Line ("Creating kernel");

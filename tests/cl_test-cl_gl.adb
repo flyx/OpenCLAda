@@ -78,8 +78,8 @@ procedure CL_Test.CL_GL is
    
    Kernel_File : IO.File_Type;
    
-   Global_Work_Size : aliased constant CL.Size_List := (1 => 512, 2=> 512);
-   Local_Work_Size  : aliased constant CL.Size_List := (1 => 16, 2 => 16);
+   Global_Work_Size : aliased constant CL.Size_List := (1 => 512, 2 => 512);
+   Local_Work_Size  : aliased constant CL.Size_List := (1 => 16,  2 => 16);
    
 begin
    IO.Put_Line ("Initializing GLFW");
@@ -110,7 +110,7 @@ begin
       begin
          IO.Close (Kernel_File);
          Program := CL.Programs.Constructors.Create_From_Source (Context,
-           (1 => Kernel_Source'Unchecked_Access));
+           CL.Programs.String_List'(1 => Kernel_Source'Unchecked_Access));
       end;
       
       IO.Put_Line ("Building Program");

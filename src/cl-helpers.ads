@@ -24,6 +24,8 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
+with Ada.Text_IO;
+
 with Interfaces.C.Strings;
 
 with CL.Enumerations;
@@ -145,6 +147,8 @@ private package CL.Helpers is
    generic
       type Object_T is new Runtime_Object with private;
    function New_Reference (Location : System.Address) return Object_T;
+   
+   function Read_File (File : Ada.Text_IO.File_Type) return String;
 
    -- converts a bit vector that is represented as record to a raw Bitfield
    -- value. Apart from the conversion itself, this function fills all unused

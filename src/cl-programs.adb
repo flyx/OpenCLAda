@@ -24,6 +24,8 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
+with Ada.Unchecked_Deallocation;
+
 with Interfaces.C.Strings;
 
 with CL.API;
@@ -83,9 +85,40 @@ package body CL.Programs is
                                               C_Strings (C_Strings'First)'Access,
                                               Size_List (Size_List'First)'Access,
                                               Error'Unchecked_Access);
+         for Index in C_Strings'Range loop
+            IFC.Strings.Free (C_Strings (Index));
+         end loop;
          Helpers.Error_Handler (Error);
          return Program'(Ada.Finalization.Controlled with Location => Ret_Program);
       end Create_From_Source;
+      
+      
+      function Create_From_Source (Context : Contexts.Context'Class;
+                                   Sources : File_List)
+                                   return Program is
+         C_Strings   : array (Sources'Range) of aliased IFC.Strings.chars_ptr;
+         Size_List   : array (Sources'Range) of aliased Size;          
+         Ret_Program : System.Address;
+         Error       : aliased Enumerations.Error_Code;
+      begin
+         for Index in Sources'Range loop
+            C_Strings (Index) := IFC.Strings.New_String
+              (Helpers.Read_File (Sources (Index)));
+         end loop;
+         
+         Ret_Program
+           := API.Create_Program_With_Source (CL_Object (Context).Location,
+                                              UInt (Size_List'Length),
+                                              C_Strings (C_Strings'First)'Access,
+                                              Size_List (Size_List'First)'Access,
+                                              Error'Unchecked_Access);
+         for Index in C_Strings'Range loop
+            IFC.Strings.Free (C_Strings (Index));
+         end loop;
+         Helpers.Error_Handler (Error);
+         return Program'(Ada.Finalization.Controlled with Location => Ret_Program);
+      end Create_From_Source;
+      
 
       function Create_From_Binary (Context  : Contexts.Context'Class;
                                    Devices  : Platforms.Device_List;

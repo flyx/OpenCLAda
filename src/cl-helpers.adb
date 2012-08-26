@@ -24,6 +24,8 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
+with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;
 with Ada.Unchecked_Conversion;
 with System;
 with System.Storage_Elements;
@@ -31,6 +33,7 @@ with System.Storage_Elements;
 with CL.Enumerations;
 
 package body CL.Helpers is
+   package IO renames Ada.Text_IO;
 
    function Get_Parameter (Object : in CL_Object'Class;
                            Param  : in Parameter_T) return Return_T is
@@ -277,5 +280,16 @@ package body CL.Helpers is
    begin
       return Result mod 2 ** Used_Bits;
    end Record_To_Bitfield;
+   
+   function Read_File (File : Ada.Text_IO.File_Type) return String is
+      use Ada.Strings.Unbounded;
+      Contents : Unbounded_String := Null_Unbounded_String;
+   begin
+      while not IO.End_Of_File (File) loop
+         Append (Contents, IO.Get_Line (File));
+         Append (Contents, ASCII.LF);
+      end loop;
+      return To_String (Contents);
+   end Read_File;
 
 end CL.Helpers;
