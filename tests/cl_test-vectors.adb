@@ -10,13 +10,14 @@ with CL.Kernels;
 with CL.Queueing;
 with CL.Queueing.Memory_Objects;
 with CL.Events;
+with CL.Vectors;
 
 with CL_Test.Helpers;
 
 procedure CL_Test.Vectors is
    package IO renames Ada.Text_IO;
 
-   type Int2_List is array (Positive range <>) of CL.Int2;
+   type Int2_List is array (Positive range <>) of CL.Vectors.Int2;
 
    Source1_List : aliased Int2_List := ((1, 2), (3, 4), (5, 6), (7, 8), (9, 0));
    Source2_List : aliased Int2_List := ((0, 9), (2, 7), (4, 5), (6, 3), (8, 1));
@@ -24,10 +25,10 @@ procedure CL_Test.Vectors is
 
    function Int2_Buffer is
      new CL.Memory.Buffers.Constructors.Create_From_Source
-       (Element      => CL.Int2, Element_List => Int2_List);
+       (Element      => CL.Vectors.Int2, Element_List => Int2_List);
 
    package Int2_Objects is
-     new CL.Queueing.Memory_Objects (Element      => CL.Int2,
+     new CL.Queueing.Memory_Objects (Element      => CL.Vectors.Int2,
                                      Element_List => Int2_List);
 
    Platform    : CL.Platforms.Platform;
@@ -55,7 +56,7 @@ begin
    Context     := CL.Contexts.Constructors.Create_For_Devices (Platform, Device_List);
    Source1     := Int2_Buffer (Context, CL.Memory.Read_Only, Source1_List'Access);
    Source2     := Int2_Buffer (Context, CL.Memory.Read_Only, Source2_List'Access);
-   Destination := CL.Memory.Buffers.Constructors.Create (Context, CL.Memory.Write_Only, CL.Int2'Size / System.Storage_Unit * Source1_List'Length);
+   Destination := CL.Memory.Buffers.Constructors.Create (Context, CL.Memory.Write_Only, CL.Vectors.Int2'Size / System.Storage_Unit * Source1_List'Length);
    Queue       := CL.Command_Queues.Constructors.Create (Context, Device,
                                                          CL.Platforms.CQ_Property_Vector'(others => False));
 
@@ -65,7 +66,7 @@ begin
    begin
       IO.Close (Kernel_File);
       Program := CL.Programs.Constructors.Create_From_Source
-        (Context, (1 => Kernel_Source'Unchecked_Access));
+        (Context, CL.Programs.String_List'(1 => Kernel_Source'Unchecked_Access));
    end;
    Program.Build (Device_List, "", null);
    Kernel := CL.Kernels.Constructors.Create (Program, "add");

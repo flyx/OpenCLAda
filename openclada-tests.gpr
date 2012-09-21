@@ -12,7 +12,8 @@ project OpenCLAda.Tests is
    Os : Os_Type := external ("OS");
    
    for Main use ("cl_test-context.adb", "cl_test-device.adb", "cl_test-memory.adb",
-                 "cl_test-platform.adb", "cl_test-hello_world.adb", "cl_test-cl_gl.adb");
+                 "cl_test-platform.adb", "cl_test-vectors.adb", "cl_test-hello_world.adb",
+                 "cl_test-cl_gl.adb");
 
    package Compiler is
       for Default_Switches ("ada") use ("-g", "-O2", "-gnatn", "-gnatf", "-gnat05", "-gnata");

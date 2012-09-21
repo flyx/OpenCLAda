@@ -32,6 +32,7 @@ private with Interfaces.C.Strings;
 private with Interfaces.C.Pointers;
 
 package CL is
+   pragma Preelaborate (CL);
 
    -----------------------------------------------------------------------------
    --  OpenCL scalar types that are available

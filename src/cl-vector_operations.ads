@@ -7,6 +7,8 @@ generic
    with function "*" (Left, Right: Base) return Base is <>;
    with function "/" (Left, Right: Base) return Base is <>;
 package CL.Vector_Operations is
+   pragma Preelaborate (CL.Vector_Operations);
+   
    type Vector is array (Vector_Range) of Base;
    
    generic

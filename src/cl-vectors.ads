@@ -27,6 +27,8 @@
 with CL.Vector_Operations;
 
 package CL.Vectors is
+   pragma Preelaborate (CL.Vectors);
+   
    generic
       type Base is private;
       with function "+" (Left, Right: Base) return Base is <>;
