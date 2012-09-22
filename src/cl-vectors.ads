@@ -117,6 +117,12 @@ package CL.Vectors is
    type Float8 is new Float_Vectors.V8.Vector;
    type Float16 is new Float_Vectors.V16.Vector;
    
+   function Normalized (Left : Float2) return Float2;
+   function Normalized (Left : Float3) return Float3;
+   function Normalized (Left : Float4) return Float4;
+   function Normalized (Left : Float8) return Float8;
+   function Normalized (Left : Float16) return Float16;
+   
 private
    for Char2'Alignment  use Char'Size / System.Storage_Unit * 2;
    for Char3'Alignment  use Char'Size / System.Storage_Unit * 4;
