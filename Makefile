@@ -7,19 +7,19 @@ GNATFLAGS ?=
 ADA_PROJECT_DIR ?= ${PREFIX}/lib/gnat
 GPRBUILD = gprbuild ${GNATFLAGS} -p
 
-OS := Windows
+GL_BACKEND := Windows
 UNAME := $(shell uname)
 ifeq ($(UNAME), Darwin)
-  OS := MacOSX
+  GL_BACKEND := MacOSX
 endif
 ifeq ($(UNAME), Linux)
-  OS := Linux
+  GL_BACKEND := Linux
 endif
 
 compile:
 	mkdir -p lib
 	mkdir -p obj
-	${GPRBUILD} -P opencl.gpr -XOS=${OS} -XCL_GL=Yes
+	${GPRBUILD} -P opencl.gpr -XGL_Backend=${GL_BACKEND} -XCL_GL=Yes
 
 uninstall:
 	rm -rf ${DESTDIR}/${PREFIX}/include/openclada ${DESTDIR}/${LIBDIR}/openclada ${DESTDIR}/${ADA_PROJECT_DIR}/openclada*.gpr

@@ -9,7 +9,7 @@ generic
 package CL.Vector_Operations is
    pragma Preelaborate (CL.Vector_Operations);
    
-   type Vector is array (Vector_Range) of Base;
+   type Vector is array (Vector_Range) of aliased Base;
    
    generic
       with function Operation (Left, Right : Base) return Base;

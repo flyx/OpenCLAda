@@ -39,7 +39,11 @@ navigate to the OpenCLAda directory and do:
 On Windows, it could work the same way if you're using MinGW or Cygwin.
 However, I didn't try either one. Anyway, to compile without make, just do
 
-	$ gprbuild -p -P opencl.gpr -XOS=Windows -XCL_GL=Yes
+	$ gprbuild -p -P opencl.gpr -XGL_Backend=Windows -XCL_GL=Yes
+
+*Note: The variable __GL_Backend__ is shared with OpenGLAda, hence the name.
+You have to provide it even when compiling without OpenGL support because
+it defines the way OpenCLAda links with your system.*
 
 The compiler needs to find the `OpenCL.lib` file mentioned above. If you're
 unsure how to achieve this, just copy it into `C:\GNAT\2011\lib` or wherever
@@ -51,7 +55,7 @@ build the tests and see if they are linked properly (see below).*
 
 If you want to build OpenCLAda without the cl_gl extension, do:
 
-   $ gprbuild -p -P opencl.gpr -XOS={Windows|MacOSX|Linux} -XCL_GL=No
+   $ gprbuild -p -P opencl.gpr -XGL_Backend={Windows|MacOSX|Linux} -XCL_GL=No
 
 *Note: The makefile does not support switching off cl_gl.*
 
@@ -73,7 +77,7 @@ some of the basic functionality of the API. You can build them with
 
 or
 
-	$ gprbuild -p -P opencl.gpr -XOS={Windows|MacOSX|Linux} -XTests=Yes
+	$ gprbuild -p -P opencl.gpr -XGL_Backend={Windows|MacOSX|Linux} -XTests=Yes
 	
 A basic "hello world" example is also included. After compilation,
 the executables will be located in the `bin` directory. They can only be
