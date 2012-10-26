@@ -93,17 +93,23 @@ package body CL.Programs is
       end Create_From_Source;
       
       
-      function Create_From_Source (Context : Contexts.Context'Class;
-                                   Sources : File_List)
-                                   return Program is
+      function Create_From_Files (Context : Contexts.Context'Class;
+                                  Sources : String_List)
+                                  return Program is
          C_Strings   : array (Sources'Range) of aliased IFC.Strings.chars_ptr;
          Size_List   : array (Sources'Range) of aliased Size;          
          Ret_Program : System.Address;
          Error       : aliased Enumerations.Error_Code;
       begin
          for Index in Sources'Range loop
-            C_Strings (Index) := IFC.Strings.New_String
-              (Helpers.Read_File (Sources (Index).all));
+            declare
+               File : Ada.Text_IO.File_Type;
+            begin
+               Ada.Text_IO.Open (File, Ada.Text_IO.In_File, Sources (Index).all);
+               C_Strings (Index) := IFC.Strings.New_String
+                 (Helpers.Read_File (File));
+               Ada.Text_IO.Close (File);
+            end;
             Size_List (Index) := Size (IFC.Strings.Strlen (C_Strings (Index)));
          end loop;
          
@@ -118,7 +124,7 @@ package body CL.Programs is
          end loop;
          Helpers.Error_Handler (Error);
          return Program'(Ada.Finalization.Controlled with Location => Ret_Program);
-      end Create_From_Source;
+      end Create_From_Files;
       
 
       function Create_From_Binary (Context  : Contexts.Context'Class;

@@ -46,11 +46,14 @@ package CL.Programs is
 
    package Constructors is
 
+      -- Create a program from a list of OpenCL sources.
       function Create_From_Source (Context : Contexts.Context'Class;
                                    Sources : String_List)
                                    return Program;
-      function Create_From_Source (Context : Contexts.Context'Class;
-                                   Sources : File_List)
+      -- Create a program from a list of files containing OpenCL sources.
+      -- The files can be provided as relative or absolute paths.
+      function Create_From_Files (Context : Contexts.Context'Class;
+                                   Sources : String_List)
                                    return Program;
 
       --  The result for each binary in Binaries will be stored in Success

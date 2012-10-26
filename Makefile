@@ -43,6 +43,6 @@ clean:
 
 tests:
 	mkdir -p bin
-	${GPRBUILD} -P opencl.gpr -XOS=${OS} -XTests=Yes
+	${GPRBUILD} -P opencl.gpr -XGL_Backend=${GL_BACKEND} -XTests=Yes
 
 .PHONY: tests
