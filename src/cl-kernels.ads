@@ -29,6 +29,7 @@ with CL.Contexts;
 with CL.Programs;
 
 package CL.Kernels is
+   
    type Kernel is new Runtime_Object with null record;
 
    type Kernel_List is array (Positive range <>) of Kernel;

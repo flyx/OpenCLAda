@@ -27,6 +27,7 @@
 with System;
 
 package CL.Platforms is
+   
    type Platform is new CL_Object with null record;
    type Device is new CL_Object with null record;
 

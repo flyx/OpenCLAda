@@ -62,11 +62,11 @@ begin
 
    IO.Open (Kernel_File, IO.In_File, "../tests/vectors.cl");
     declare
-      Kernel_Source : aliased String := CL_Test.Helpers.Read_File (Kernel_File);
+      Kernel_Source : String := CL_Test.Helpers.Read_File (Kernel_File);
    begin
       IO.Close (Kernel_File);
       Program := CL.Programs.Constructors.Create_From_Source
-        (Context, CL.Programs.String_List'(1 => Kernel_Source'Unchecked_Access));
+        (Context, Kernel_Source);
    end;
    Program.Build (Device_List, "", null);
    Kernel := CL.Kernels.Constructors.Create (Program, "add");

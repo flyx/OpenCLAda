@@ -24,20 +24,22 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with Ada.Text_IO;
+with Ada.Containers.Indefinite_Vectors;
 
 with CL.Platforms;
 with System.Storage_Elements;
 with CL.Contexts;
 
 package CL.Programs is
+   
    type Program is new Runtime_Object with null record;
 
    package SSE renames System.Storage_Elements;
 
    type Binary_List is array (Positive range <>) of access SSE.Storage_Array;
-   type String_List is array (Positive range <>) of access constant String;
-   type File_List   is array (Positive range <>) of access constant Ada.Text_IO.File_Type;
+   package String_Vectors is new Ada.Containers.Indefinite_Vectors
+     (Positive, String);
+   subtype String_List is String_Vectors.Vector;
    type Bool_List   is array (Positive range <>) of Boolean;
 
    type Build_Status is (In_Progress, Error, None, Success);
@@ -45,6 +47,9 @@ package CL.Programs is
    type Build_Callback is access procedure (Subject : Program);
 
    package Constructors is
+
+      function Create_From_Source (Context : Contexts.Context'Class;
+                                   Source : String) return Program;
 
       -- Create a program from a list of OpenCL sources.
       function Create_From_Source (Context : Contexts.Context'Class;

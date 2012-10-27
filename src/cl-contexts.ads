@@ -29,6 +29,7 @@ with CL.Platforms;
 private with Ada.Unchecked_Conversion;
 
 package CL.Contexts is
+   
    type Context is new Runtime_Object with null record;
    -- pragma Preelaborable_Initialization (Context);
 

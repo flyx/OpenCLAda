@@ -24,6 +24,7 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
+with Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
 
 with Interfaces.C.Strings;
@@ -65,18 +66,37 @@ package body CL.Programs is
    -----------------------------------------------------------------------------
 
    package body Constructors is
+      
+      function Create_From_Source (Context : Contexts.Context'Class;
+                                   Source : String) return Program is
+         C_String    : aliased IFC.Strings.chars_ptr
+           := IFC.Strings.New_String (Source);
+         String_Size : aliased Size := Source'Length;
+         Ret_Program : System.Address;
+         Error       : aliased Enumerations.Error_Code;
+      begin
+         Ret_Program
+           := API.Create_Program_With_Source (CL_Object (Context).Location,
+                                              1, C_String'Access,
+                                              String_Size'Access,
+                                              Error'Unchecked_Access);
+         IFC.Strings.Free (C_String);
+         Helpers.Error_Handler (Error);
+         return Program'(Ada.Finalization.Controlled with Location => Ret_Program);
+      end Create_From_Source;
 
       function Create_From_Source (Context : Contexts.Context'Class;
                                    Sources : String_List)
                                    return Program is
-         C_Strings   : array (Sources'Range) of aliased IFC.Strings.chars_ptr;
-         Size_List   : array (Sources'Range) of aliased Size;
+         C_Strings   : array (Sources.First_Index .. Sources.Last_Index)
+           of aliased IFC.Strings.chars_ptr;
+         Size_List   : array (C_Strings'Range) of aliased Size;
          Ret_Program : System.Address;
          Error       : aliased Enumerations.Error_Code;
       begin
-         for Index in Sources'Range loop
-            C_Strings (Index) := IFC.Strings.New_String (Sources (Index).all);
-            Size_List (Index) := Sources (Index)'Length;
+         for Index in C_Strings'Range loop
+            C_Strings (Index) := IFC.Strings.New_String (Sources.Element (Index));
+            Size_List (Index) := Size (IFC.Strings.Strlen (C_Strings (Index)));
          end loop;
 
          Ret_Program
@@ -96,16 +116,17 @@ package body CL.Programs is
       function Create_From_Files (Context : Contexts.Context'Class;
                                   Sources : String_List)
                                   return Program is
-         C_Strings   : array (Sources'Range) of aliased IFC.Strings.chars_ptr;
-         Size_List   : array (Sources'Range) of aliased Size;          
+         C_Strings   : array (Sources.First_Index .. Sources.Last_Index)
+           of aliased IFC.Strings.chars_ptr;
+         Size_List   : array (C_Strings'Range) of aliased Size;          
          Ret_Program : System.Address;
          Error       : aliased Enumerations.Error_Code;
       begin
-         for Index in Sources'Range loop
+         for Index in C_Strings'Range loop
             declare
                File : Ada.Text_IO.File_Type;
             begin
-               Ada.Text_IO.Open (File, Ada.Text_IO.In_File, Sources (Index).all);
+               Ada.Text_IO.Open (File, Ada.Text_IO.In_File, Sources.Element (Index));
                C_Strings (Index) := IFC.Strings.New_String
                  (Helpers.Read_File (File));
                Ada.Text_IO.Close (File);
