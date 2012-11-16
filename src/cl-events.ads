@@ -29,7 +29,7 @@ with CL.Command_Queues;
 package CL.Events is
    type Event is new Runtime_Object with null record;
 
-   type Event_List is array (Positive range <>) of access constant Event'Class;
+   type Event_List is array (Integer range <>) of access constant Event'Class;
 
    type Command_Type is (NDRange_Kernel, C_Task, Native_Kernel, Read_Buffer,
                          Write_Buffer, Copy_Buffer, Read_Image, Write_Image,
@@ -67,6 +67,8 @@ package CL.Events is
    function Started_At (Source : Event) return ULong;
 
    function Ended_At (Source : Event) return ULong;
+   
+   No_Events : constant Event_List (1 .. 0) := (others => <>);
 
 private
    for Command_Type use (NDRange_Kernel       => 16#11F0#,

@@ -33,7 +33,7 @@ package CL.Memory.CL_GL is
    -- Sadly, we cannot ensure that all elements in the list are GL enabled
    -- memory objects, because CL.Memory.GL.Objects is orthogonal and thus there
    -- is no common parent class for all GL enabled memory objects.
-   type Object_List is array (Positive range <>) of access constant Memory_Object'Class;
+   type Object_List is array (Integer range <>) of access constant Memory_Object'Class;
 
 private
 

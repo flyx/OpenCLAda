@@ -29,94 +29,95 @@ with CL.Memory.Buffers;
 
 generic
    type Element is private;
-   type Element_List is array (Positive range <>) of Element;
+   type Element_List is array (Integer range <>) of Element;
 package CL.Queueing.Memory_Objects is
    type Size_Vector2D is array (1 .. 2) of aliased Size;
    type Size_Vector3D is array (1 .. 3) of aliased Size;
-
-   function Read_Buffer (Queue       : Command_Queues.Command_Queue'Class;
-                         Buffer      : Memory.Buffers.Buffer'Class;
-                         Blocking    : Boolean;
-                         Offset      : Size;
-                         Destination : access Element_List;
-                         Wait_For    : access constant Events.Event_List)
-                         return Events.Event;
-
-   function Write_Buffer (Queue       : Command_Queues.Command_Queue'Class;
+   
+   procedure Read_Buffer (Queue       : Command_Queues.Command_Queue'Class;
                           Buffer      : Memory.Buffers.Buffer'Class;
                           Blocking    : Boolean;
                           Offset      : Size;
-                          Source      : access Element_List;
-                          Wait_For    : access constant Events.Event_List)
-                          return Events.Event;
+                          Destination : Element_List;
+                          Ready       : out Events.Event;
+                          Wait_For    : Events.Event_List := Events.No_Events);
 
-   function Copy_Buffer (Queue         : Command_Queues.Command_Queue'Class;
-                         Source        : Memory.Buffers.Buffer'Class;
-                         Destination   : Memory.Buffers.Buffer'Class;
-                         Source_Offset : Size;
-                         Dest_Offset   : Size;
-                         Num_Elements  : Size;
-                         Wait_For      : Events.Event_List) return Events.Event;
+   procedure Write_Buffer (Queue       : Command_Queues.Command_Queue'Class;
+                           Buffer      : Memory.Buffers.Buffer'Class;
+                           Blocking    : Boolean;
+                           Offset      : Size;
+                           Source      : Element_List;
+                           Ready       : out Events.Event;
+                           Wait_For    : Events.Event_List := Events.No_Events);
 
-   function Read_Image2D (Queue       : Command_Queues.Command_Queue'Class;
-                          Image       : Memory.Images.Image2D'Class;
-                          Blocking    : Boolean;
-                          Origin      : Size_Vector2D;
-                          Region      : Size_Vector2D;
-                          Row_Pitch   : Size;
-                          Destination : access Element_List;
-                          Wait_For    : access constant Events.Event_List)
-                          return Events.Event;
+   procedure Copy_Buffer (Queue         : Command_Queues.Command_Queue'Class;
+                          Source        : Memory.Buffers.Buffer'Class;
+                          Destination   : Memory.Buffers.Buffer'Class;
+                          Source_Offset : Size;
+                          Dest_Offset   : Size;
+                          Num_Elements  : Size;
+                          Ready         : out Events.Event;
+                          Wait_For      : Events.Event_List := Events.No_Events);
 
-   function Read_Image3D (Queue       : Command_Queues.Command_Queue'Class;
-                          Image       : Memory.Images.Image3D'Class;
-                          Blocking    : Boolean;
-                          Origin      : Size_Vector3D;
-                          Region      : Size_Vector3D;
-                          Row_Pitch   : Size;
-                          Slice_Pitch : Size;
-                          Destination : access Element_List;
-                          Wait_For    : access constant Events.Event_List)
-                          return Events.Event;
-
-   function Write_Image2D (Queue       : Command_Queues.Command_Queue'Class;
+   procedure Read_Image2D (Queue       : Command_Queues.Command_Queue'Class;
                            Image       : Memory.Images.Image2D'Class;
                            Blocking    : Boolean;
                            Origin      : Size_Vector2D;
                            Region      : Size_Vector2D;
                            Row_Pitch   : Size;
-                           Source      : access Element_List;
-                           Wait_For    : access constant Events.Event_List)
-                           return Events.Event;
+                           Destination : Element_List;
+                           Ready       : out Events.Event;
+                           Wait_For    : Events.Event_List := Events.No_Events);
 
-   function Write_Image3D (Queue       : Command_Queues.Command_Queue'Class;
+   procedure Read_Image3D (Queue       : Command_Queues.Command_Queue'Class;
                            Image       : Memory.Images.Image3D'Class;
                            Blocking    : Boolean;
                            Origin      : Size_Vector3D;
                            Region      : Size_Vector3D;
                            Row_Pitch   : Size;
                            Slice_Pitch : Size;
-                           Source      : access Element_List;
-                           Wait_For    : access constant Events.Event_List)
-                           return Events.Event;
+                           Destination : Element_List;
+                           Ready       : out Events.Event;
+                           Wait_For    : Events.Event_List := Events.No_Events);
 
-   function Copy_Image2D (Queue       : Command_Queues.Command_Queue'Class;
-                          Source      : Memory.Images.Image2D'Class;
-                          Destination : Memory.Images.Image2D'Class;
-                          Src_Origin  : Size_Vector2D;
-                          Dest_Origin : Size_Vector2D;
-                          Region      : Size_Vector2D;
-                          Wait_For    : access constant Events.Event_List)
-                          return Events.Event;
+   procedure Write_Image2D (Queue       : Command_Queues.Command_Queue'Class;
+                            Image       : Memory.Images.Image2D'Class;
+                            Blocking    : Boolean;
+                            Origin      : Size_Vector2D;
+                            Region      : Size_Vector2D;
+                            Row_Pitch   : Size;
+                            Source      : Element_List;
+                            Ready       : out Events.Event;
+                            Wait_For    : Events.Event_List := Events.No_Events);
 
-   function Copy_Image3D (Queue       : Command_Queues.Command_Queue'Class;
-                          Source      : Memory.Images.Image3D'Class;
-                          Destination : Memory.Images.Image3D'Class;
-                          Src_Origin  : Size_Vector3D;
-                          Dest_Origin : Size_Vector3D;
-                          Region      : Size_Vector3D;
-                          Wait_For    : access constant Events.Event_List)
-                          return Events.Event;
+   procedure Write_Image3D (Queue       : Command_Queues.Command_Queue'Class;
+                            Image       : Memory.Images.Image3D'Class;
+                            Blocking    : Boolean;
+                            Origin      : Size_Vector3D;
+                            Region      : Size_Vector3D;
+                            Row_Pitch   : Size;
+                            Slice_Pitch : Size;
+                            Source      : Element_List;
+                            Ready       : out Events.Event;
+                            Wait_For    : Events.Event_List := Events.No_Events);
+
+   procedure Copy_Image2D (Queue       : Command_Queues.Command_Queue'Class;
+                           Source      : Memory.Images.Image2D'Class;
+                           Destination : Memory.Images.Image2D'Class;
+                           Src_Origin  : Size_Vector2D;
+                           Dest_Origin : Size_Vector2D;
+                           Region      : Size_Vector2D;
+                           Ready       : out Events.Event;
+                           Wait_For    : Events.Event_List := Events.No_Events);
+
+   procedure Copy_Image3D (Queue       : Command_Queues.Command_Queue'Class;
+                           Source      : Memory.Images.Image3D'Class;
+                           Destination : Memory.Images.Image3D'Class;
+                           Src_Origin  : Size_Vector3D;
+                           Dest_Origin : Size_Vector3D;
+                           Region      : Size_Vector3D;
+                           Ready       : out Events.Event;
+                           Wait_For    : Events.Event_List := Events.No_Events);
 
    --  currently not supported: Copy_Image_To_Buffer, Copy_Buffer_To_Image,
    --  Map_Buffer, Map_Image, Unmap_Mem_Object

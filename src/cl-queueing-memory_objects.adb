@@ -31,27 +31,27 @@ with CL.Helpers;
 package body CL.Queueing.Memory_Objects is
    Element_Bytes : constant Size := Element'Size / System.Storage_Unit;
 
-   function Read_Buffer (Queue       : Command_Queues.Command_Queue'Class;
-                         Buffer      : Memory.Buffers.Buffer'Class;
-                         Blocking    : Boolean;
-                         Offset      : Size;
-                         Destination : access Element_List;
-                         Wait_For    : access constant Events.Event_List)
-                         return Events.Event is
+   procedure Read_Buffer (Queue       : Command_Queues.Command_Queue'Class;
+                          Buffer      : Memory.Buffers.Buffer'Class;
+                          Blocking    : Boolean;
+                          Offset      : Size;
+                          Destination : Element_List;
+                          Ready       : out Events.Event;
+                          Wait_For    : Events.Event_List := Events.No_Events) is
 
       Error     : Enumerations.Error_Code;
       Ret_Event : aliased System.Address;
    begin
-      if Wait_For /= null and then Wait_For.all'Length > 0 then
+      if Wait_For'Length > 0 then
          declare
-            Raw_List  : Address_List := Raw_Event_List (Wait_For.all);
+            Raw_List  : Address_List := Raw_Event_List (Wait_For);
          begin
             Error := API.Enqueue_Read_Buffer
               (CL_Object (Queue).Location,
                CL_Object (Buffer).Location,
                CL.Bool (Blocking), Offset,
-               Destination.all'Length * Element_Bytes,
-               Destination.all (Destination.all'First)'Address,
+               Destination'Length * Element_Bytes,
+               Destination (Destination'First)'Address,
                Raw_List'Length,
                Raw_List (1)'Unchecked_Access,
                Ret_Event'Unchecked_Access);
@@ -61,35 +61,35 @@ package body CL.Queueing.Memory_Objects is
            (CL_Object (Queue).Location,
             CL_Object (Buffer).Location,
             CL.Bool (Blocking), Offset,
-            Destination.all'Length * Element_Bytes,
-            Destination.all (Destination.all'First)'Address,
+            Destination'Length * Element_Bytes,
+            Destination (Destination'First)'Address,
             0, null, Ret_Event'Unchecked_Access);
       end if;
       Helpers.Error_Handler (Error);
-      return Events.Event'(Ada.Finalization.Controlled with
+      Ready := Events.Event'(Ada.Finalization.Controlled with
                            Location => Ret_Event);
    end Read_Buffer;
-
-   function Write_Buffer (Queue       : Command_Queues.Command_Queue'Class;
-                          Buffer      : Memory.Buffers.Buffer'Class;
-                          Blocking    : Boolean;
-                          Offset      : Size;
-                          Source      : access Element_List;
-                          Wait_For    : access constant Events.Event_List)
-                          return Events.Event is
+   
+   procedure Write_Buffer (Queue       : Command_Queues.Command_Queue'Class;
+                           Buffer      : Memory.Buffers.Buffer'Class;
+                           Blocking    : Boolean;
+                           Offset      : Size;
+                           Source      : Element_List;
+                           Ready       : out Events.Event;
+                           Wait_For    : Events.Event_List := Events.No_Events) is
       Error     : Enumerations.Error_Code;
       Ret_Event : aliased System.Address;
    begin
-      if Wait_For /= null and then Wait_For.all'Length > 0 then
+      if Wait_For'Length > 0 then
          declare
-            Raw_List  : Address_List := Raw_Event_List (Wait_For.all);
+            Raw_List  : Address_List := Raw_Event_List (Wait_For);
          begin
             Error := API.Enqueue_Write_Buffer
               (CL_Object (Queue).Location,
                CL_Object (Buffer).Location,
                CL.Bool (Blocking), Offset,
-               Source.all'Length * Element_Bytes,
-               Source.all (Source.all'First)'Address,
+               Source'Length * Element_Bytes,
+               Source (Source'First)'Address,
                Raw_List'Length,
                Raw_List (1)'Unchecked_Access,
                Ret_Event'Unchecked_Access);
@@ -99,23 +99,24 @@ package body CL.Queueing.Memory_Objects is
               (CL_Object (Queue).Location,
                CL_Object (Buffer).Location,
                CL.Bool (Blocking), Offset,
-               Source.all'Length * Element_Bytes,
-               Source.all (Source.all'First)'Address,
+               Source'Length * Element_Bytes,
+               Source (Source'First)'Address,
                0, null, Ret_Event'Unchecked_Access);
       end if;
 
       Helpers.Error_Handler (Error);
-      return Events.Event'(Ada.Finalization.Controlled with
+      Ready := Events.Event'(Ada.Finalization.Controlled with
                              Location => Ret_Event);
    end Write_Buffer;
 
-   function Copy_Buffer (Queue         : Command_Queues.Command_Queue'Class;
-                         Source        : Memory.Buffers.Buffer'Class;
-                         Destination   : Memory.Buffers.Buffer'Class;
-                         Source_Offset : Size;
-                         Dest_Offset   : Size;
-                         Num_Elements  : Size;
-                         Wait_For      : Events.Event_List) return Events.Event is
+   procedure Copy_Buffer (Queue         : Command_Queues.Command_Queue'Class;
+                          Source        : Memory.Buffers.Buffer'Class;
+                          Destination   : Memory.Buffers.Buffer'Class;
+                          Source_Offset : Size;
+                          Dest_Offset   : Size;
+                          Num_Elements  : Size;
+                          Ready         : out Events.Event;
+                          Wait_For      : Events.Event_List := Events.No_Events) is
       Raw_List  : Address_List := Raw_Event_List (Wait_For);
       Error     : Enumerations.Error_Code;
       Ret_Event : aliased System.Address;
@@ -128,162 +129,162 @@ package body CL.Queueing.Memory_Objects is
                                         Raw_List (1)'Unchecked_Access,
                                         Ret_Event'Unchecked_Access);
       Helpers.Error_Handler (Error);
-      return Events.Event'(Ada.Finalization.Controlled with
-                           Location => Ret_Event);
+      Ready := Events.Event'(Ada.Finalization.Controlled with
+                             Location => Ret_Event);
    end Copy_Buffer;
 
-   function Read_Image2D (Queue       : Command_Queues.Command_Queue'Class;
-                          Image       : Memory.Images.Image2D'Class;
-                          Blocking    : Boolean;
-                          Origin      : Size_Vector2D;
-                          Region      : Size_Vector2D;
-                          Row_Pitch   : Size;
-                          Destination : access Element_List;
-                          Wait_For    : access constant Events.Event_List)
-                          return Events.Event is
-
-      Error     : Enumerations.Error_Code;
-      Ret_Event : aliased System.Address;
-      Origin_3D : Size_Vector3D := (1 => Origin (1), 2 => Origin (2), 3 => 0);
-      Region_3D : Size_Vector3D := (1 => Region (1), 2 => Region (2), 3 => 1);
-   begin
-      if Wait_For /= null and then Wait_For.all'Length > 0 then
-         declare
-            Raw_List  : Address_List := Raw_Event_List (Wait_For.all);
-         begin
-            Error := API.Enqueue_Read_Image
-              (CL_Object (Queue).Location,
-               CL_Object (Image).Location,
-               CL.Bool (Blocking),
-               Origin_3D (1)'Unchecked_Access,
-               Region_3D (1)'Unchecked_Access,
-               Row_Pitch, 0,
-               Destination.all (Destination.all'First)'Address,
-               Raw_List'Length,
-               Raw_List (1)'Unchecked_Access,
-               Ret_Event'Unchecked_Access);
-         end;
-      else
-         Error := API.Enqueue_Read_Image
-              (CL_Object (Queue).Location,
-               CL_Object (Image).Location,
-               CL.Bool (Blocking),
-               Origin_3D (1)'Unchecked_Access,
-               Region_3D (1)'Unchecked_Access,
-               Row_Pitch, 0,
-               Destination.all (Destination.all'First)'Address,
-               0, null, Ret_Event'Unchecked_Access);
-      end if;
-      Helpers.Error_Handler (Error);
-      return Events.Event'(Ada.Finalization.Controlled with
-                             Location => Ret_Event);
-   end Read_Image2D;
-
-   function Read_Image3D (Queue       : Command_Queues.Command_Queue'Class;
-                          Image       : Memory.Images.Image3D'Class;
-                          Blocking    : Boolean;
-                          Origin      : Size_Vector3D;
-                          Region      : Size_Vector3D;
-                          Row_Pitch   : Size;
-                          Slice_Pitch : Size;
-                          Destination : access Element_List;
-                          Wait_For    : access constant Events.Event_List)
-                          return Events.Event is
-      Error     : Enumerations.Error_Code;
-      Ret_Event : aliased System.Address;
-   begin
-      if Wait_For /= null and then Wait_For.all'Length > 0 then
-         declare
-            Raw_List  : Address_List := Raw_Event_List (Wait_For.all);
-         begin
-            Error := API.Enqueue_Read_Image
-              (CL_Object (Queue).Location,
-               CL_Object (Image).Location,
-               CL.Bool (Blocking), Origin (1)'Access,
-               Region (1)'Access,
-               Row_Pitch, Slice_Pitch,
-               Destination.all (Destination.all'First)'Address,
-               Raw_List'Length,
-               Raw_List (1)'Unchecked_Access,
-               Ret_Event'Unchecked_Access);
-         end;
-      else
-         Error := API.Enqueue_Read_Image
-              (CL_Object (Queue).Location,
-               CL_Object (Image).Location,
-               CL.Bool (Blocking), Origin (1)'Access,
-               Region (1)'Access,
-               Row_Pitch, Slice_Pitch,
-               Destination.all (Destination.all'First)'Address,
-               0, null, Ret_Event'Unchecked_Access);
-      end if;
-      Helpers.Error_Handler (Error);
-      return Events.Event'(Ada.Finalization.Controlled with
-                             Location => Ret_Event);
-   end Read_Image3D;
-
-   function Write_Image2D (Queue       : Command_Queues.Command_Queue'Class;
+   procedure Read_Image2D (Queue       : Command_Queues.Command_Queue'Class;
                            Image       : Memory.Images.Image2D'Class;
                            Blocking    : Boolean;
                            Origin      : Size_Vector2D;
                            Region      : Size_Vector2D;
                            Row_Pitch   : Size;
-                           Source      : access Element_List;
-                           Wait_For    : access constant Events.Event_List)
-                           return Events.Event is
+                           Destination : Element_List;
+                           Ready       : out Events.Event;
+                           Wait_For    : Events.Event_List := Events.No_Events) is
+
       Error     : Enumerations.Error_Code;
       Ret_Event : aliased System.Address;
       Origin_3D : Size_Vector3D := (1 => Origin (1), 2 => Origin (2), 3 => 0);
       Region_3D : Size_Vector3D := (1 => Region (1), 2 => Region (2), 3 => 1);
    begin
-      if Wait_For /= null and then Wait_For.all'Length > 0 then
+      if Wait_For'Length > 0 then
          declare
-            Raw_List  : Address_List := Raw_Event_List (Wait_For.all);
+            Raw_List  : Address_List := Raw_Event_List (Wait_For);
          begin
-            Error := API.Enqueue_Write_Image
+            Error := API.Enqueue_Read_Image
               (CL_Object (Queue).Location,
                CL_Object (Image).Location,
                CL.Bool (Blocking),
-               Origin_3D (1)'Access,
-               Region_3D (1)'Access,
+               Origin_3D (1)'Unchecked_Access,
+               Region_3D (1)'Unchecked_Access,
                Row_Pitch, 0,
-               Source.all (Source.all'First)'Address,
+               Destination (Destination'First)'Address,
                Raw_List'Length,
                Raw_List (1)'Unchecked_Access,
                Ret_Event'Unchecked_Access);
          end;
       else
-         Error := API.Enqueue_Write_Image
+         Error := API.Enqueue_Read_Image
               (CL_Object (Queue).Location,
                CL_Object (Image).Location,
                CL.Bool (Blocking),
-               Origin_3D (1)'Access,
-               Region_3D (1)'Access,
+               Origin_3D (1)'Unchecked_Access,
+               Region_3D (1)'Unchecked_Access,
                Row_Pitch, 0,
-               Source.all (Source.all'First)'Address,
+               Destination (Destination'First)'Address,
                0, null, Ret_Event'Unchecked_Access);
       end if;
       Helpers.Error_Handler (Error);
-      return Events.Event'(Ada.Finalization.Controlled with
+      Ready := Events.Event'(Ada.Finalization.Controlled with
                              Location => Ret_Event);
-   end Write_Image2D;
+   end Read_Image2D;
 
-   function Write_Image3D (Queue       : Command_Queues.Command_Queue'Class;
+   procedure Read_Image3D (Queue       : Command_Queues.Command_Queue'Class;
                            Image       : Memory.Images.Image3D'Class;
                            Blocking    : Boolean;
                            Origin      : Size_Vector3D;
                            Region      : Size_Vector3D;
                            Row_Pitch   : Size;
                            Slice_Pitch : Size;
-                           Source      : access Element_List;
-                           Wait_For    : access constant Events.Event_List)
-                           return Events.Event is
+                           Destination : Element_List;
+                           Ready       : out Events.Event;
+                           Wait_For    : Events.Event_List := Events.No_Events) is
       Error     : Enumerations.Error_Code;
       Ret_Event : aliased System.Address;
    begin
-      if Wait_For /= null and then Wait_For.all'Length > 0 then
+      if Wait_For'Length > 0 then
          declare
-            Raw_List  : Address_List := Raw_Event_List (Wait_For.all);
+            Raw_List  : Address_List := Raw_Event_List (Wait_For);
+         begin
+            Error := API.Enqueue_Read_Image
+              (CL_Object (Queue).Location,
+               CL_Object (Image).Location,
+               CL.Bool (Blocking), Origin (1)'Access,
+               Region (1)'Access,
+               Row_Pitch, Slice_Pitch,
+               Destination (Destination'First)'Address,
+               Raw_List'Length,
+               Raw_List (1)'Unchecked_Access,
+               Ret_Event'Unchecked_Access);
+         end;
+      else
+         Error := API.Enqueue_Read_Image
+              (CL_Object (Queue).Location,
+               CL_Object (Image).Location,
+               CL.Bool (Blocking), Origin (1)'Access,
+               Region (1)'Access,
+               Row_Pitch, Slice_Pitch,
+               Destination (Destination'First)'Address,
+               0, null, Ret_Event'Unchecked_Access);
+      end if;
+      Helpers.Error_Handler (Error);
+      Ready := Events.Event'(Ada.Finalization.Controlled with
+                             Location => Ret_Event);
+   end Read_Image3D;
+
+   procedure Write_Image2D (Queue       : Command_Queues.Command_Queue'Class;
+                            Image       : Memory.Images.Image2D'Class;
+                            Blocking    : Boolean;
+                            Origin      : Size_Vector2D;
+                            Region      : Size_Vector2D;
+                            Row_Pitch   : Size;
+                            Source      : Element_List;
+                            Ready       : out Events.Event;
+                            Wait_For    : Events.Event_List := Events.No_Events) is
+      Error     : Enumerations.Error_Code;
+      Ret_Event : aliased System.Address;
+      Origin_3D : Size_Vector3D := (1 => Origin (1), 2 => Origin (2), 3 => 0);
+      Region_3D : Size_Vector3D := (1 => Region (1), 2 => Region (2), 3 => 1);
+   begin
+      if Wait_For'Length > 0 then
+         declare
+            Raw_List  : Address_List := Raw_Event_List (Wait_For);
+         begin
+            Error := API.Enqueue_Write_Image
+              (CL_Object (Queue).Location,
+               CL_Object (Image).Location,
+               CL.Bool (Blocking),
+               Origin_3D (1)'Access,
+               Region_3D (1)'Access,
+               Row_Pitch, 0,
+               Source (Source'First)'Address,
+               Raw_List'Length,
+               Raw_List (1)'Unchecked_Access,
+               Ret_Event'Unchecked_Access);
+         end;
+      else
+         Error := API.Enqueue_Write_Image
+              (CL_Object (Queue).Location,
+               CL_Object (Image).Location,
+               CL.Bool (Blocking),
+               Origin_3D (1)'Access,
+               Region_3D (1)'Access,
+               Row_Pitch, 0,
+               Source (Source'First)'Address,
+               0, null, Ret_Event'Unchecked_Access);
+      end if;
+      Helpers.Error_Handler (Error);
+      Ready := Events.Event'(Ada.Finalization.Controlled with
+                             Location => Ret_Event);
+   end Write_Image2D;
+
+   procedure Write_Image3D (Queue       : Command_Queues.Command_Queue'Class;
+                            Image       : Memory.Images.Image3D'Class;
+                            Blocking    : Boolean;
+                            Origin      : Size_Vector3D;
+                            Region      : Size_Vector3D;
+                            Row_Pitch   : Size;
+                            Slice_Pitch : Size;
+                            Source      : Element_List;
+                            Ready       : out Events.Event;
+                            Wait_For    : Events.Event_List := Events.No_Events) is
+      Error     : Enumerations.Error_Code;
+      Ret_Event : aliased System.Address;
+   begin
+      if Wait_For'Length > 0 then
+         declare
+            Raw_List  : Address_List := Raw_Event_List (Wait_For);
          begin
             Error := API.Enqueue_Write_Image
               (CL_Object (Queue).Location,
@@ -292,7 +293,7 @@ package body CL.Queueing.Memory_Objects is
                Origin (1)'Access,
                Region (1)'Access,
                Row_Pitch, Slice_Pitch,
-               Source.all (Source.all'First)'Address,
+               Source (Source'First)'Address,
                Raw_List'Length,
                Raw_List (1)'Unchecked_Access,
                Ret_Event'Unchecked_Access);
@@ -305,22 +306,22 @@ package body CL.Queueing.Memory_Objects is
                Origin (1)'Access,
                Region (1)'Access,
                Row_Pitch, Slice_Pitch,
-               Source.all (Source.all'First)'Address,
+               Source (Source'First)'Address,
                0, null, Ret_Event'Unchecked_Access);
       end if;
       Helpers.Error_Handler (Error);
-      return Events.Event'(Ada.Finalization.Controlled with
+      Ready := Events.Event'(Ada.Finalization.Controlled with
                              Location => Ret_Event);
    end Write_Image3D;
 
-   function Copy_Image2D (Queue       : Command_Queues.Command_Queue'Class;
-                          Source      : Memory.Images.Image2D'Class;
-                          Destination : Memory.Images.Image2D'Class;
-                          Src_Origin  : Size_Vector2D;
-                          Dest_Origin : Size_Vector2D;
-                          Region      : Size_Vector2D;
-                          Wait_For    : access constant Events.Event_List)
-                          return Events.Event is
+   procedure Copy_Image2D (Queue       : Command_Queues.Command_Queue'Class;
+                           Source      : Memory.Images.Image2D'Class;
+                           Destination : Memory.Images.Image2D'Class;
+                           Src_Origin  : Size_Vector2D;
+                           Dest_Origin : Size_Vector2D;
+                           Region      : Size_Vector2D;
+                           Ready       : out Events.Event;
+                           Wait_For    : Events.Event_List := Events.No_Events) is
       Error     : Enumerations.Error_Code;
       Ret_Event : aliased System.Address;
       Src_Origin_3D : Size_Vector3D := (1 => Src_Origin (1),
@@ -329,9 +330,9 @@ package body CL.Queueing.Memory_Objects is
                                          2 => Dest_Origin (2), 3 => 0);
       Region_3D : Size_Vector3D := (1 => Region (1), 2 => Region (2), 3 => 1);
    begin
-      if Wait_For /= null and then Wait_For.all'Length > 0 then
+      if Wait_For'Length > 0 then
          declare
-            Raw_List  : Address_List := Raw_Event_List (Wait_For.all);
+            Raw_List  : Address_List := Raw_Event_List (Wait_For);
          begin
             Error := API.Enqueue_Copy_Image
               (CL_Object (Queue).Location,
@@ -355,24 +356,24 @@ package body CL.Queueing.Memory_Objects is
                0, null, Ret_Event'Unchecked_Access);
       end if;
       Helpers.Error_Handler (Error);
-      return Events.Event'(Ada.Finalization.Controlled with
+      Ready := Events.Event'(Ada.Finalization.Controlled with
                              Location => Ret_Event);
    end Copy_Image2D;
 
-   function Copy_Image3D (Queue       : Command_Queues.Command_Queue'Class;
-                          Source      : Memory.Images.Image3D'Class;
-                          Destination : Memory.Images.Image3D'Class;
-                          Src_Origin  : Size_Vector3D;
-                          Dest_Origin : Size_Vector3D;
-                          Region      : Size_Vector3D;
-                          Wait_For    : access constant Events.Event_List)
-                          return Events.Event is
+   procedure Copy_Image3D (Queue       : Command_Queues.Command_Queue'Class;
+                           Source      : Memory.Images.Image3D'Class;
+                           Destination : Memory.Images.Image3D'Class;
+                           Src_Origin  : Size_Vector3D;
+                           Dest_Origin : Size_Vector3D;
+                           Region      : Size_Vector3D;
+                           Ready       : out Events.Event;
+                           Wait_For    : Events.Event_List := Events.No_Events) is
       Error     : Enumerations.Error_Code;
       Ret_Event : aliased System.Address;
    begin
-      if Wait_For /= null and then Wait_For.all'Length > 0 then
+      if Wait_For'Length > 0 then
          declare
-            Raw_List  : Address_List := Raw_Event_List (Wait_For.all);
+            Raw_List  : Address_List := Raw_Event_List (Wait_For);
          begin
             Error := API.Enqueue_Copy_Image
               (CL_Object (Queue).Location,
@@ -396,7 +397,7 @@ package body CL.Queueing.Memory_Objects is
                0, null, Ret_Event'Unchecked_Access);
       end if;
       Helpers.Error_Handler (Error);
-      return Events.Event'(Ada.Finalization.Controlled with
+      Ready := Events.Event'(Ada.Finalization.Controlled with
                              Location => Ret_Event);
    end Copy_Image3D;
 end CL.Queueing.Memory_Objects;

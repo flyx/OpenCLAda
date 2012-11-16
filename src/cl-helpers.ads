@@ -141,7 +141,7 @@ private package CL.Helpers is
 
    generic
       type Element_T is abstract new CL_Object with private;
-      type Element_List_T is array (Positive range <>) of access Element_T'Class;
+      type Element_List_T is array (Integer range <>) of access Element_T'Class;
    function Raw_List_From_Polymorphic (List : Element_List_T) return Address_List;
 
    generic

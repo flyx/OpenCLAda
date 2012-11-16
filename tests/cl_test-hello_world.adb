@@ -42,7 +42,7 @@ with CL_Test.Helpers;
 procedure CL_Test.Hello_World is
    package IO renames Ada.Text_IO;
 
-   type Aliased_String is array (Positive range <>) of aliased Character;
+   type Aliased_String is array (Integer range <>) of aliased Character;
 
    function String_Buffer is
      new CL.Memory.Buffers.Constructors.Create_From_Source (Element => Character,
@@ -77,7 +77,7 @@ begin
    IO.Put_Line ("Creating context");
    Context     := CL.Contexts.Constructors.Create_For_Devices (Platform, (1 => Device));
    IO.Put_Line ("Creating buffer");
-   Buffer      := String_Buffer (Context, CL.Memory.Write_Only, Output'Access);
+   Buffer      := String_Buffer (Context, CL.Memory.Write_Only, Output);
 
    IO.Put_Line ("Compiling kernel source");
    IO.Open (Kernel_File, IO.In_File, "../tests/hello-kernel.cl");
@@ -102,7 +102,7 @@ begin
                                         Local_Work_Size'Access, null);
    Event.Wait_For;
    IO.Put_Line ("Retrieving result");
-   Event := String_Objects.Read_Buffer (Queue, Buffer, True, 0, Output'Access, null);
+   String_Objects.Read_Buffer (Queue, Buffer, True, 0, Output, Event);
 
    IO.Put_Line (String (Output));
 end CL_Test.Hello_World;

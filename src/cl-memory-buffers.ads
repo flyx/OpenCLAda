@@ -44,10 +44,10 @@ package CL.Memory.Buffers is
 
       generic
          type Element is private;
-         type Element_List is array (Positive range <>) of Element;
+         type Element_List is array (Integer range <>) of Element;
       function Create_From_Source (Context              : Contexts.Context'Class;
                                    Mode                 : Access_Kind;
-                                   Source               : access constant Element_List;
+                                   Source               : Element_List;
                                    Use_Source_As_Buffer : Boolean := False;
                                    Use_Host_Memory      : Boolean := False)
                                    return Buffer;

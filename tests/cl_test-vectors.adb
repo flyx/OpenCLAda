@@ -17,7 +17,7 @@ with CL_Test.Helpers;
 procedure CL_Test.Vectors is
    package IO renames Ada.Text_IO;
 
-   type Int2_List is array (Positive range <>) of CL.Vectors.Int2;
+   type Int2_List is array (Integer range <>) of CL.Vectors.Int2;
 
    Source1_List : aliased Int2_List := ((1, 2), (3, 4), (5, 6), (7, 8), (9, 0));
    Source2_List : aliased Int2_List := ((0, 9), (2, 7), (4, 5), (6, 3), (8, 1));
@@ -25,7 +25,7 @@ procedure CL_Test.Vectors is
 
    function Int2_Buffer is
      new CL.Memory.Buffers.Constructors.Create_From_Source
-       (Element      => CL.Vectors.Int2, Element_List => Int2_List);
+       (Element => CL.Vectors.Int2, Element_List => Int2_List);
 
    package Int2_Objects is
      new CL.Queueing.Memory_Objects (Element      => CL.Vectors.Int2,
@@ -54,8 +54,8 @@ begin
                                                               others => False)) (1);
    Device_List := (1 => Device);
    Context     := CL.Contexts.Constructors.Create_For_Devices (Platform, Device_List);
-   Source1     := Int2_Buffer (Context, CL.Memory.Read_Only, Source1_List'Access);
-   Source2     := Int2_Buffer (Context, CL.Memory.Read_Only, Source2_List'Access);
+   Source1     := Int2_Buffer (Context, CL.Memory.Read_Only, Source1_List);
+   Source2     := Int2_Buffer (Context, CL.Memory.Read_Only, Source2_List);
    Destination := CL.Memory.Buffers.Constructors.Create (Context, CL.Memory.Write_Only, CL.Vectors.Int2'Size / System.Storage_Unit * Source1_List'Length);
    Queue       := CL.Command_Queues.Constructors.Create (Context, Device,
                                                          CL.Platforms.CQ_Property_Vector'(others => False));
@@ -76,7 +76,7 @@ begin
    Event := CL.Queueing.Execute_Kernel (Queue, Kernel, 1, Global_Work_Size'Access,
                                         Local_Work_Size'Access, null);
    Event.Wait_For;
-   Event := Int2_Objects.Read_Buffer (Queue, Destination, True, 0, Destination_List'Access, null);
+   Int2_Objects.Read_Buffer (Queue, Destination, True, 0, Destination_List, Event);
    IO.Put ("Output: (");
    for Index in Destination_List'Range loop
       IO.Put ("(" & Destination_List (Index)(0)'Img & "," & Destination_List (Index)(1)'Img & "),");

@@ -51,7 +51,7 @@ package body CL.Memory.Buffers is
 
       function Create_From_Source (Context              : Contexts.Context'Class;
                                    Mode                 : Access_Kind;
-                                   Source               : access constant Element_List;
+                                   Source               : Element_List;
                                    Use_Source_As_Buffer : Boolean := False;
                                    Use_Host_Memory      : Boolean := False)
                                    return Buffer is
@@ -77,8 +77,8 @@ package body CL.Memory.Buffers is
          Raw_Object
            := API.Create_Buffer (Context  => CL_Object (Context).Location,
                                  Flags    => To_Bitfield (Flags),
-                                 Size     => Source.all'Size / System.Storage_Unit,
-                                 Host_Ptr => Source.all (Source.all'First)'Address,
+                                 Size     => Source'Size / System.Storage_Unit,
+                                 Host_Ptr => Source (Source'First)'Address,
                                  Error    => Error'Unchecked_Access);
          Helpers.Error_Handler (Error);
          return Buffer'(Ada.Finalization.Controlled with Location => Raw_Object);
