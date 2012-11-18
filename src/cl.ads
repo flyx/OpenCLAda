@@ -26,8 +26,8 @@
 
 with Ada.Finalization;
 with Interfaces.C;
+with System;
 
-private with System;
 private with Interfaces.C.Strings;
 private with Interfaces.C.Pointers;
 
