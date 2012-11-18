@@ -25,8 +25,11 @@
 --------------------------------------------------------------------------------
 
 with Ada.Numerics.Generic_Elementary_Functions;
+with Ada.Strings.Fixed;
 
 package body CL.Vectors is
+   use Ada.Strings.Fixed;
+   use Ada.Strings;
    
    generic
       type Vector_Range is (<>);
@@ -48,6 +51,43 @@ package body CL.Vectors is
       end loop;
       return Normed;
    end Normalizer;
+   
+   function To_String (Value : Char) return String is
+   begin
+      return Trim (Value'Img, Both);
+   end To_String;
+   function To_String (Value : Short) return String is
+   begin
+      return Trim (Value'Img, Both);
+   end To_String;
+   function To_String (Value : Int) return String is
+   begin
+      return Trim (Value'Img, Both);
+   end To_String;
+   function To_String (Value : Long) return String is
+   begin
+      return Trim (Value'Img, Both);
+   end To_String;
+   function To_String (Value : UChar) return String is
+   begin
+      return Trim (Value'Img, Both);
+   end To_String;
+   function To_String (Value : UShort) return String is
+   begin
+      return Trim (Value'Img, Both);
+   end To_String;
+   function To_String (Value : UInt) return String is
+   begin
+      return Trim (Value'Img, Both);
+   end To_String;
+   function To_String (Value : ULong) return String is
+   begin
+      return Trim (Value'Img, Both);
+   end To_String;
+   function To_String (Value : CL.Float) return String is
+   begin
+      return Trim (Value'Img, Both);
+   end To_String;
    
    function Normalizer2 is new Normalizer (Range2, Float2);
    function Normalizer3 is new Normalizer (Range3, Float3);

@@ -36,4 +36,9 @@ package body CL is
    begin
       return Object.Location /= System.Null_Address;
    end Initialized;
+   
+   function Raw (Source : Runtime_Object) return System.Address is
+   begin
+      return Source.Location;
+   end Raw;
 end CL;

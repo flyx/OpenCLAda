@@ -94,6 +94,8 @@ package CL is
    function Initialized (Object : Runtime_Object) return Boolean;
 
    function Reference_Count (Source : Runtime_Object) return UInt is abstract;
+   
+   function Raw (Source : Runtime_Object) return System.Address;
 
    -----------------------------------------------------------------------------
    --  Exceptions

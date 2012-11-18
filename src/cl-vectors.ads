@@ -29,12 +29,25 @@ with CL.Vector_Operations;
 package CL.Vectors is
    pragma Preelaborate (CL.Vectors);
    
+   -- Needed for the instances of Vector_Set
+   function To_String (Value : Char) return String;
+   function To_String (Value : Short) return String;
+   function To_String (Value : Int) return String;
+   function To_String (Value : Long) return String;
+   function To_String (Value : UChar) return String;
+   function To_String (Value : UShort) return String;
+   function To_String (Value : UInt) return String;
+   function To_String (Value : ULong) return String;
+   function To_String (Value : CL.Float) return String;
+   pragma Inline (To_String);
+   
    generic
       type Base is private;
       with function "+" (Left, Right: Base) return Base is <>;
       with function "-" (Left, Right: Base) return Base is <>;
       with function "*" (Left, Right: Base) return Base is <>;
       with function "/" (Left, Right: Base) return Base is <>;
+      with function To_String (Values : Base) return String is <>;
    package Vector_Set is
       package V2 is new Vector_Operations (Base => Base,
                                            Vector_Range => Range2);
@@ -57,6 +70,8 @@ package CL.Vectors is
    package UInt_Vectors is new Vector_Set (Base => UInt);
    package ULong_Vectors is new Vector_Set (Base => ULong);
    package Float_Vectors is new Vector_Set (Base => CL.Float);
+   
+   
    
    -----------------------------------------------------------------------------
    --  OpenCL vector types that are available

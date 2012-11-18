@@ -1,6 +1,7 @@
 
 generic
    type Base is private;
+   with function To_String (Value : Base) return String is <>;
    type Vector_Range is (<>);
    with function "+" (Left, Right: Base) return Base is <>;
    with function "-" (Left, Right: Base) return Base is <>;
@@ -32,6 +33,9 @@ package CL.Vector_Operations is
 
    --  Element-wise division
    function "/" (Left, Right : Vector) return Vector;
+   
+   -- Formats the vector as String (e.g. for debugging)
+   function To_String (Value : Vector) return String;
    
 private
    pragma Convention (C, Vector);
