@@ -72,7 +72,31 @@ package CL is
    subtype Range4  is Natural range 0 .. 3;
    subtype Range8  is Natural range 0 .. 7;
    subtype Range16 is Natural range 0 .. 15;
-
+   
+   
+   -- Mainly needed in order to have a single interface for
+   -- converting numeric values to string when instanciating
+   -- generic packages like Vector_Operations. ('Img cannot
+   -- be used directly because it takes both integer and floating
+   -- point types, and there is no common supertype that supports
+   -- 'Img)
+   function To_String (Value : Char)     return String;
+   function To_String (Value : Short)    return String;
+   function To_String (Value : Int)      return String;
+   function To_String (Value : Long)     return String;
+   function To_String (Value : UChar)    return String;
+   function To_String (Value : UShort)   return String;
+   function To_String (Value : UInt)     return String;
+   function To_String (Value : ULong)    return String;
+   function To_String (Value : CL.Float) return String;
+   pragma Inline (To_String);
+   
+   -- Float types should be compared with a small epsilon value to
+   -- compensate rounding errors and such.
+   generic
+      Epsilon : Float;
+   function Float_Equals (Left, Right : Float) return Boolean;
+   
    -----------------------------------------------------------------------------
    --  Types used by this API
    -----------------------------------------------------------------------------

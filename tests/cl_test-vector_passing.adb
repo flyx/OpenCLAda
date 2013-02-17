@@ -14,13 +14,11 @@ with CL.Vectors;
 
 with CL_Test.Helpers;
 
-procedure CL_Test.Vectors is
+procedure CL_Test.Vector_Passing is
    package IO renames Ada.Text_IO;
    use CL.Vectors;
 
-   Source1_List : aliased Int2_Array := New_Array (((1, 2), (3, 4), (5, 6), (7, 8), (9, 0)));
-   Source2_List : aliased Int2_Array := New_Array (((0, 9), (2, 7), (4, 5), (6, 3), (8, 1)));
-   Destination_List : aliased Int2_Array := New_Array ((Source1_List'Range => (0, 0)));
+   Destination_List : aliased Int2_Array := New_Array ((1 => (0, 0)));
 
    function Int2_Buffer is
      new CL.Memory.Buffers.Constructors.Create_From_Source
@@ -42,10 +40,9 @@ procedure CL_Test.Vectors is
 
    Kernel_File : IO.File_Type;
 
-   Global_Work_Size : aliased CL.Size_List := (1 => Source1_List'Length);
-   Local_Work_Size  : aliased CL.Size_List := (1 => 1);
-
    use type CL.Size;
+   
+   procedure Set_Input is new CL.Kernels.Set_Kernel_Argument (Argument_Type => Int2, Argument_Index => 0);
 begin
 
    Platform    := CL.Platforms.List (1);
@@ -53,14 +50,12 @@ begin
                                                               others => False)) (1);
    Device_List := (1 => Device);
    Context     := CL.Contexts.Constructors.Create_For_Devices (Platform, Device_List);
-   Source1     := Int2_Buffer (Context, CL.Memory.Read_Only, Source1_List);
-   Source2     := Int2_Buffer (Context, CL.Memory.Read_Only, Source2_List);
-   Destination := CL.Memory.Buffers.Constructors.Create (Context, CL.Memory.Write_Only, CL.Vectors.Int2'Size / System.Storage_Unit * Source1_List'Length);
+   Destination := CL.Memory.Buffers.Constructors.Create (Context, CL.Memory.Write_Only, CL.Vectors.Int2'Size / System.Storage_Unit);
    Queue       := CL.Command_Queues.Constructors.Create (Context, Device,
                                                          CL.Platforms.CQ_Property_Vector'(others => False));
 
-   IO.Open (Kernel_File, IO.In_File, "../tests/vectors.cl");
-    declare
+   IO.Open (Kernel_File, IO.In_File, "../tests/vector_passing.cl");
+   declare
       Kernel_Source : String := CL_Test.Helpers.Read_File (Kernel_File);
    begin
       IO.Close (Kernel_File);
@@ -69,11 +64,9 @@ begin
    end;
    Program.Build (Device_List, "", null);
    Kernel := CL.Kernels.Constructors.Create (Program, "add");
-   Kernel.Set_Kernel_Argument_Object (0, Source1);
-   Kernel.Set_Kernel_Argument_Object (1, Source2);
-   Kernel.Set_Kernel_Argument_Object (2, Destination);
-   Event := CL.Queueing.Execute_Kernel (Queue, Kernel, 1, Global_Work_Size'Access,
-                                        Local_Work_Size'Access, null);
+   Set_Input (Kernel, CL_Vector (7, 42));
+   Kernel.Set_Kernel_Argument_Object (1, Destination);
+   Event := CL.Queueing.Execute_Task (Queue, Kernel, null);
    Event.Wait_For;
    Int2_Objects.Read_Buffer (Queue, Destination, True, 0, Destination_List, Event);
    IO.Put ("Output: (");
@@ -82,4 +75,4 @@ begin
    end loop;
    IO.Put_Line (")");
 
-end CL_Test.Vectors;
+end CL_Test.Vector_Passing;

@@ -1,8 +1,9 @@
 
 generic
    type Base is private;
+   type Base_Vector is array (Natural range <>) of aliased Base;
    with function To_String (Value : Base) return String is <>;
-   type Vector_Range is (<>);
+   type Vector_Range is new Natural;
    with function "+" (Left, Right: Base) return Base is <>;
    with function "-" (Left, Right: Base) return Base is <>;
    with function "*" (Left, Right: Base) return Base is <>;
@@ -10,7 +11,8 @@ generic
 package CL.Vector_Operations is
    pragma Preelaborate (CL.Vector_Operations);
    
-   type Vector is array (Vector_Range) of aliased Base;
+   subtype Vector is Base_Vector (Natural (Vector_Range'First) .. Natural (Vector_Range'Last));
+   type Vector_Array is array (Integer range <>) of Vector;
    
    generic
       with function Operation (Left, Right : Base) return Base;
@@ -36,7 +38,4 @@ package CL.Vector_Operations is
    
    -- Formats the vector as String (e.g. for debugging)
    function To_String (Value : Vector) return String;
-   
-private
-   pragma Convention (C, Vector);
 end CL.Vector_Operations;

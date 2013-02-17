@@ -5,7 +5,7 @@ package body CL.Vector_Operations is
    function Element_Wise (Left, Right : Vector) return Vector is
       Result : Vector;
    begin
-      for I in Vector_Range'Range loop
+      for I in Natural (Vector_Range'First) .. Natural (Vector_Range'Last) loop
          Result (I) := Operation (Left (I), Right (I));
       end loop;
       return Result;
@@ -14,7 +14,7 @@ package body CL.Vector_Operations is
    function Apply_Scalar (Left : Vector; Right : Base) return Vector is
       Result : Vector;
    begin
-      for I in Vector_Range'Range loop
+      for I in Natural (Vector_Range'First) .. Natural (Vector_Range'Last) loop
          Result (I) := Operation (Left (I), Right);
       end loop;
       return Result;
@@ -51,7 +51,7 @@ package body CL.Vector_Operations is
    begin
       Result (1) := '(';
       Pos := 2;
-      for I in Vector_Range'Range loop
+      for I in Natural (Vector_Range'First) .. Natural (Vector_Range'Last) loop
          if Pos /= 2 and Pos + 1 <= Max then
             Result (Pos .. Pos + 1) := ", ";
             Pos := Pos + 2;
