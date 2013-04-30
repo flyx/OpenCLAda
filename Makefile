@@ -7,13 +7,13 @@ GNATFLAGS ?=
 ADA_PROJECT_DIR ?= ${PREFIX}/lib/gnat
 GPRBUILD = gprbuild ${GNATFLAGS} -p
 
-GL_BACKEND := Windows
+GL_BACKEND := windows
 UNAME := $(shell uname)
 ifeq ($(UNAME), Darwin)
-  GL_BACKEND := MacOSX
+  GL_BACKEND := mac
 endif
 ifeq ($(UNAME), Linux)
-  GL_BACKEND := Linux
+  GL_BACKEND := linux
 endif
 
 compile:

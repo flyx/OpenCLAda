@@ -81,113 +81,113 @@ procedure CL_Test.CL_GL is
    Global_Work_Size : aliased constant CL.Size_List := (1 => 512, 2 => 512);
    Local_Work_Size  : aliased constant CL.Size_List := (1 => 16,  2 => 16);
    
+   My_Texture : GL.Objects.Textures.Texture;
+   CL_Texture : aliased CL.Memory.Images.CL_GL.GL_Shared_Image2D;
 begin
    IO.Put_Line ("Initializing GLFW");
    Glfw.Init;
    Glfw.Display.Open (Mode => Glfw.Display.Window);
+   
+   My_Texture.Initialize_Id;
+   
+   GL.Objects.Textures.Texture_2D.Bind (My_Texture);
+   GL.Fixed.Matrix.Projection.Load_Identity;
+   GL.Fixed.Matrix.Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+   GL.Toggles.Set (GL.Toggles.Texture_2D, GL.Toggles.Enabled);
+   
+   IO.Put_Line ("Initializing OpenCL");
+   Platform    := CL.Platforms.List (1);
+   Device      := Platform.Devices (GPU_Devices) (1);
+   Device_List := (1 => Device);
+   IO.Put_Line ("Using device " & Device.Name & " with maximum work group size" &
+     Device.Max_Work_Group_Size'Img);
+   Context := CL.Contexts.CL_GL.Constructors.Create (Platform, Device_List);
+   Queue   := CL.Command_Queues.CL_GL.Constructors.Create (Context, Device, My_Platform_Props);
+   
+   IO.Put_Line ("Loading kernel");
+   IO.Open (Kernel_File, IO.In_File, "../tests/cl_gl_testkernel.cl");
    declare
-      My_Texture : GL.Objects.Textures.Texture;
-      CL_Texture : aliased CL.Memory.Images.CL_GL.GL_Shared_Image2D;
+      Kernel_Source : aliased String := Helpers.Read_File (Kernel_File);
    begin
-      GL.Objects.Textures.Texture_2D.Bind (My_Texture);
-      GL.Fixed.Matrix.Projection.Load_Identity;
-      GL.Fixed.Matrix.Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-      GL.Toggles.Set (GL.Toggles.Texture_2D, GL.Toggles.Enabled);
+      IO.Close (Kernel_File);
+      Program := CL.Programs.Constructors.Create_From_Source (Context,
+        Kernel_Source);
+   end;
+   
+   IO.Put_Line ("Building Program");
+   Program.Build (Device_List, "", null);
+   Kernel := CL.Kernels.Constructors.Create (Program, "cl_gl_testkernel");
+   
+   IO.Put_Line ("Configuring Texture");
+   GL.Objects.Textures.Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Repeat);
+   GL.Objects.Textures.Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Mirrored_Repeat);
+   GL.Objects.Textures.Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
+   GL.Objects.Textures.Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
+   
+   GL.Fixed.Textures.Set_Tex_Function (GL.Fixed.Textures.Replace);
+   GL.Objects.Textures.Loader_2D.Load_Empty_Texture (
+     Target          => GL.Objects.Textures.Loader_2D.TX_2D,
+     Level           => 0,
+     Internal_Format => GL.Pixel_Data.RGBA,
+     Width           => 512,
+     Height          => 512,
+     Border          => False,
+     Format          => GL.Pixel_Data.RGBA,
+     Data_Type       => GL.Pixel_Data.Float);
+   
+   IO.Put_Line ("Loading Texture to OpenCL");
+   CL_Texture := CL.Memory.Images.CL_GL.Constructors.Create_Image2D_From_Texture (
+     Context        => Context,
+     Mode           => CL.Memory.Read_Write,
+     Texture_Target => GL.Objects.Textures.Loader_2D.TX_2D,
+     Mipmap_Level   => 0,
+     Texture        => My_Texture
+   );
+   Kernel.Set_Kernel_Argument_Object (0, CL_Texture);
+   
+   IO.Put_Line ("Entering main loop");
+   while not Glfw.Events.Keys.Pressed (Glfw.Events.Keys.Esc) and
+     Glfw.Display.Opened loop
+      GL.Buffers.Clear (GL.Buffers.Buffer_Bits'(Color => True, others => False));
+      GL.Finish;
       
-      IO.Put_Line ("Initializing OpenCL");
-      Platform    := CL.Platforms.List (1);
-      Device      := Platform.Devices (GPU_Devices) (1);
-      Device_List := (1 => Device);
-      IO.Put_Line ("Using device " & Device.Name & " with maximum work group size" &
-        Device.Max_Work_Group_Size'Img);
-      Context := CL.Contexts.CL_GL.Constructors.Create (Platform, Device_List);
-      Queue   := CL.Command_Queues.CL_GL.Constructors.Create (Context, Device, My_Platform_Props);
+      IO.Put_Line ("Acquire Texture");
+      CL_Event := CL.Queueing.CL_GL.Acquire_GL_Objects
+        (Queue, (1 => CL_Texture'Unchecked_Access), null);
+      Queue.Finish;
       
-      IO.Put_Line ("Loading kernel");
-      IO.Open (Kernel_File, IO.In_File, "../tests/cl_gl_testkernel.cl");
+      IO.Put_Line ("Executing kernel");
+      CL_Event := CL.Queueing.Execute_Kernel (Queue, Kernel, 2, Global_Work_Size'Access,
+        Local_Work_Size'Access, null);
+      Queue.Finish;
+      
+      IO.Put_Line ("Release Texture");
+      CL_Event := CL.Queueing.CL_GL.Release_GL_Objects
+        (Queue, (1 => CL_Texture'Unchecked_Access), null);
+      Queue.Finish;
+      
+      IO.Put_Line ("Rendering Texture");
       declare
-         Kernel_Source : aliased String := Helpers.Read_File (Kernel_File);
+         use GL.Immediate;
+         use GL.Types.Doubles;
+         Token : Input_Token := Start (Quads);
       begin
-         IO.Close (Kernel_File);
-         Program := CL.Programs.Constructors.Create_From_Source (Context,
-           Kernel_Source);
+         Set_Texture_Coordinates (Vector4'( 0.0,  1.0, 0.0, 1.0));
+         Token.Add_Vertex        (Vector4'(-1.0, -1.0, 0.0, 1.0));
+         Set_Texture_Coordinates (Vector4'( 0.0,  0.0, 0.0, 1.0));
+         Token.Add_Vertex        (Vector4'(-1.0,  1.0, 0.0, 1.0));
+         Set_Texture_Coordinates (Vector4'( 1.0,  0.0, 0.0, 1.0));
+         Token.Add_Vertex        (Vector4'( 1.0,  1.0, 0.0, 1.0));
+         Set_Texture_Coordinates (Vector4'( 1.0,  1.0, 0.0, 1.0));
+         Token.Add_Vertex        (Vector4'( 1.0, -1.0, 0.0, 1.0));
       end;
       
-      IO.Put_Line ("Building Program");
-      Program.Build (Device_List, "", null);
-      Kernel := CL.Kernels.Constructors.Create (Program, "cl_gl_testkernel");
+      GL.Finish;
       
-      IO.Put_Line ("Configuring Texture");
-      GL.Objects.Textures.Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Repeat);
-      GL.Objects.Textures.Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Mirrored_Repeat);
-      GL.Objects.Textures.Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
-      GL.Objects.Textures.Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
+      Glfw.Display.Swap_Buffers;
       
-      GL.Fixed.Textures.Set_Tex_Function (GL.Fixed.Textures.Replace);
-      GL.Objects.Textures.Loader_2D.Load_Empty_Texture (
-        Target          => GL.Objects.Textures.Loader_2D.TX_2D,
-        Level           => 0,
-        Internal_Format => GL.Pixel_Data.RGBA,
-        Width           => 512,
-        Height          => 512,
-        Border          => False,
-        Format          => GL.Pixel_Data.RGBA,
-        Data_Type       => GL.Pixel_Data.Float);
-      
-      IO.Put_Line ("Loading Texture to OpenCL");
-      CL_Texture := CL.Memory.Images.CL_GL.Constructors.Create_Image2D_From_Texture (
-        Context        => Context,
-        Mode           => CL.Memory.Read_Write,
-        Texture_Target => GL.Objects.Textures.Loader_2D.TX_2D,
-        Mipmap_Level   => 0,
-        Texture        => My_Texture
-      );
-      Kernel.Set_Kernel_Argument_Object (0, CL_Texture);
-      
-      IO.Put_Line ("Entering main loop");
-      while not Glfw.Events.Keys.Pressed (Glfw.Events.Keys.Esc) and
-        Glfw.Display.Opened loop
-         GL.Buffers.Clear (GL.Buffers.Buffer_Bits'(Color => True, others => False));
-         GL.Finish;
-         
-         IO.Put_Line ("Acquire Texture");
-         CL_Event := CL.Queueing.CL_GL.Acquire_GL_Objects
-           (Queue, (1 => CL_Texture'Unchecked_Access), null);
-         Queue.Finish;
-         
-         IO.Put_Line ("Executing kernel");
-         CL_Event := CL.Queueing.Execute_Kernel (Queue, Kernel, 2, Global_Work_Size'Access,
-           Local_Work_Size'Access, null);
-         Queue.Finish;
-         
-         IO.Put_Line ("Release Texture");
-         CL_Event := CL.Queueing.CL_GL.Release_GL_Objects
-           (Queue, (1 => CL_Texture'Unchecked_Access), null);
-         Queue.Finish;
-         
-         IO.Put_Line ("Rendering Texture");
-         declare
-            use GL.Immediate;
-            use GL.Types.Doubles;
-            Token : Input_Token := Start (Quads);
-         begin
-            Set_Texture_Coordinates (Vector4'( 0.0,  1.0, 0.0, 1.0));
-            Token.Add_Vertex        (Vector4'(-1.0, -1.0, 0.0, 1.0));
-            Set_Texture_Coordinates (Vector4'( 0.0,  0.0, 0.0, 1.0));
-            Token.Add_Vertex        (Vector4'(-1.0,  1.0, 0.0, 1.0));
-            Set_Texture_Coordinates (Vector4'( 1.0,  0.0, 0.0, 1.0));
-            Token.Add_Vertex        (Vector4'( 1.0,  1.0, 0.0, 1.0));
-            Set_Texture_Coordinates (Vector4'( 1.0,  1.0, 0.0, 1.0));
-            Token.Add_Vertex        (Vector4'( 1.0, -1.0, 0.0, 1.0));
-         end;
-         
-         GL.Finish;
-         
-         Glfw.Display.Swap_Buffers;
-         
-         delay 0.5;
-         Glfw.Events.Poll_Events;
-      end loop;
-   end;
+      delay 0.5;
+      Glfw.Events.Poll_Events;
+   end loop;
    Glfw.Terminate_Glfw;
 end CL_Test.CL_GL;
