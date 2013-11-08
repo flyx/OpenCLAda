@@ -34,13 +34,11 @@ with CL.Kernels;
 with CL.Events;
 with CL.Queueing.CL_GL;
 
-with GL;
 with GL.Buffers;
 with GL.Fixed.Textures;
 with GL.Fixed.Matrix;
 with GL.Immediate;
-with GL.Objects.Textures;
-with GL.Objects.Textures.Loader_2D;
+with GL.Objects.Textures.Targets;
 with GL.Pixel_Data;
 with GL.Toggles;
 with GL.Types;
@@ -90,7 +88,7 @@ begin
    
    My_Texture.Initialize_Id;
    
-   GL.Objects.Textures.Texture_2D.Bind (My_Texture);
+   GL.Objects.Textures.Targets.Texture_2D.Bind (My_Texture);
    GL.Fixed.Matrix.Projection.Load_Identity;
    GL.Fixed.Matrix.Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
    GL.Toggles.Set (GL.Toggles.Texture_2D, GL.Toggles.Enabled);
@@ -119,27 +117,23 @@ begin
    Kernel := CL.Kernels.Constructors.Create (Program, "cl_gl_testkernel");
    
    IO.Put_Line ("Configuring Texture");
-   GL.Objects.Textures.Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Repeat);
-   GL.Objects.Textures.Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Mirrored_Repeat);
-   GL.Objects.Textures.Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
-   GL.Objects.Textures.Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
+   GL.Objects.Textures.Targets.Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Repeat);
+   GL.Objects.Textures.Targets.Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Mirrored_Repeat);
+   GL.Objects.Textures.Targets.Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
+   GL.Objects.Textures.Targets.Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
    
    GL.Fixed.Textures.Set_Tex_Function (GL.Fixed.Textures.Replace);
-   GL.Objects.Textures.Loader_2D.Load_Empty_Texture (
-     Target          => GL.Objects.Textures.Loader_2D.TX_2D,
+   GL.Objects.Textures.Targets.Texture_2D.Load_Empty_Texture (
      Level           => 0,
      Internal_Format => GL.Pixel_Data.RGBA,
      Width           => 512,
-     Height          => 512,
-     Border          => False,
-     Format          => GL.Pixel_Data.RGBA,
-     Data_Type       => GL.Pixel_Data.Float);
+     Height          => 512);
    
    IO.Put_Line ("Loading Texture to OpenCL");
    CL_Texture := CL.Memory.Images.CL_GL.Constructors.Create_Image2D_From_Texture (
      Context        => Context,
      Mode           => CL.Memory.Read_Write,
-     Texture_Target => GL.Objects.Textures.Loader_2D.TX_2D,
+     Texture_Target => GL.Objects.Textures.Targets.Texture_2D,
      Mipmap_Level   => 0,
      Texture        => My_Texture
    );

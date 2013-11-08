@@ -1,0 +1,21 @@
+with "opengl.gpr";
+with "opencl.gpr";
+library project OpenCL.CL_GL is
+   for Library_Name use "OpenCLAda-cl_gl";
+   for Object_Dir use "obj";
+   for Library_Dir use "lib";
+   
+   Sources := ("src/interface/cl_gl", "src/implementation/cl_gl");
+   
+   case OpenCL.Windowing_System is
+      when "windows" =>
+         Sources := Sources & "src/implementation/cl_gl/win";
+      when "x11" =>
+         Sources := Sources & "src/implementation/cl_gl/x11";
+      when "quartz" =>
+         Sources := Sources & "src/implementation/cl_gl/mac";
+   end case;
+   for Source_Dirs use Sources;
+   
+   package Compiler renames OpenCL.Compiler;
+end OpenCL.CL_GL;

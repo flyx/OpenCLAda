@@ -28,7 +28,7 @@ with CL.Memory.Images.GL_Base;
 with CL.Contexts.CL_GL;
 
 with GL.Objects.Textures;
-with GL.Objects.Textures.Loader_2D;
+with GL.Objects.Textures.Targets;
 
 package CL.Memory.Images.CL_GL is
 
@@ -39,13 +39,22 @@ package CL.Memory.Images.CL_GL is
    subtype GL_Shared_Image3D is Image3D_Base.GL_Shared_Image;
 
    package Constructors is
+      package Targets renames GL.Objects.Textures.Targets;
 
       function Create_Image2D_From_Texture (Context        : Contexts.CL_GL.GL_Enabled_Context'Class;
                                             Mode           : Access_Kind;
-                                            Texture_Target : GL.Objects.Textures.Loader_2D.Target_Kind;
-                                            Mipmap_Level   : Integer;
+                                            Texture_Target : Targets.Texture_2D_Target.Fillable_Target'Class;
+                                            Mipmap_Level   : GL.Objects.Textures.Mipmap_Level;
                                             Texture        : GL.Objects.Textures.Texture'Class)
                                             return GL_Shared_Image2D;
+      
+      function Create_Image2D_From_Texture (Context        : Contexts.CL_GL.GL_Enabled_Context'Class;
+                                            Mode           : Access_Kind;
+                                            Texture_Target : Targets.Cube_Map_Side_Target.Fillable_Target'Class;
+                                            Mipmap_Level   : GL.Objects.Textures.Mipmap_Level;
+                                            Texture        : GL.Objects.Textures.Texture'Class)
+                                            return GL_Shared_Image2D;
+      
       -- not supported yet by OpenGLAda
       function Create_Image2D_From_Renderbuffer
         (Context      : Contexts.CL_GL.GL_Enabled_Context'Class;

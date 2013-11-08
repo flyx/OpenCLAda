@@ -1,19 +1,39 @@
-aggregate project OpenCL is
-   type Yes_No is ("Yes", "No");
-   CL_GL : Yes_No := external ("CL_GL", "No");
-   Tests : Yes_No := external ("Tests", "No");
+library project OpenCL is
+   for Library_Name use "OpenCLAda";
+   for Object_Dir use "obj";
+   for Library_Dir use "lib";
    
-   Project_List := ("openclada.gpr");
+   for Languages use ("ada");
    
-   case CL_GL is
-      when "Yes" => Project_List := ("openclada-cl_gl.gpr");
-      when "No"  => null;
-   end case;
+   -- this scenario variable is shared with OpenGLAda, but only
+   -- the CL_GL extension depends on OpenGL, so we redeclare it here.
+   type Windowing_System_Type is
+      ("windows", "x11", "quartz");
+   Windowing_System : Windowing_System_Type
+     := external ("Windowing_System");
    
-   case Tests is
-      when "Yes" => Project_List := ("openclada-tests.gpr");
-      when "No"  => null;
-   end case;
+   type Mode_Type is ("debug", "release");
+   Mode : Mode_Type := external ("mode", "debug");
    
-   for Project_Files use Project_List;
+   for Source_Dirs use ("src/interface", "src/implementation");
+
+   package Compiler is
+      case Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use ("-g", "-gnatwa", "-gnatf", "-gnat05", "-gnata");
+         when "release" =>
+            for Default_Switches ("ada") use ("-O2", "-gnatn2", "-gnat05");
+      end case;
+   end Compiler;
+
+   package Linker is
+      case Windowing_System is
+         when "windows" =>
+            for Linker_Options use ("-lOpenCL");
+         when "x11" =>
+            for Linker_Options use ("-lOpenCL");
+         when "quartz" =>
+            for Linker_Options use ("-Wl,-framework,OpenCL");
+      end case;
+   end Linker;
 end OpenCL;

@@ -1,8 +1,8 @@
-with "openclada.gpr";
-with "openclada-cl_gl.gpr";
-with "glfw.gpr";
+with "opencl.gpr";
+with "opencl-cl_gl.gpr";
+with "opengl-glfw.gpr";
 
-project OpenCLAda.Tests is
+project OpenCL_Test is
 
    for Source_Dirs use ("tests");
    for Object_Dir use "obj";
@@ -12,13 +12,11 @@ project OpenCLAda.Tests is
                  "cl_test-platform.adb", "cl_test-vectors.adb", "cl_test-hello_world.adb",
                  "cl_test-cl_gl.adb", "cl_test-vector_passing.adb");
 
-   package Compiler is
-      for Default_Switches ("ada") use ("-g", "-O2", "-gnatn", "-gnatf", "-gnat05", "-gnata");
-   end Compiler;
+   package Compiler renames OpenCL.Compiler;
 
    package Builder is
       for Default_Switches ("ada") use ("-m");
    end Builder;
 
-end OpenCLAda.Tests;
+end OpenCL_Test;
 

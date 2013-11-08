@@ -10,39 +10,24 @@ GPRBUILD = gprbuild ${GNATFLAGS} -p
 GL_BACKEND := windows
 UNAME := $(shell uname)
 ifeq ($(UNAME), Darwin)
-  GL_BACKEND := mac
+  GL_BACKEND := quartz
 endif
 ifeq ($(UNAME), Linux)
-  GL_BACKEND := linux
+  GL_BACKEND := x11
 endif
+
+all: compile
 
 compile:
 	mkdir -p lib
 	mkdir -p obj
-	${GPRBUILD} -P opencl.gpr -XGL_Backend=${GL_BACKEND} -XCL_GL=Yes
-
-uninstall:
-	rm -rf ${DESTDIR}/${PREFIX}/include/openclada ${DESTDIR}/${LIBDIR}/openclada ${DESTDIR}/${ADA_PROJECT_DIR}/openclada*.gpr
-
-install: compile uninstall
-	mkdir -p ${DESTDIR}/${PREFIX}/include/openclada
-	mkdir -p ${DESTDIR}/${LIBDIR}/openclada
-	mkdir -p ${DESTDIR}/${ADA_PROJECT_DIR}
-
-	cp -r lib/* ${DESTDIR}/${LIBDIR}/openclada
-
-	cp -f src/cl.ad* ${DESTDIR}/${PREFIX}/include/openclada
-	cp -f src/cl-*.ad* ${DESTDIR}/${PREFIX}/include/openclada
-	chmod -w ${DESTDIR}/${PREFIX}/include/openclada/*.ad?
-	cp openclada.gpr ${DESTDIR}/${ADA_PROJECT_DIR}
-	cp openclada-cl_gl.gpr ${DESTDIR}/${ADA_PROJECT_DIR}
-all: compile
+	${GPRBUILD} -P opencl-cl_gl.gpr -XWindowing_System=${GL_BACKEND}
 
 clean:
 	rm -rf ./obj ./bin ./lib
 
 tests:
 	mkdir -p bin
-	${GPRBUILD} -P opencl.gpr -XGL_Backend=${GL_BACKEND} -XTests=Yes
+	${GPRBUILD} -P opencl_test.gpr -XWindowing_System=${GL_BACKEND} -XGLFW_Version=2
 
 .PHONY: tests

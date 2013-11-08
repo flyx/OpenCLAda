@@ -75,7 +75,7 @@ package CL is
    
    
    -- Mainly needed in order to have a single interface for
-   -- converting numeric values to string when instanciating
+   -- converting numeric values to string when instantiating
    -- generic packages like Vector_Operations. ('Img cannot
    -- be used directly because it takes both integer and floating
    -- point types, and there is no common supertype that supports
