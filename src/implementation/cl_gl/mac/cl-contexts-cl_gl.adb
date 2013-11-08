@@ -24,7 +24,6 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with Ada.Exceptions;
 with GL.CGL;
 
 with CL.Enumerations;
@@ -49,8 +48,8 @@ package body CL.Contexts.CL_GL is
          Error       : aliased Enumerations.Error_Code;
          Ret_Context : System.Address;
                        
-         CGL_Context : GL.CGL.CGLContextObject := GL.CGL.CGLGetCurrentContext;
-         Share_Group : GL.CGL.CGLShareGroup    := GL.CGL.CGLGetShareGroup (CGL_Context);
+         CGL_Context : constant GL.CGL.CGLContextObject := GL.CGL.CGLGetCurrentContext;
+         Share_Group : constant GL.CGL.CGLShareGroup    := GL.CGL.CGLGetShareGroup (CGL_Context);
          Props       : Address_List := (Value (Context_Property_Use_CGL_Sharegroup_Apple),
                                         Share_Group,
                                         System.Null_Address);

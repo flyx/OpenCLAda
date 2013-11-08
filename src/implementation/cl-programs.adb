@@ -25,7 +25,6 @@
 --------------------------------------------------------------------------------
 
 with Ada.Text_IO;
-with Ada.Unchecked_Deallocation;
 
 with Interfaces.C.Strings;
 
@@ -252,7 +251,7 @@ package body CL.Programs is
                                     Return_T         => Address_List,
                                     Parameter_T      => Enumerations.Program_Info,
                                     C_Getter         => API.Get_Program_Info);
-      Raw_List : Address_List := Getter (Source, Enumerations.Devices);
+      Raw_List : constant Address_List := Getter (Source, Enumerations.Devices);
       Ret_List : Platforms.Device_List (Raw_List'Range);
    begin
       for Index in Raw_List'Range loop

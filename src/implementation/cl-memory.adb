@@ -24,9 +24,6 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with Interfaces.C.Pointers;
-with Ada.Unchecked_Conversion;
-
 with CL.API;
 with CL.Enumerations;
 with CL.Helpers;
@@ -48,10 +45,10 @@ package body CL.Memory is
                                 Parameter_T => Enumerations.Memory_Info,
                                 C_Getter    => API.Get_Mem_Object_Info);
 
-   function Type_Info is
-     new Helpers.Get_Parameter (Return_T    => Enumerations.Memory_Object_Type,
-                                Parameter_T => Enumerations.Memory_Info,
-                                C_Getter    => API.Get_Mem_Object_Info);
+   --function Type_Info is
+   --  new Helpers.Get_Parameter (Return_T    => Enumerations.Memory_Object_Type,
+   --                             Parameter_T => Enumerations.Memory_Info,
+   --                             C_Getter    => API.Get_Mem_Object_Info);
 
    --procedure Destructor_Callback_Dispatcher (Object   : System.Address;
    --                                          Callback : Destructor_Callback);
@@ -98,7 +95,7 @@ package body CL.Memory is
    end Flags;
 
    function Mode (Source : Memory_Object) return Access_Kind is
-      Flags : Memory_Flags := Source.Flags;
+      Flags : constant Memory_Flags := Source.Flags;
    begin
       if Flags.Write_Only then
          return Write_Only;
@@ -110,7 +107,7 @@ package body CL.Memory is
    end Mode;
 
    function In_Host_Memory (Source : Memory_Object) return Boolean is
-      Flags : Memory_Flags := Source.Flags;
+      Flags : constant Memory_Flags := Source.Flags;
    begin
       return (Flags.Use_Host_Ptr or Flags.Alloc_Host_Ptr);
    end In_Host_Memory;

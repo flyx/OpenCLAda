@@ -24,8 +24,9 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with CL.Contexts;
 with Ada.Text_IO;
+
+with CL;
 
 package CL_Test.Helpers is
    procedure Callback (Error_Info   : String;

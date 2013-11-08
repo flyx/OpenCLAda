@@ -26,13 +26,10 @@
 
 with Interfaces.C;
 with Interfaces.C.Strings;
-with Interfaces.C.Pointers;
 
 with CL.Enumerations;
-with CL.Platforms;
 with CL.Contexts;
 with CL.Memory;
-with CL.Memory.Buffers;
 with CL.Memory.Images;
 with CL.Samplers;
 with CL.Programs;
@@ -57,7 +54,7 @@ private package CL.API is
    function Get_Platform_Info (Source      : System.Address;
                                Info        : Enumerations.Platform_Info;
                                Value_Size  : Size;
-                               Value       : CStr.chars_ptr;
+                               Value       : access Interfaces.C.char_array;
                                Return_Size : Size_Ptr)
                                return Enumerations.Error_Code;
    pragma Import (Convention => StdCall, Entity => Get_Platform_Info,
@@ -79,7 +76,7 @@ private package CL.API is
    function Get_Device_Info (Source      : System.Address;
                              Param       : Enumerations.Device_Info;
                              Num_Entries : Size;
-                             Value       : CStr.chars_ptr;
+                             Value       : access Interfaces.C.char_array;
                              Return_Size : Size_Ptr)
                              return Enumerations.Error_Code;
    function Get_Device_Info (Source      : System.Address;
@@ -94,7 +91,7 @@ private package CL.API is
    -----------------------------------------------------------------------------
    --  Context APIs
    -----------------------------------------------------------------------------
-   type Error_Callback is access procedure (Error_Info   : CStr.chars_ptr;
+   type Error_Callback is access procedure (Error_Info   : IFC.Strings.chars_ptr;
                                             Private_Info : C_Chars.Pointer;
                                             CB           : IFC.ptrdiff_t;
                                             User_Data    : CL.Contexts.Error_Callback);
@@ -411,7 +408,7 @@ private package CL.API is
    function Get_Kernel_Info (Source      : System.Address;
                              Param       : Enumerations.Kernel_Info;
                              Value_Size  : Size;
-                             Value       : CStr.chars_ptr;
+                             Value       : access Interfaces.C.char_array;
                              Return_Size : Size_Ptr)
                              return Enumerations.Error_Code;
    pragma Import (Convention => StdCall, Entity => Get_Kernel_Info,

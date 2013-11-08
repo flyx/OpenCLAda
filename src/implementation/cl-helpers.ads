@@ -26,7 +26,7 @@
 
 with Ada.Text_IO;
 
-with Interfaces.C.Strings;
+with Interfaces.C;
 
 with CL.Enumerations;
 
@@ -93,7 +93,7 @@ private package CL.Helpers is
       with function C_Getter (Object      : System.Address;
                               Param       : Parameter_T;
                               Value_Size  : Size;
-                              Value       : Interfaces.C.Strings.chars_ptr;
+                              Value       : access Interfaces.C.char_array;
                               Return_Size : Size_Ptr)
                               return Enumerations.Error_Code;
    function Get_String (Object : in CL_Object'Class;

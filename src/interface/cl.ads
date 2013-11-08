@@ -28,7 +28,6 @@ with Ada.Finalization;
 with Interfaces.C;
 with System;
 
-private with Interfaces.C.Strings;
 private with Interfaces.C.Pointers;
 
 package CL is
@@ -209,7 +208,6 @@ private
    for Bitfield'Size use ULong'Size;
 
    package IFC renames Interfaces.C;
-   package CStr renames Interfaces.C.Strings;
 
    package C_Chars is
      new Interfaces.C.Pointers (Index              => Positive,

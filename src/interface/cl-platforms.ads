@@ -24,8 +24,6 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with System;
-
 package CL.Platforms is
    
    type Platform is new CL_Object with null record;

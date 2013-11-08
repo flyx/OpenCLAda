@@ -18,11 +18,7 @@ procedure CL_Test.Vector_Passing is
    package IO renames Ada.Text_IO;
    use CL.Vectors;
 
-   Destination_List : aliased Int2_Array := New_Array ((1 => (0, 0)));
-
-   function Int2_Buffer is
-     new CL.Memory.Buffers.Constructors.Create_From_Source
-       (Element => CL.Vectors.Int2, Element_List => Int2_Array);
+   Destination_List : aliased constant Int2_Array := New_Array ((1 => (0, 0)));
 
    package Int2_Objects is
      new CL.Queueing.Memory_Objects (Element      => CL.Vectors.Int2,
@@ -32,7 +28,7 @@ procedure CL_Test.Vector_Passing is
    Device      : CL.Platforms.Device;
    Device_List : CL.Platforms.Device_List (1 .. 1);
    Context     : CL.Contexts.Context;
-   Source1, Source2, Destination : CL.Memory.Buffers.Buffer;
+   Destination : CL.Memory.Buffers.Buffer;
    Program     : CL.Programs.Program;
    Kernel      : CL.Kernels.Kernel;
    Queue       : CL.Command_Queues.Command_Queue;
@@ -56,7 +52,7 @@ begin
 
    IO.Open (Kernel_File, IO.In_File, "../tests/vector_passing.cl");
    declare
-      Kernel_Source : String := CL_Test.Helpers.Read_File (Kernel_File);
+      Kernel_Source : constant String := CL_Test.Helpers.Read_File (Kernel_File);
    begin
       IO.Close (Kernel_File);
       Program := CL.Programs.Constructors.Create_From_Source

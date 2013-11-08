@@ -28,11 +28,7 @@ with CL.Enumerations;
 with CL.Helpers;
 with CL.API.CL_GL;
 
-with GL.Low_Level;
-with GL.Types;
-
 package body CL.Memory.Images.CL_GL is
-   use GL.Types;
 
    package body Constructors is
 

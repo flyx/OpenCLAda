@@ -25,11 +25,8 @@
 --------------------------------------------------------------------------------
 
 with Ada.Numerics.Generic_Elementary_Functions;
-with Ada.Strings.Fixed;
 
 package body CL.Vectors is
-   use Ada.Strings.Fixed;
-   use Ada.Strings;
    
    generic
       type Vector_Range is (<>);

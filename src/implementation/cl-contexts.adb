@@ -24,11 +24,6 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with Interfaces.C.Strings;
-with Interfaces.C.Pointers;
-
-with Ada.Unchecked_Conversion;
-
 with CL.API;
 with CL.Enumerations;
 with CL.Helpers;
@@ -39,12 +34,12 @@ package body CL.Contexts is
    --  Helpers
    -----------------------------------------------------------------------------
 
-   procedure Callback_Dispatcher (Error_Info   : CStr.chars_ptr;
+   procedure Callback_Dispatcher (Error_Info   : Interfaces.C.Strings.chars_ptr;
                                   Private_Info : C_Chars.Pointer;
                                   CB           : IFC.ptrdiff_t;
                                   User_Data    : Error_Callback) is
    begin
-      User_Data (CStr.Value    (Error_Info),
+      User_Data (Interfaces.C.Strings.Value    (Error_Info),
                  C_Chars.Value (Private_Info, CB));
    end Callback_Dispatcher;
 
@@ -162,7 +157,7 @@ package body CL.Contexts is
                                     Return_T         => Address_List,
                                     Parameter_T      => Enumerations.Context_Info,
                                     C_Getter         => API.Get_Context_Info);
-      Raw_List : Address_List := Getter (Source, Enumerations.Devices);
+      Raw_List : constant Address_List := Getter (Source, Enumerations.Devices);
       Ret_List : Platforms.Device_List (Raw_List'Range);
    begin
       for Index in Raw_List'Range loop
@@ -178,7 +173,8 @@ package body CL.Contexts is
                                      Return_T         => Address_List,
                                      Parameter_T      => Enumerations.Context_Info,
                                      C_Getter         => API.Get_Context_Info);
-      Props : Address_List := Properties_Info (Source, Enumerations.Properties);
+      Props : constant Address_List
+        := Properties_Info (Source, Enumerations.Properties);
       Index : Positive     := Props'First;
 
       use type System.Address;

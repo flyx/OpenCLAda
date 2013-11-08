@@ -29,8 +29,7 @@ with Ada.Text_IO;
 
 procedure CL_Test.Platform is
    package IO renames Ada.Text_IO;
-   P_List : Cl.Platforms.Platform_List := CL.Platforms.List;
-   Null_String : String (1 .. 1) := (others => Character'Val (0));
+   P_List : constant CL.Platforms.Platform_List := CL.Platforms.List;
 begin
    for Index in P_List'Range loop
       IO.Put_Line("Platform" & Index'Img);

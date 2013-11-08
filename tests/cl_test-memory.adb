@@ -33,18 +33,16 @@ with CL_Test.Helpers;
 
 with Ada.Text_IO;
 with Ada.Strings.Fixed;
-with Ada.Unchecked_Conversion;
 
 procedure CL_Test.Memory is
    package ATI renames Ada.Text_IO;
 
-   Pfs     : CL.Platforms.Platform_List := CL.Platforms.List;
+   Pfs     : constant CL.Platforms.Platform_List := CL.Platforms.List;
    pragma Assert (Pfs'Length > 0);
-   Pf      : CL.Platforms.Platform := Pfs (1);
-   Dvs     : CL.Platforms.Device_List := Pf.Devices(CL.Platforms.Device_Kind_All);
+   Pf      : constant CL.Platforms.Platform := Pfs (1);
+   Dvs     : constant CL.Platforms.Device_List := Pf.Devices(CL.Platforms.Device_Kind_All);
    pragma Assert (Dvs'Length > 0);
-   Dv      : CL.Platforms.Device := Dvs (1);
-   Context : CL.Contexts.Context
+   Context : constant CL.Contexts.Context
      := CL.Contexts.Constructors.Create_For_Devices (Pf, Dvs,
                                                      CL_Test.Helpers.Callback'Access);
 
@@ -52,8 +50,6 @@ procedure CL_Test.Memory is
    use type CL.Memory.Images.Image_Format;
    use type CL.Memory.Access_Kind;
 
-   package ULong_IO is
-     new Ada.Text_IO.Modular_IO (CL.ULong);
    use type CL.Contexts.Context;
 begin
    for Index in CL.Memory.Access_Kind loop
@@ -61,7 +57,7 @@ begin
       ATI.New_Line;
       ATI.Put_Line ("Testing Buffer");
       declare
-         Buffer : CL.Memory.Buffers.Buffer
+         Buffer : constant CL.Memory.Buffers.Buffer
            := CL.Memory.Buffers.Constructors.Create (Context, Index, 1024);
       begin
          ATI.Put_Line ("Created Buffer.");
@@ -79,12 +75,12 @@ begin
       --  test 2D image
       declare
          --  decide for an image format to use
-         Format_List : CL.Memory.Images.Image_Format_List
+         Format_List : constant CL.Memory.Images.Image_Format_List
            := CL.Memory.Images.Supported_Image_Formats (Context, Index,
                                                         CL.Memory.Images.T_Image2D);
          pragma Assert (Format_List'Length > 0);
 
-         Image : CL.Memory.Images.Image2D
+         Image : constant CL.Memory.Images.Image2D
            := CL.Memory.Images.Constructors.Create_Image2D
              (Context, Index, Format_List (1), 1024, 512, 0);
       begin

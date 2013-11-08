@@ -18,9 +18,9 @@ procedure CL_Test.Vectors is
    package IO renames Ada.Text_IO;
    use CL.Vectors;
 
-   Source1_List : aliased Int2_Array := New_Array (((1, 2), (3, 4), (5, 6), (7, 8), (9, 0)));
-   Source2_List : aliased Int2_Array := New_Array (((0, 9), (2, 7), (4, 5), (6, 3), (8, 1)));
-   Destination_List : aliased Int2_Array := New_Array ((Source1_List'Range => (0, 0)));
+   Source1_List : aliased constant Int2_Array := New_Array (((1, 2), (3, 4), (5, 6), (7, 8), (9, 0)));
+   Source2_List : aliased constant Int2_Array := New_Array (((0, 9), (2, 7), (4, 5), (6, 3), (8, 1)));
+   Destination_List : aliased constant Int2_Array := New_Array ((Source1_List'Range => (0, 0)));
 
    function Int2_Buffer is
      new CL.Memory.Buffers.Constructors.Create_From_Source
@@ -61,7 +61,7 @@ begin
 
    IO.Open (Kernel_File, IO.In_File, "../tests/vectors.cl");
     declare
-      Kernel_Source : String := CL_Test.Helpers.Read_File (Kernel_File);
+      Kernel_Source : constant String := CL_Test.Helpers.Read_File (Kernel_File);
    begin
       IO.Close (Kernel_File);
       Program := CL.Programs.Constructors.Create_From_Source

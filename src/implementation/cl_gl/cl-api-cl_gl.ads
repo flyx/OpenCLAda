@@ -28,7 +28,7 @@ with CL.Memory.CL_GL;
 with CL.Enumerations.CL_GL;
 
 with GL.Low_Level.Enums;
-with GL.Objects.Textures.Targets;
+with GL.Objects.Textures;
 with GL.Types;
 
 package CL.API.CL_GL is

@@ -26,7 +26,6 @@
 
 with CL.API;
 with CL.Enumerations;
-with CL.Helpers;
 
 package body CL.Queueing is
    function Execute_Kernel (Queue            : Command_Queues.Command_Queue'Class;

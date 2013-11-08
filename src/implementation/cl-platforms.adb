@@ -26,6 +26,8 @@
 
 with Ada.Unchecked_Conversion;
 
+with System;
+
 with CL.API;
 with CL.Helpers;
 with CL.Enumerations;

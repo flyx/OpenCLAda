@@ -24,8 +24,6 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with CL.Contexts.CL_GL;
-
 package body CL.Command_Queues.CL_GL is
 
    package body Constructors is

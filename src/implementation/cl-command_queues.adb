@@ -24,8 +24,6 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with Ada.Unchecked_Conversion;
-
 with CL.Helpers;
 with CL.Enumerations;
 with CL.API;

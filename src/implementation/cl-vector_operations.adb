@@ -1,4 +1,4 @@
-with Ada.Strings.Fixed;
+
 
 package body CL.Vector_Operations is
    
@@ -42,8 +42,6 @@ package body CL.Vector_Operations is
    function "/" (Left, Right : Vector) return Vector renames Divide;
    
    function To_String (Value : Vector) return String is
-      use Ada.Strings.Fixed;
-      
       Max : constant := 256;
       
       Result : String (1 .. Max);
@@ -57,7 +55,7 @@ package body CL.Vector_Operations is
             Pos := Pos + 2;
          end if;
          declare
-            Repr : String := To_String (Value (I));
+            Repr : constant String := To_String (Value (I));
          begin
             if Pos + Repr'Length - 1 <= Max then
                Result (Pos .. Pos + Repr'Length - 1) := Repr;

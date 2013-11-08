@@ -24,13 +24,9 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 with Ada.Unchecked_Conversion;
 with System;
-with System.Storage_Elements;
-
-with CL.Enumerations;
 
 package body CL.Helpers is
    package IO renames Ada.Text_IO;
@@ -39,7 +35,7 @@ package body CL.Helpers is
                            Param  : in Parameter_T) return Return_T is
       Return_Value    : Return_T;
       Return_Size     : aliased Size;
-      Return_Size_Ptr : Size_Ptr := Return_Size'Unchecked_Access;
+      Return_Size_Ptr : constant Size_Ptr := Return_Size'Unchecked_Access;
       Error           : Enumerations.Error_Code;
 
       pragma Assert (Parameter_T'Size = UInt'Size);
@@ -56,7 +52,7 @@ package body CL.Helpers is
                             Param   : in Parameter_T) return Return_T is
       Return_Value    : Return_T;
       Return_Size     : aliased Size;
-      Return_Size_Ptr : Size_Ptr := Return_Size'Unchecked_Access;
+      Return_Size_Ptr : constant Size_Ptr := Return_Size'Unchecked_Access;
       Error           : Enumerations.Error_Code;
    begin
       Error := C_Getter (Object1.Location, Object2.Location, Param,
@@ -117,19 +113,17 @@ package body CL.Helpers is
       Error       : Enumerations.Error_Code;
       pragma Assert (Parameter_T'Size = UInt'Size);
    begin
-      Error := C_Getter (Object.Location, Param, 0,
-                         Interfaces.C.Strings.Null_Ptr,
+      Error := C_Getter (Object.Location, Param, 0, null,
                          Value_Count'Unchecked_Access);
       Error_Handler (Error);
       declare
-         Raw_String : Interfaces.C.Strings.chars_ptr :=
-           Interfaces.C.Strings.New_String
-             (Str => (1 .. Integer (Value_Count) => ' '));
+         Raw_String : aliased Interfaces.C.char_array :=
+           (1 .. Interfaces.C.size_t (Value_Count) => <>);
       begin
          Error := C_Getter (Object.Location, Param, Value_Count,
-                            Raw_String, null);
+                            Raw_String'Access, null);
          Error_Handler (Error);
-         return Interfaces.C.Strings.Value (Raw_String);
+         return Interfaces.C.To_Ada (Raw_String);
       end;
    end Get_String;
 
@@ -276,7 +270,7 @@ package body CL.Helpers is
    is
       function Convert is new Ada.Unchecked_Conversion (Source => Bit_Vector_Record,
                                                         Target => Bitfield);
-      Result : Bitfield := Convert (Bit_Vector);
+      Result : constant Bitfield := Convert (Bit_Vector);
    begin
       return Result mod 2 ** Used_Bits;
    end Record_To_Bitfield;

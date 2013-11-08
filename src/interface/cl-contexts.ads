@@ -27,6 +27,7 @@
 with CL.Platforms;
 
 private with Ada.Unchecked_Conversion;
+private with Interfaces.C.Strings;
 
 package CL.Contexts is
    
@@ -70,7 +71,7 @@ private
      new Ada.Unchecked_Conversion (Source => System.Address,
                                    Target => Address_Equivalent);
 
-   procedure Callback_Dispatcher (Error_Info   : CStr.chars_ptr;
+   procedure Callback_Dispatcher (Error_Info   : Interfaces.C.Strings.chars_ptr;
                                   Private_Info : C_Chars.Pointer;
                                   CB           : IFC.ptrdiff_t;
                                   User_Data    : Error_Callback);

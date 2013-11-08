@@ -25,7 +25,7 @@
 --------------------------------------------------------------------------------
 
 with CL.Command_Queues.CL_GL;
-with CL.Memory.CL_GL.Objects;
+with CL.Memory.CL_GL;
 with CL.Events;
 
 package CL.Queueing.CL_GL is

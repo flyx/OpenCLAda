@@ -53,17 +53,11 @@ with Ada.Text_IO;
 procedure CL_Test.CL_GL is
    use GL.Types;
    
-   use type GL.Types.Double;
-      
-   type Position is record
-      X, Y, Z : Integer;
-   end record;
-   
    package IO renames Ada.Text_IO;
    
    GPU_Devices : constant CL.Platforms.Device_Kind
      := CL.Platforms.Device_Kind'(GPU => True, others => False);
-   My_Platform_Props : CL.Platforms.CQ_Property_Vector :=
+   My_Platform_Props : constant CL.Platforms.CQ_Property_Vector :=
      CL.Platforms.CQ_Property_Vector'(others => False);
    Platform    : CL.Platforms.Platform;
    Device      : CL.Platforms.Device;
@@ -105,7 +99,7 @@ begin
    IO.Put_Line ("Loading kernel");
    IO.Open (Kernel_File, IO.In_File, "../tests/cl_gl_testkernel.cl");
    declare
-      Kernel_Source : aliased String := Helpers.Read_File (Kernel_File);
+      Kernel_Source : aliased constant String := Helpers.Read_File (Kernel_File);
    begin
       IO.Close (Kernel_File);
       Program := CL.Programs.Constructors.Create_From_Source (Context,

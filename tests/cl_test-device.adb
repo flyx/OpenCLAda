@@ -27,16 +27,15 @@
 with CL.Platforms;
 
 with Ada.Text_IO;
-with Ada.Exceptions;
 with Ada.Strings.Fixed;
 
 procedure CL_Test.Device is
    package IO renames Ada.Text_IO;
 
-   Pfs   : CL.Platforms.Platform_List := CL.Platforms.List;
+   Pfs   : constant CL.Platforms.Platform_List := CL.Platforms.List;
    pragma Assert (Pfs'Length > 0);
-   Pf    : CL.Platforms.Platform := Pfs (1);
-   Dvs   : CL.Platforms.Device_List := Pf.Devices (CL.Platforms.Device_Kind_All);
+   Pf    : constant CL.Platforms.Platform := Pfs (1);
+   Dvs   : constant CL.Platforms.Device_List := Pf.Devices (CL.Platforms.Device_Kind_All);
    pragma Assert (Dvs'Length > 0);
 
    DT    : CL.Platforms.Device_Kind;
@@ -73,7 +72,7 @@ begin
 
       Ada.Text_IO.Put ("MAX_WORK_ITEM_SIZES: (");
       declare
-         Sizes : CL.Size_List := Dvs (Index).Max_Work_Item_Sizes;
+         Sizes : constant CL.Size_List := Dvs (Index).Max_Work_Item_Sizes;
       begin
          for Size in Sizes'Range loop
             if Size /= Sizes'Last then

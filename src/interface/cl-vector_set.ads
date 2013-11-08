@@ -7,7 +7,7 @@ generic
    with function "-" (Left, Right: Base) return Base is <>;
    with function "*" (Left, Right: Base) return Base is <>;
    with function "/" (Left, Right: Base) return Base is <>;
-   with function "=" (Left, Right: Base) return Boolean is <>;
+   --with function "=" (Left, Right: Base) return Boolean is <>;
    with function To_String (Values : Base) return String is <>;
 package CL.Vector_Set is
    pragma Preelaborate (CL.Vector_Set);

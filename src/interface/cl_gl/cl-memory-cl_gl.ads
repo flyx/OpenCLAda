@@ -24,8 +24,6 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with Interfaces.C;
-
 package CL.Memory.CL_GL is
 
    type Object_Kind is (Buffer, Texture2D, Texture3D, Renderbuffer);

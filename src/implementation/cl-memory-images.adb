@@ -39,7 +39,11 @@ package body CL.Memory.Images is
                                      Img_Type        : Image_Type;
                                      Use_Host_Memory : Boolean := False)
                                      return Image_Format_List is
-      Flags      : Memory_Flags;
+      Flags      : constant Memory_Flags
+        := Create_Flags (Mode => Mode,
+                         Alloc_Host_Ptr => Use_Host_Memory,
+                         Use_Host_Ptr   => False,
+                         Copy_Host_Ptr  => False);
       Num_Values : aliased UInt;
       Error      : Enumerations.Error_Code;
    begin
@@ -71,15 +75,15 @@ package body CL.Memory.Images is
                                Height    : CL.Size;
                                Row_Pitch : CL.Size;
                                Use_Host_Memory : Boolean := False) return Image2D is
-         Flags      : Memory_Flags;
+         Flags      : constant Memory_Flags
+           := Create_Flags (Mode           => Mode,
+                            Alloc_Host_Ptr => Use_Host_Memory,
+                            Use_Host_Ptr   => False,
+                            Copy_Host_Ptr  => False);
          Raw_Object : System.Address;
          Error      : aliased Enumerations.Error_Code;
          Format_Obj : aliased Image_Format := Format;
       begin
-         Flags := Create_Flags (Mode           => Mode,
-                                Alloc_Host_Ptr => Use_Host_Memory,
-                                Use_Host_Ptr   => False,
-                                Copy_Host_Ptr  => False);
          Raw_Object := API.Create_Image2D (CL_Object (Context).Location,
                                            To_Bitfield (Flags),
                                            Format_Obj'Unchecked_Access,
@@ -100,15 +104,15 @@ package body CL.Memory.Images is
                                Row_Pitch   : CL.Size;
                                Slice_Pitch : CL.Size;
                                Use_Host_Memory : Boolean := False) return Image3D is
-         Flags      : Memory_Flags;
+         Flags      : constant Memory_Flags
+           := Create_Flags (Mode           => Mode,
+                            Alloc_Host_Ptr => Use_Host_Memory,
+                            Use_Host_Ptr   => False,
+                            Copy_Host_Ptr  => False);
          Raw_Object : System.Address;
          Error      : aliased Enumerations.Error_Code;
          Format_Obj : aliased Image_Format := Format;
       begin
-         Flags := Create_Flags (Mode           => Mode,
-                                Alloc_Host_Ptr => Use_Host_Memory,
-                                Use_Host_Ptr   => False,
-                                Copy_Host_Ptr  => False);
          Raw_Object := API.Create_Image3D (CL_Object (Context).Location,
                                            To_Bitfield (Flags),
                                            Format_Obj'Unchecked_Access,

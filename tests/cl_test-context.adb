@@ -31,36 +31,35 @@ with CL_Test.Helpers;
 with Ada.Text_IO;
 with Ada.Strings.Fixed;
 with Ada.Exceptions;
-with System;
 
 procedure CL_Test.Context is
    package ATI renames Ada.Text_IO;
 
-   Pfs   : CL.Platforms.Platform_List := CL.Platforms.List;
+   Pfs   : constant CL.Platforms.Platform_List := CL.Platforms.List;
    pragma Assert (Pfs'Length > 0);
-   Pf    : CL.Platforms.Platform := Pfs (1);
-   Dvs   : CL.Platforms.Device_List
+   Pf    : constant CL.Platforms.Platform := Pfs (1);
+   Dvs   : constant CL.Platforms.Device_List
      := Pf.Devices(CL.Platforms.Device_Kind_All);
    pragma Assert (Dvs'Length > 0);
-   Dv    : CL.Platforms.Device := Dvs (1);
 
    use Ada.Strings.Fixed;
    use type CL.Size;
 
-   Unit_Size   : constant CL.Size :=
-        System.Address'Size / System.Storage_Unit;
 begin
    ATI.Put_Line ("Device count is" & Dvs'Length'Img);
 
    --  create a context for the first device
    declare
-      Context : CL.Contexts.Context := CL.Contexts.Constructors.Create_For_Devices
-        (Pf, Dvs (1 .. 1), CL_Test.Helpers.Callback'Access);
+      Context : constant CL.Contexts.Context
+        := CL.Contexts.Constructors.Create_For_Devices
+          (Pf, Dvs (1 .. 1), CL_Test.Helpers.Callback'Access);
    begin
       ATI.Put ("Created context, reference count is");
       ATI.Put_Line (Context.Reference_Count'Img);
       declare
-         Context2 : CL.Contexts.Context := Context;
+         pragma Warnings (Off);
+         Context2 : constant CL.Contexts.Context := Context;
+         pragma Warnings (On);
       begin
          ATI.Put ("Duplicated context, reference count is");
          ATI.Put_Line (Context.Reference_Count'Img);
@@ -68,7 +67,7 @@ begin
       ATI.Put ("Duplicated terminated, reference count is");
       ATI.Put_Line (Context.Reference_Count'Img);
       declare
-         Devices : CL.Platforms.Device_List := Context.Devices;
+         Devices : constant CL.Platforms.Device_List := Context.Devices;
       begin
          ATI.Put ("Number of Devices is");
          ATI.Put_Line (Devices'Length'Img);
@@ -88,13 +87,13 @@ begin
 
    --  create a context for all GPU devices
    declare
-      GPU_Devices    : CL.Platforms.Device_Kind :=
+      GPU_Devices    : constant CL.Platforms.Device_Kind :=
         CL.Platforms.Device_Kind'(GPU => True, others => False);
-      Context        : CL.Contexts.Context :=
+      Context        : constant CL.Contexts.Context :=
         CL.Contexts.Constructors.Create_From_Type (Pf, GPU_Devices,
                                                    CL_Test.Helpers.Callback'Access);
 
-      Returned_Pf    : CL.Platforms.Platform := Context.Platform;
+      Returned_Pf    : constant CL.Platforms.Platform := Context.Platform;
       use type CL.Platforms.Platform;
    begin
       ATI.Put ("Created context, reference count is");

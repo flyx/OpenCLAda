@@ -25,7 +25,6 @@
 --------------------------------------------------------------------------------
 
 with Ada.Text_IO;
-with Ada.Strings.Unbounded;
 
 with CL.Platforms;
 with CL.Contexts;
@@ -63,7 +62,7 @@ procedure CL_Test.Hello_World is
    Event       : CL.Events.Event;
 
    Hello_World : constant String := "Hello world!";
-   Output      : aliased Aliased_String := (Hello_World'Range => ' ');
+   Output      : aliased constant Aliased_String := (Hello_World'Range => ' ');
 
    Kernel_File : IO.File_Type;
 
@@ -82,7 +81,7 @@ begin
    IO.Put_Line ("Compiling kernel source");
    IO.Open (Kernel_File, IO.In_File, "../tests/hello-kernel.cl");
    declare
-      Kernel_Source : String := CL_Test.Helpers.Read_File (Kernel_File);
+      Kernel_Source : constant String := CL_Test.Helpers.Read_File (Kernel_File);
    begin
       IO.Close (Kernel_File);
       Program := CL.Programs.Constructors.Create_From_Source
