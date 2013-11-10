@@ -28,7 +28,7 @@ package CL.Queueing is
       Write : Boolean;
    end record;
 
-   function Execute_Kernel (Queue            : Command_Queues.Command_Queue'Class;
+   function Execute_Kernel (Target_Queue     : Command_Queues.Queue'Class;
                             Kernel           : Kernels.Kernel'Class;
                             Dimension        : Kernel_Dimension;
                             Global_Work_Size : access constant Size_List;
@@ -36,18 +36,18 @@ package CL.Queueing is
                             Wait_For         : access Events.Event_List)
                             return Events.Event;
 
-   function Execute_Task (Queue    : Command_Queues.Command_Queue'Class;
-                          Kernel   : Kernels.Kernel'Class;
-                          Wait_For : access Events.Event_List)
+   function Execute_Task (Target_Queue : Command_Queues.Queue'Class;
+                          Kernel       : Kernels.Kernel'Class;
+                          Wait_For     : access Events.Event_List)
                           return Events.Event;
 
-   function Marker (Queue : Command_Queues.Command_Queue'Class)
+   function Marker (Target_Queue : Command_Queues.Queue'Class)
                     return Events.Event;
 
-   procedure Wait_For_Events (Queue      : Command_Queues.Command_Queue'Class;
-                              Event_List : Events.Event_List);
+   procedure Wait_For_Events (Target_Queue : Command_Queues.Queue'Class;
+                              Event_List   : Events.Event_List);
 
-   procedure Barrier (Queue : Command_Queues.Command_Queue'Class);
+   procedure Barrier (Target_Queue : Command_Queues.Queue'Class);
 
 private
    for Map_Flags use record

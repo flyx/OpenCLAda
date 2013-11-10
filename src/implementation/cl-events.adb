@@ -52,13 +52,13 @@ package body CL.Events is
                                                   Raw_List (1)'Address));
    end Wait_For;
 
-   function Command_Queue (Source : Event) return Command_Queues.Command_Queue is
+   function Command_Queue (Source : Event) return Command_Queues.Queue is
       function Getter is
         new Helpers.Get_Parameter (Return_T    => System.Address,
                                    Parameter_T => Enumerations.Event_Info,
                                    C_Getter    => API.Get_Event_Info);
       function New_CQ_Reference is
-         new Helpers.New_Reference (Object_T => Command_Queues.Command_Queue);
+         new Helpers.New_Reference (Object_T => Command_Queues.Queue);
    begin
       return New_CQ_Reference (Getter (Source, Enumerations.Command_Queue));
    end Command_Queue;

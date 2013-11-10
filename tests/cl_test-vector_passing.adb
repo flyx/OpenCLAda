@@ -47,7 +47,7 @@ procedure CL_Test.Vector_Passing is
    Destination : CL.Memory.Buffers.Buffer;
    Program     : CL.Programs.Program;
    Kernel      : CL.Kernels.Kernel;
-   Queue       : CL.Command_Queues.Command_Queue;
+   Queue       : CL.Command_Queues.Queue;
    Event       : CL.Events.Event;
 
    Kernel_File : IO.File_Type;

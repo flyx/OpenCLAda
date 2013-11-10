@@ -52,8 +52,8 @@ procedure CL_Test.CL_GL is
    Platform    : CL.Platforms.Platform;
    Device      : CL.Platforms.Device;
    Device_List : CL.Platforms.Device_List (1 .. 1);
-   Context     : CL.Contexts.CL_GL.GL_Enabled_Context;
-   Queue       : CL.Command_Queues.CL_GL.GL_Enabled_Command_Queue;
+   Context     : CL.Contexts.CL_GL.Context;
+   Queue       : CL.Command_Queues.CL_GL.Queue;
    Program     : CL.Programs.Program;
    Kernel      : CL.Kernels.Kernel;
    CL_Event    : CL.Events.Event;
@@ -64,7 +64,7 @@ procedure CL_Test.CL_GL is
    Local_Work_Size  : aliased constant CL.Size_List := (1 => 16,  2 => 16);
    
    My_Texture : GL.Objects.Textures.Texture;
-   CL_Texture : aliased CL.Memory.Images.CL_GL.GL_Shared_Image2D;
+   CL_Texture : aliased CL.Memory.Images.CL_GL.Image2D;
 begin
    IO.Put_Line ("Initializing GLFW");
    Glfw.Init;
@@ -114,7 +114,7 @@ begin
      Height          => 512);
    
    IO.Put_Line ("Loading Texture to OpenCL");
-   CL_Texture := CL.Memory.Images.CL_GL.Constructors.Create_Image2D_From_Texture (
+   CL_Texture := CL.Memory.Images.CL_GL.Constructors.Create_Image2D (
      Context        => Context,
      Mode           => CL.Memory.Read_Write,
      Texture_Target => GL.Objects.Textures.Targets.Texture_2D,

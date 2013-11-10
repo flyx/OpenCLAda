@@ -18,17 +18,17 @@ package body CL.Command_Queues.CL_GL is
 
    package body Constructors is
 
-      function Create (Attach_To  : Contexts.CL_GL.GL_Enabled_Context'Class;
+      function Create (Attach_To  : Contexts.CL_GL.Context'Class;
                        Device     : Platforms.Device'Class;
                        Properties : Platforms.CQ_Property_Vector)
-                       return GL_Enabled_Command_Queue is
-         Queue : Command_Queue
+                       return Queue is
+         Ret : Command_Queues.Queue
            := Command_Queues.Constructors.Create (Attach_To, Device, Properties);
       begin
-         Queue.Adjust;
+         Ret.Adjust;
 
-         return GL_Enabled_Command_Queue'(Ada.Finalization.Controlled
-                                            with Location => Queue.Location);
+         return Queue'(Ada.Finalization.Controlled
+                       with Location => Ret.Location);
       end Create;
 
    end Constructors;

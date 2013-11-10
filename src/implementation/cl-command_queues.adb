@@ -25,26 +25,26 @@ package body CL.Command_Queues is
      function Create (Attach_To  : Contexts.Context'Class;
                       Device     : Platforms.Device'Class;
                       Properties : Platforms.CQ_Property_Vector)
-                      return Command_Queue is
+                      return Queue is
         Error : aliased Enumerations.Error_Code;
-        Queue : System.Address;
+        Raw : System.Address;
 
         function To_Bitfield is new
           Helpers.Record_To_Bitfield (Bit_Vector_Record => Platforms.CQ_Property_Vector,
                                       Used_Bits => 2);
      begin
-        Queue := API.Create_Command_Queue (CL_Object (Attach_To).Location,
-                                           CL_Object (Device).Location,
-                                           To_Bitfield (Properties),
-                                           Error'Unchecked_Access);
+        Raw := API.Create_Command_Queue (CL_Object (Attach_To).Location,
+                                         CL_Object (Device).Location,
+                                         To_Bitfield (Properties),
+                                         Error'Unchecked_Access);
         Helpers.Error_Handler (Error);
-        return Command_Queue'(Ada.Finalization.Controlled with
-                              Location => Queue);
+        return Queue'(Ada.Finalization.Controlled with
+                      Location => Raw);
      end Create;
 
    end Constructors;
 
-   overriding procedure Adjust (Object : in out Command_Queue) is
+   overriding procedure Adjust (Object : in out Queue) is
       use type System.Address;
    begin
       if Object.Location /= System.Null_Address then
@@ -52,7 +52,7 @@ package body CL.Command_Queues is
       end if;
    end Adjust;
 
-   overriding procedure Finalize (Object : in out Command_Queue) is
+   overriding procedure Finalize (Object : in out Queue) is
       use type System.Address;
    begin
       if Object.Location /= System.Null_Address then
@@ -60,7 +60,7 @@ package body CL.Command_Queues is
       end if;
    end Finalize;
 
-   function Context (Queue : Command_Queue) return Contexts.Context is
+   function Context (Object : Queue) return Contexts.Context is
 
       function Getter is
         new Helpers.Get_Parameter (Return_T    => System.Address,
@@ -69,10 +69,10 @@ package body CL.Command_Queues is
       function New_Context_Reference is
          new Helpers.New_Reference (Object_T => Contexts.Context);
    begin
-      return New_Context_Reference (Getter (Queue, Enumerations.Queue_Context));
+      return New_Context_Reference (Getter (Object, Enumerations.Queue_Context));
    end Context;
 
-   function Device (Queue : Command_Queue) return Platforms.Device is
+   function Device (Object : Queue) return Platforms.Device is
 
       function Getter is
         new Helpers.Get_Parameter (Return_T    => System.Address,
@@ -80,20 +80,20 @@ package body CL.Command_Queues is
                                    C_Getter    => API.Get_Command_Queue_Info);
    begin
       return Platforms.Device'(Ada.Finalization.Controlled with
-                               Location => Getter (Queue, Enumerations.Queue_Device));
+                               Location => Getter (Object, Enumerations.Queue_Device));
    end Device;
 
-   function Reference_Count (Queue : Command_Queue) return CL.UInt is
+   function Reference_Count (Object : Queue) return CL.UInt is
 
       function Getter is
         new Helpers.Get_Parameter (Return_T    => UInt,
                                    Parameter_T => Enumerations.Command_Queue_Info,
                                    C_Getter    => API.Get_Command_Queue_Info);
    begin
-      return Getter (Queue, Enumerations.Reference_Count);
+      return Getter (Object, Enumerations.Reference_Count);
    end Reference_Count;
 
-   function Properties (Queue : Command_Queue)
+   function Properties (Object : Queue)
                         return Platforms.CQ_Property_Vector is
 
       function Getter is
@@ -101,15 +101,15 @@ package body CL.Command_Queues is
                                    Parameter_T => Enumerations.Command_Queue_Info,
                                    C_Getter    => API.Get_Command_Queue_Info);
    begin
-      return Getter (Queue, Enumerations.Properties);
+      return Getter (Object, Enumerations.Properties);
    end Properties;
 
-   procedure Flush (Target : Command_Queue) is
+   procedure Flush (Target : Queue) is
    begin
       Helpers.Error_Handler (API.Flush (Target.Location));
    end Flush;
 
-   procedure Finish (Target : Command_Queue) is
+   procedure Finish (Target : Queue) is
    begin
       Helpers.Error_Handler (API.Finish (Target.Location));
    end Finish;

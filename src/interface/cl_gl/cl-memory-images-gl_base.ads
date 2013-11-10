@@ -16,16 +16,21 @@
 
 with CL.Memory.CL_GL.Objects;
 
+with GL.Objects.Textures;
+
 generic
    type Parent is new Image with private;
 package CL.Memory.Images.GL_Base is
 
-   package Base is new Memory.CL_GL.Objects (Parent => Parent);
+   package Base is new Memory.CL_GL.Objects (Parent);
 
-   subtype GL_Shared_Image is Base.GL_Shared_Memory_Object;
+   type Image is new Base.Base_GL_Memory_Object with null record;
 
-   function Texture_Target (Source : GL_Shared_Image) return Interfaces.C.unsigned;
+   -- This function is provided for completeness, but seriously, don't use it.
+   -- You should know the texture target some OpenGL resource belongs to.
+   function Texture_Target (Source : Image)
+                            return not null access constant GL.Objects.Textures.Texture_Proxy'Class;
 
-   function Mipmap_Level (Source : GL_Shared_Image) return Interfaces.C.int;
-
+   function Mipmap_Level (Source : Image)
+                          return GL.Objects.Textures.Mipmap_Level;
 end CL.Memory.Images.GL_Base;

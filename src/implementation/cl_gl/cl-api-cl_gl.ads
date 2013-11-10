@@ -43,9 +43,9 @@ package CL.API.CL_GL is
 
    function Create_From_GL_Texture_3D (Context    : System.Address;
                                        Flags      : Bitfield;
-                                       Image_Type : IFC.unsigned;
-                                       Mip_Level  : IFC.int;
-                                       Source     : IFC.unsigned;
+                                       Image_Type : GL.Low_Level.Enums.Texture_Kind;
+                                       Mip_Level  : GL.Objects.Textures.Mipmap_Level;
+                                       Source     : GL.Types.UInt;
                                        Error      : Enumerations.Error_Ptr)
                                        return System.Address;
    pragma Import (Convention => StdCall, Entity => Create_From_GL_Texture_3D,
@@ -53,7 +53,7 @@ package CL.API.CL_GL is
 
    function Create_From_GL_Renderbuffer (Context      : System.Address;
                                          Flags        : Bitfield;
-                                         Renderbuffer : IFC.unsigned;
+                                         Renderbuffer : GL.Low_Level.Enums.Renderbuffer_Kind;
                                          Error        : Enumerations.Error_Ptr)
                                          return System.Address;
    pragma Import (Convention => StdCall, Entity => Create_From_GL_Renderbuffer,
@@ -61,7 +61,7 @@ package CL.API.CL_GL is
 
    function Get_GL_Object_Info (Mem_Object  : System.Address;
                                 Object_Type : access CL.Memory.CL_GL.Object_Kind;
-                                Object_Name : access IFC.unsigned)
+                                Object_Name : access  GL.Types.UInt)
                                 return Enumerations.Error_Code;
    pragma Import (Convention => StdCall, Entity => Get_GL_Object_Info,
                   External_Name => "clGetGLObjectInfo");

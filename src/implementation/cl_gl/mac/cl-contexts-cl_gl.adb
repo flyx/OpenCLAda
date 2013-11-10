@@ -29,7 +29,7 @@ package body CL.Contexts.CL_GL is
       function Create (Platform : Platforms.Platform;
                        Devices  : Platforms.Device_List;
                        Callback : Error_Callback := null)
-                       return GL_Enabled_Context is
+                       return Context is
                        
          function Address is new
            Ada.Unchecked_Conversion (Source => Error_Callback,
@@ -60,7 +60,7 @@ package body CL.Contexts.CL_GL is
          
          Helpers.Error_Handler (Error);
          
-         return GL_Enabled_Context'(Ada.Finalization.Controlled with Location => Ret_Context);
+         return Context'(Ada.Finalization.Controlled with Location => Ret_Context);
       end Create;
    end Constructors;
 

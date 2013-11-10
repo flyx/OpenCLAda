@@ -14,11 +14,9 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Ada.Exceptions;
-
 with CL.API;
-with CL.Enumerations.CL_GL;
 with CL.Helpers;
+with CL.Enumerations;
 
 with GL.WGL;
 
@@ -31,7 +29,7 @@ package body CL.Contexts.CL_GL is
       function Create (Platform : Platforms.Platform;
                        Devices  : Platforms.Device_List;
                        Callback : Error_Callback := null)
-                       return GL_Enabled_Context is
+                       return Context is
          Props : Address_List := (Value (CL_GL_CONTEXT_KHR),
                                   System.Address (GL.WGL.wglGetCurrentContext),
                                   Value (CL_WGL_HDC_KHR),
@@ -59,8 +57,8 @@ package body CL.Contexts.CL_GL is
                                             Error'Unchecked_Access);
          Helpers.Error_Handler (Error);
 
-         return GL_Enabled_Context'(Ada.Finalization.Controlled
-                                    with Location => Ret_Context);
+         return Context'(Ada.Finalization.Controlled
+                         with Location => Ret_Context);
       end Create;
    end Constructors;
 

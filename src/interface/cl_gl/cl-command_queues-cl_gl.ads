@@ -18,14 +18,14 @@ with CL.Contexts.CL_GL;
 
 package CL.Command_Queues.CL_GL is
 
-   type GL_Enabled_Command_Queue is new Command_Queue with null record;
+   type Queue is new Command_Queues.Queue with null record;
 
    package Constructors is
 
-      function Create (Attach_To  : Contexts.CL_GL.GL_Enabled_Context'Class;
+      function Create (Attach_To  : Contexts.CL_GL.Context'Class;
                        Device     : Platforms.Device'Class;
                        Properties : Platforms.CQ_Property_Vector)
-                       return GL_Enabled_Command_Queue;
+                       return Queue;
    end Constructors;
 
 end CL.Command_Queues.CL_GL;

@@ -48,7 +48,7 @@ procedure CL_Test.Hello_World is
    Buffer      : CL.Memory.Buffers.Buffer;
    Program     : CL.Programs.Program;
    Kernel      : CL.Kernels.Kernel;
-   Queue       : CL.Command_Queues.Command_Queue;
+   Queue       : CL.Command_Queues.Queue;
    Event       : CL.Events.Event;
 
    Hello_World : constant String := "Hello world!";

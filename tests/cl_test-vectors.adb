@@ -53,7 +53,7 @@ procedure CL_Test.Vectors is
    Source1, Source2, Destination : CL.Memory.Buffers.Buffer;
    Program     : CL.Programs.Program;
    Kernel      : CL.Kernels.Kernel;
-   Queue       : CL.Command_Queues.Command_Queue;
+   Queue       : CL.Command_Queues.Queue;
    Event       : CL.Events.Event;
 
    Kernel_File : IO.File_Type;

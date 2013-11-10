@@ -18,7 +18,7 @@ with CL.API;
 with CL.Enumerations;
 
 package body CL.Queueing is
-   function Execute_Kernel (Queue            : Command_Queues.Command_Queue'Class;
+   function Execute_Kernel (Target_Queue     : Command_Queues.Queue'Class;
                             Kernel           : Kernels.Kernel'Class;
                             Dimension        : Kernel_Dimension;
                             Global_Work_Size : access constant Size_List;
@@ -48,7 +48,7 @@ package body CL.Queueing is
             Raw_List : Address_List := Raw_Event_List (Wait_For.all);
          begin
             Error := API.Enqueue_NDRange_Kernel
-              (CL_Object (Queue).Location,
+              (CL_Object (Target_Queue).Location,
                CL_Object (Kernel).Location,
                Dimension, null,
                Global_Work_Size.all (1)'Access,
@@ -59,7 +59,7 @@ package body CL.Queueing is
          end;
       else
          Error := API.Enqueue_NDRange_Kernel
-           (CL_Object (Queue).Location,
+           (CL_Object (Target_Queue).Location,
             CL_Object (Kernel).Location,
             Dimension, null,
             Global_Work_Size.all (1)'Access,
@@ -73,9 +73,9 @@ package body CL.Queueing is
                              Location => Ret_Event);
    end Execute_Kernel;
 
-   function Execute_Task (Queue    : Command_Queues.Command_Queue'Class;
-                          Kernel   : Kernels.Kernel'Class;
-                          Wait_For : access Events.Event_List)
+   function Execute_Task (Target_Queue : Command_Queues.Queue'Class;
+                          Kernel       : Kernels.Kernel'Class;
+                          Wait_For     : access Events.Event_List)
                           return Events.Event is
       Error          : Enumerations.Error_Code;
       Ret_Event      : aliased System.Address;
@@ -84,14 +84,14 @@ package body CL.Queueing is
          declare
             Raw_List       : Address_List := Raw_Event_List (Wait_For.all);
          begin
-            Error := API.Enqueue_Task (CL_Object (Queue).Location,
+            Error := API.Enqueue_Task (CL_Object (Target_Queue).Location,
                                        CL_Object (Kernel).Location,
                                        Raw_List'Length,
                                        Raw_List (1)'Unchecked_Access,
                                        Ret_Event'Unchecked_Access);
          end;
       else
-         Error := API.Enqueue_Task (CL_Object (Queue).Location,
+         Error := API.Enqueue_Task (CL_Object (Target_Queue).Location,
                                     CL_Object (Kernel).Location,
                                     0, null,
                                     Ret_Event'Unchecked_Access);
@@ -101,33 +101,33 @@ package body CL.Queueing is
                              Location => Ret_Event);
    end Execute_Task;
 
-   function Marker (Queue : Command_Queues.Command_Queue'Class)
+   function Marker (Target_Queue : Command_Queues.Queue'Class)
                     return Events.Event is
       Ret_Event : aliased System.Address;
       Error     : Enumerations.Error_Code;
    begin
-      Error := API.Enqueue_Marker (CL_Object (Queue).Location,
+      Error := API.Enqueue_Marker (CL_Object (Target_Queue).Location,
                                    Ret_Event'Unchecked_Access);
       Helpers.Error_Handler (Error);
       return Events.Event'(Ada.Finalization.Controlled with
                              Location => Ret_Event);
    end Marker;
 
-   procedure Wait_For_Events (Queue      : Command_Queues.Command_Queue'Class;
-                              Event_List : Events.Event_List) is
+   procedure Wait_For_Events (Target_Queue : Command_Queues.Queue'Class;
+                              Event_List   : Events.Event_List) is
       Raw_List : Address_List := Raw_Event_List (Event_List);
       Error    : Enumerations.Error_Code;
    begin
-      Error := API.Enqueue_Wait_For_Events (CL_Object (Queue).Location,
+      Error := API.Enqueue_Wait_For_Events (CL_Object (Target_Queue).Location,
                                             Raw_List'Length,
                                             Raw_List (1)'Unchecked_Access);
       Helpers.Error_Handler (Error);
    end Wait_For_Events;
 
-   procedure Barrier (Queue : Command_Queues.Command_Queue'Class) is
+   procedure Barrier (Target_Queue : Command_Queues.Queue'Class) is
       Error : Enumerations.Error_Code;
    begin
-      Error := API.Enqueue_Barrier (CL_Object (Queue).Location);
+      Error := API.Enqueue_Barrier (CL_Object (Target_Queue).Location);
       Helpers.Error_Handler (Error);
    end Barrier;
 

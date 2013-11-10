@@ -39,7 +39,7 @@ package CL.Events is
 
    procedure Wait_For (Subjects : Event_List);
 
-   function Command_Queue (Source : Event) return Command_Queues.Command_Queue;
+   function Command_Queue (Source : Event) return Command_Queues.Queue;
 
    function Kind (Source : Event) return Command_Type;
 

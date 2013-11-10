@@ -20,14 +20,14 @@ with CL.Events;
 
 package CL.Queueing.CL_GL is
 
-   function Acquire_GL_Objects (Queue    : Command_Queues.CL_GL.GL_Enabled_Command_Queue'Class;
-                                Objects  : Memory.CL_GL.Object_List;
-                                Wait_For : access Events.Event_List)
+   function Acquire_GL_Objects (Target_Queue : Command_Queues.CL_GL.Queue'Class;
+                                Objects      : Memory.CL_GL.Object_List;
+                                Wait_For     : access Events.Event_List)
                                 return Events.Event;
 
-   function Release_GL_Objects (Queue    : Command_Queues.CL_GL.GL_Enabled_Command_Queue'Class;
-                                Objects  : Memory.CL_GL.Object_List;
-                                Wait_For : access Events.Event_List)
+   function Release_GL_Objects (Target_Queue : Command_Queues.CL_GL.Queue'Class;
+                                Objects      : Memory.CL_GL.Object_List;
+                                Wait_For     : access Events.Event_List)
                                 return Events.Event;
 
 end CL.Queueing.CL_GL;

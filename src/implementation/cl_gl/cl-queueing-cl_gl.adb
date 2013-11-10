@@ -28,9 +28,9 @@ package body CL.Queueing.CL_GL is
         (Element_T      => Events.Event,
          Element_List_T => Events.Event_List);
 
-   function Acquire_GL_Objects (Queue    : Command_Queues.CL_GL.GL_Enabled_Command_Queue'Class;
-                                Objects  : Memory.CL_GL.Object_List;
-                                Wait_For : access Events.Event_List)
+   function Acquire_GL_Objects (Target_Queue : Command_Queues.CL_GL.Queue'Class;
+                                Objects      : Memory.CL_GL.Object_List;
+                                Wait_For     : access Events.Event_List)
                                 return Events.Event is
 
       Raw_Objects : Address_List := Raw_Object_List (Objects);
@@ -43,7 +43,7 @@ package body CL.Queueing.CL_GL is
             Raw_Events : Address_List := Raw_Event_List (Wait_For.all);
          begin
             Error := API.CL_GL.Enqueue_Acquire_GL_Objects
-              (Command_Queue => CL_Object (Queue).Location,
+              (Command_Queue => CL_Object (Target_Queue).Location,
                Num_Objects   => Raw_Objects'Length,
                Object_List   => Raw_Objects (1)'Unchecked_Access,
                Num_Events    => Raw_Events'Length,
@@ -52,7 +52,7 @@ package body CL.Queueing.CL_GL is
          end;
       else
          Error := API.CL_GL.Enqueue_Acquire_GL_Objects
-           (Command_Queue => CL_Object (Queue).Location,
+           (Command_Queue => CL_Object (Target_Queue).Location,
             Num_Objects   => Raw_Objects'Length,
             Object_List   => Raw_Objects (1)'Unchecked_Access,
             Num_Events    => 0,
@@ -66,9 +66,9 @@ package body CL.Queueing.CL_GL is
       return Events.Event'(Ada.Finalization.Controlled with Location => Ret_Event);
    end Acquire_GL_Objects;
 
-   function Release_GL_Objects (Queue    : Command_Queues.CL_GL.GL_Enabled_Command_Queue'Class;
-                                Objects  : Memory.CL_GL.Object_List;
-                                Wait_For : access Events.Event_List)
+   function Release_GL_Objects (Target_Queue : Command_Queues.CL_GL.Queue'Class;
+                                Objects      : Memory.CL_GL.Object_List;
+                                Wait_For     : access Events.Event_List)
                                 return Events.Event is
 
       Raw_Objects : Address_List := Raw_Object_List (Objects);
@@ -81,7 +81,7 @@ package body CL.Queueing.CL_GL is
             Raw_Events : Address_List := Raw_Event_List (Wait_For.all);
          begin
             Error := API.CL_GL.Enqueue_Release_GL_Objects
-              (Command_Queue => CL_Object (Queue).Location,
+              (Command_Queue => CL_Object (Target_Queue).Location,
                Num_Objects   => Raw_Objects'Length,
                Object_List   => Raw_Objects (1)'Unchecked_Access,
                Num_Events    => Raw_Events'Length,
@@ -90,7 +90,7 @@ package body CL.Queueing.CL_GL is
          end;
       else
          Error := API.CL_GL.Enqueue_Release_GL_Objects
-           (Command_Queue => CL_Object (Queue).Location,
+           (Command_Queue => CL_Object (Target_Queue).Location,
             Num_Objects   => Raw_Objects'Length,
             Object_List   => Raw_Objects (1)'Unchecked_Access,
             Num_Events    => 0,

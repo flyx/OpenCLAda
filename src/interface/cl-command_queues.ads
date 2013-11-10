@@ -19,7 +19,7 @@ with CL.Platforms;
 
 package CL.Command_Queues is
 
-   type Command_Queue is new Runtime_Object with null record;
+   type Queue is new Runtime_Object with null record;
 
    type Map_Flags is
       record
@@ -31,25 +31,25 @@ package CL.Command_Queues is
       function Create (Attach_To  : Contexts.Context'Class;
                        Device     : Platforms.Device'Class;
                        Properties : Platforms.CQ_Property_Vector)
-                       return Command_Queue;
+                       return Queue;
    end Constructors;
 
-   overriding procedure Adjust (Object : in out Command_Queue);
+   overriding procedure Adjust (Object : in out Queue);
 
-   overriding procedure Finalize (Object : in out Command_Queue);
+   overriding procedure Finalize (Object : in out Queue);
 
-   function Context (Queue : Command_Queue) return Contexts.Context;
+   function Context (Object : Queue) return Contexts.Context;
 
-   function Device (Queue : Command_Queue) return Platforms.Device;
+   function Device (Object : Queue) return Platforms.Device;
 
-   function Reference_Count (Queue : Command_Queue) return UInt;
+   function Reference_Count (Object : Queue) return UInt;
 
-   function Properties (Queue : Command_Queue)
+   function Properties (Object : Queue)
                         return Platforms.CQ_Property_Vector;
 
-   procedure Flush (Target : Command_Queue);
+   procedure Flush (Target : Queue);
 
-   procedure Finish (Target : Command_Queue);
+   procedure Finish (Target : Queue);
 private
    for Map_Flags use
       record

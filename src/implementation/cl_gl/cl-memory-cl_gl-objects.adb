@@ -19,21 +19,23 @@ with CL.Helpers;
 
 package body CL.Memory.CL_GL.Objects is
 
-   function Object_Type (Source : GL_Shared_Memory_Object) return Object_Kind is
+   function Kind (Source : Base_GL_Memory_Object) return Object_Kind is
       Return_Value : aliased Object_Kind;
    begin
       Helpers.Error_Handler
-        (API.CL_GL.Get_GL_Object_Info (Source.Location, Return_Value'Access, null));
+        (API.CL_GL.Get_GL_Object_Info (Source.Location,
+                                       Return_Value'Access, null));
       return Return_Value;
-   end Object_Type;
+   end Kind;
 
-   function GL_Object (Source : GL_Shared_Memory_Object)
-                       return Interfaces.C.unsigned is
-      Return_Value : aliased Interfaces.C.unsigned;
+   function Raw_GL_Id (Source : Base_GL_Memory_Object)
+                       return GL.Types.UInt is
+      Return_Value : aliased GL.Types.UInt;
    begin
       Helpers.Error_Handler
-        (API.CL_GL.Get_GL_Object_Info (Source.Location, null, Return_Value'Access));
+        (API.CL_GL.Get_GL_Object_Info (Source.Location,
+                                       null, Return_Value'Access));
       return Return_Value;
-   end GL_Object;
+   end Raw_GL_Id;
 
 end CL.Memory.CL_GL.Objects;

@@ -14,14 +14,20 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with GL.Types;
+
 package CL.Memory.CL_GL is
 
    type Object_Kind is (Buffer, Texture2D, Texture3D, Renderbuffer);
 
-   -- Sadly, we cannot ensure that all elements in the list are GL enabled
-   -- memory objects, because CL.Memory.GL.Objects is orthogonal and thus there
-   -- is no common parent class for all GL enabled memory objects.
-   type Object_List is array (Integer range <>) of access constant Memory_Object'Class;
+   type Memory_Object is interface;
+
+   function Kind (Source : Memory_Object) return Object_Kind is abstract;
+
+   function Raw_GL_Id (Source : Memory_Object) return GL.Types.UInt is abstract;
+
+   type Object_List is array (Integer range <>)
+     of access constant Memory_Object'Class;
 
 private
 

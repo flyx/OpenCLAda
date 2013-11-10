@@ -15,13 +15,14 @@
 --------------------------------------------------------------------------------
 
 generic
-   type Parent is new Memory_Object with private;
+   type Parent is new Memory.Memory_Object with private;
 package CL.Memory.CL_GL.Objects is
 
-   type GL_Shared_Memory_Object is new Parent with null record;
+   type Base_GL_Memory_Object is abstract new Parent and CL_GL.Memory_Object
+     with null record;
 
-   function Object_Type (Source : GL_Shared_Memory_Object) return Object_Kind;
-
-   function GL_Object (Source : GL_Shared_Memory_Object) return Interfaces.C.unsigned;
-
+   overriding function Kind (Source : Base_GL_Memory_Object)
+                             return Memory.CL_GL.Object_Kind;
+   overriding function Raw_GL_Id (Source : Base_GL_Memory_Object)
+                                  return GL.Types.UInt;
 end CL.Memory.CL_GL.Objects;
