@@ -62,7 +62,7 @@ procedure CL_Test.Hello_World is
    Event       : CL.Events.Event;
 
    Hello_World : constant String := "Hello world!";
-   Output      : aliased constant Aliased_String := (Hello_World'Range => ' ');
+   Output      : aliased constant Aliased_String := (Hello_World'Range => <>);
 
    Kernel_File : IO.File_Type;
 
@@ -102,6 +102,7 @@ begin
    Event.Wait_For;
    IO.Put_Line ("Retrieving result");
    String_Objects.Read_Buffer (Queue, Buffer, True, 0, Output, Event);
+   Event.Wait_For;
 
    IO.Put_Line (String (Output));
 end CL_Test.Hello_World;
