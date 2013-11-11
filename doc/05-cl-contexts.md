@@ -1,6 +1,6 @@
 ---
 layout : default
-platforms :
+packages :
  - CL.Contexts
  - CL.Programs
  - CL.Kernels

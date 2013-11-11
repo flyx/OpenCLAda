@@ -26,11 +26,13 @@ I tried to make it possible to access the elements with `.X`, `.X` and so on
 You can initialize the fixed vector types with the overloaded function
 `CL_Vector`, for instance:
 
-<?prettify lang-all=ada?>
+<?prettify lang=ada?>
 
     My_Int2 : CL.Vectors.Int2 := CL.Vectors.CL_Vector (23, 42);
 
 Array types for the fixed vector types are also available:
+
+<?prettify lang=ada?>
 
     My_Int2_Array : CL.Vectors.Int2_Array
       := CL.Vectors.New_Array ( (1, 2), (3, 4), (5, 6) );

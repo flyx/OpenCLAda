@@ -3,7 +3,6 @@ layout : default
 packages :
  - CL.Command_Queues
  - CL.Queueing
- - CL.Queueing.Memory_Objects
  - CL.Events
 permalink : cl-queueing.html
 ---
