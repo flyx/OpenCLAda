@@ -48,6 +48,16 @@ table {
 
 /* Overall Structure */
 
+body > .ie-warning {
+	background: #dc322f;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	text-align: center;
+	color: #b58900;
+}
+
 body > footer {
 	/* fix for browsers that do not support <footer> */
 	display: block;
@@ -63,7 +73,9 @@ body > header {
 	/* fix for browsers that do not support <header> */
 	display: block;
 
-	padding: 1em;
+	/* because CSS is stupid shit. This setting leads to
+	   the header wrapping the margin of the contained h1. */
+	overflow: auto;
 
 	text-align: center;
 	background: #eee8d5;
@@ -143,18 +155,6 @@ body > #main-row > nav ul > li.api > a > span {
 body > #main-row > nav > div.mainNav {
 	overflow-y: auto;
 	padding-bottom: 5em;
-}
-
-body > #main-row > nav > div.seeAlso {
-	position: absolute;
-	bottom : 0;
-	left : 0;
-	right : 0;
-	
-	margin: 0;
-	padding: 0;
-	
-	background: #4a2;
 }
 
 /* Content Style */
