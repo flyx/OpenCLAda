@@ -47,8 +47,8 @@ Usually, you want to declare array types to transfer chunks of data. OpenCLAda's
 data transfer functions are generic which makes it possible to use them with any
 array type. Apart from using the basic OpenCL types as base type, you should make
 sure to use `pragma Convention (C, Array_Type)` on your array type. For details
-see the package [CL.Queueing][3].
+see the package [CL.Memory][3].
 
  [1]: {{ site.baseurl }}/doc/cl.html
  [2]: {{ site.baseurl }}/doc/cl-vectors.html
- [3]: {{ site.baseurl }}/doc/cl-queueing.html
+ [3]: {{ site.baseurl }}/doc/cl-memory.html
